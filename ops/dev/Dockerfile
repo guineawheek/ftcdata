@@ -23,6 +23,10 @@ RUN apt-get update && apt-get install -y \
   openssh-server \
   libmysqlclient-dev
 
+#RUN update-alternatives --set python3 /usr/bin/python3.7
+RUN ln -sf /usr/bin/python3.7 /usr/local/bin/python3
+RUN echo 'exec /usr/bin/python3.7 -m pip $@' > /usr/local/bin/pip3 && chmod +x /usr/local/bin/pip3
+
 # Configure ssh server
 RUN mkdir /var/run/sshd
 RUN echo 'root:tba' | chpasswd
