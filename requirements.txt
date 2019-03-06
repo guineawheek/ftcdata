@@ -2,3 +2,7 @@ sanic
 jinja2
 beautifulsoup4
 Paver
+aiohttp
+asyncpg
+pycountry
+

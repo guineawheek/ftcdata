@@ -4,6 +4,7 @@ class Team(orm.Model):
     __tablename__ = "teams"
     __primary_key__ = ("key", "year")
     key: varchar(20)
+    number: integer
     year: integer
     rookie_year: integer
     name: text
@@ -16,4 +17,6 @@ class Team(orm.Model):
     postalcode: text
     normalized_location: text
     website: text
+    lat: double_precision
+    lon: double_precision
 

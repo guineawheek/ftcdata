@@ -1,4 +1,5 @@
 import asyncpg
+import json
 from .types import Column
 
 """
@@ -165,6 +166,14 @@ class ORM:
 
         self.Model = Model
     async def connect(self, **kwargs):
+        async def connection_initer(conn):
+            await conn.set_type_codec(
+                'json',
+                encoder=json.dumps,
+                decoder=json.loads,
+                schema='pg_catalog'
+            )
+        kwargs["init"] = connection_initer
         self.pool = await asyncpg.create_pool(**kwargs)
 
     async def close(self):
