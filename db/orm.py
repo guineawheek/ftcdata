@@ -1,5 +1,7 @@
-import asyncpg
 import json
+
+import asyncpg
+
 from .types import Column
 
 """
@@ -15,6 +17,7 @@ One can use the defualt orm instance or instantiate your own for other dbs.
 
 """
 
+
 class ORM:
     def __init__(self):
         class Model:
@@ -24,7 +27,8 @@ class ORM:
             __addn_sql__ = None
 
             # kwargs are just a way to put in fields
-            def __init__(self, **kwargs):
+            def __init__(self, conn=None, **kwargs):
+                self.conn = conn
                 self.__dict__.update(kwargs)
 
             def __repr__(self):
@@ -72,7 +76,6 @@ class ORM:
                     setattr(ret, field, record[field])
                 return ret
 
-            
             @classmethod
             async def fetch(cls, *args, conn=None):
                 if conn is None:
@@ -82,7 +85,7 @@ class ORM:
                 else:
                     async with conn.transaction():
                         return [cls.from_record(r) for r in await conn.fetch(*args)]
-            
+
             @classmethod
             async def fetchrow(cls, *args, conn=None):
                 if conn is None:
@@ -93,28 +96,30 @@ class ORM:
                     async with conn.transaction():
                         return cls.from_record(await conn.fetchrow(*args))
 
-            async def insert(self, conn=None):
+            async def insert(self, conn=None, upsert=""):
                 fields = self._columns.keys()
-                qs = f"INSERT INTO {self.__schemaname__}.{self.__tablename__}({','.join(fields)}) VALUES(" + ",".join(f"${i}" for i in range(1, len(fields) + 1)) + ")"
+                qs = f"INSERT INTO {self.__schemaname__}.{self.__tablename__}({','.join(fields)}) VALUES(" + ",".join(
+                    f"${i}" for i in range(1, len(fields) + 1)) + ")" + (" ON CONFLICT DO " + upsert if upsert else "")
                 args = [qs] + [getattr(self, f) for f in fields]
                 await self.fetch(*args, conn=conn)
 
             @classmethod
-            async def select(cls, properties=None, conn=None):
+            async def select(cls, conn=None, **properties):
                 if properties is None:
                     return await cls.fetch(f"SELECT * FROM {cls.__schemaname__}.{cls.__tablename__}")
                 else:
                     fields = properties.keys()
-                    qs = f"SELECT * FROM {cls.__schemaname__}.{cls.__tablename__} WHERE " + " AND ".join(f"${f}=${i}" for i, f in enumerate(fields, 1))
+                    qs = f"SELECT * FROM {cls.__schemaname__}.{cls.__tablename__} WHERE " + " AND ".join(
+                        f"${f}=${i}" for i, f in enumerate(fields, 1))
                     return await cls.fetch(*([qs] + list(properties.values())), conn=conn)
 
             @classmethod
-            async def select_one(cls, properties=None, conn=None):
+            async def select_one(cls, conn=None, **properties):
                 fields = properties.keys()
                 qs = f"SELECT * FROM {cls.__schemaname__}.{cls.__tablename__} WHERE " + " AND ".join(f"{f}=${i}" for i, f in enumerate(fields, 1))
                 return await cls.fetchrow(*([qs] + list(properties.values())), conn=conn)
 
-            async def update(self, properties=None, keys=None, conn=None):
+            async def update(self, keys=None, conn=None, properties=None):
                 pkeys = self.__primary_key__ or tuple()
                 if keys is None:
                     fields = [k for k in self._columns.keys() if k not in pkeys]
@@ -125,29 +130,32 @@ class ORM:
                         raise ValueError("properties must be passed to update() if there is no primary key!")
                     else:
                         properties = {k: getattr(self, k) for k in self.__primary_key__}
-                qs = f"UPDATE {self.__schemaname__}.{self.__tablename__} SET ({','.join(fields)}) = (" + ",".join(f"${i}" for i in range(1, len(fields) + 1)) + ") " \
-                     f"WHERE " + " AND ".join(f"{f} = ${i}" for i, f in enumerate(properties.keys(), len(fields) + 1))
-                #print(qs) 
-                
+                qs = f"UPDATE {self.__schemaname__}.{self.__tablename__} SET ({','.join(fields)}) = (" + ",".join(
+                    f"${i}" for i in range(1, len(fields) + 1)) + ") " \
+                         f"WHERE " + " AND ".join(f"{f} = ${i}" for i, f in enumerate(properties.keys(), len(fields) + 1))
+                # print(qs)
+
                 return await self.fetchrow(*([qs] + [getattr(self, f) for f in fields] + list(properties.values())), conn=conn)
-            
-            async def delete(self, properties=None, conn=None):
+
+            async def delete(self, conn=None, **properties):
                 pkeys = self.__primary_key__ or tuple()
                 if properties is None:
                     if not pkeys:
                         raise ValueError("properties must be passed to delete() if there is no primary key!")
                     else:
                         properties = {k: getattr(self, k) for k in self.__primary_key__}
-                qs = f"DELETE FROM {self.__schemaname__}.{self.__tablename__} WHERE " + " AND ".join(f"{f}=${i}" for i, f in enumerate(properties.keys(), 1))
+                qs = f"DELETE FROM {self.__schemaname__}.{self.__tablename__} WHERE " + " AND ".join(
+                    f"{f}=${i}" for i, f in enumerate(properties.keys(), 1))
                 return await self.fetch(*([qs] + list(properties.values())), conn=conn)
 
             @classmethod
-            async def delete_all(cls, properties: dict, conn=None):
+            async def delete_all(cls, conn=None, **properties):
                 if not properties:
                     raise ValueError("delete_all() requires at least one keyword argument!")
-                qs = f"DELETE FROM {cls.__schemaname__}.{cls.__tablename__} WHERE " + " AND ".join(f"{f}=${i}" for i, f in enumerate(properties.keys(), 1))
+                qs = f"DELETE FROM {cls.__schemaname__}.{cls.__tablename__} WHERE " + " AND ".join(
+                    f"{f}=${i}" for i, f in enumerate(properties.keys(), 1))
                 return await cls.fetch(*([qs] + list(properties.values())), conn=conn)
-            
+
             def primary_key(self):
                 if not self.__primary_key__:
                     return None
@@ -159,12 +167,14 @@ class ORM:
                 if not self.__primary_key__:
                     # ig i could implement a checker?
                     raise TypeError("upsert() requires a primary key on the table")
-                if await self.select_one(properties={k: getattr(self, k) for k in self.__primary_key__}, conn=conn):
+                if await self.select_one(**{k: getattr(self, k) for k in self.__primary_key__}, conn=conn):
                     await self.update(conn=conn)
                 else:
                     await self.insert(conn=conn)
 
         self.Model = Model
+        self.pool: asyncpg.pool.Pool
+
     async def connect(self, **kwargs):
         async def connection_initer(conn):
             await conn.set_type_codec(
@@ -173,10 +183,12 @@ class ORM:
                 decoder=json.loads,
                 schema='pg_catalog'
             )
+
         kwargs["init"] = connection_initer
         self.pool = await asyncpg.create_pool(**kwargs)
 
     async def close(self):
         await self.pool.close()
+
 
 orm = ORM()

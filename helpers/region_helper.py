@@ -1,4 +1,5 @@
 import .NominatimHelper
+
 class RegionHelper:
     # these states lack a real state championship and so are redirected to others.
     COMBINED_STATES = {

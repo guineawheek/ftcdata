@@ -44,11 +44,11 @@
                     <span class="glyphicon glyphicon-star"></span>
                 </div>
                 <div class="team-name">
-                  <a href="/team/{{ team.team_number }}">{{ team.team_number }}</a>
+                  <a href="/team/{{ team.number }}">{{ team.number }}</a>
                 </div>
               </div>
             </td>
-            <td><a href="/team/{{ team.team_number }}">{% if team.nickname %}{{ team.nickname }}{% else %}--{% endif %}</a></td>
+            <td><a href="/team/{{ team.number }}">{% if team.name %}{{ team.name }}{% else %}--{% endif %}</a></td>
             <td>{% if team.city_state_country %}{{ team.city_state_country }}{% else %}--{% endif %}</td>
           </tr>
           {% endfor %}
@@ -73,11 +73,11 @@
                     <span class="glyphicon glyphicon-star"></span>
                 </div>
                 <div class="team-name">
-                  <a href="/team/{{ team.team_number }}">{{ team.team_number }}</a>
+                  <a href="/team/{{ team.number }}">{{ team.number }}</a>
                 </div>
               </div>
             </td>
-            <td><a href="/team/{{ team.team_number }}">{% if team.nickname %}{{ team.nickname }}{% else %}--{% endif %}</a></td>
+            <td><a href="/team/{{ team.number }}">{% if team.name %}{{ team.name }}{% else %}--{% endif %}</a></td>
             <td>{% if team.city_state_country %}{{ team.city_state_country }}{% else %}--{% endif %}</td>
           </tr>
           {% endfor %}

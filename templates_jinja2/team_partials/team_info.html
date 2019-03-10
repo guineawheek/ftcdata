@@ -7,7 +7,7 @@
     {% if avatar %}
       <img class="team-avatar single blue" src='{{avatar.avatar_image_source}}'/>
     {% endif %}
-    Team {{team.team_number}}{% if team.nickname %} - {{team.nickname}}{% endif %}</h2>
+    Team {{team.number}}{% if team.name %} - {{team.name}}{% endif %}</h2>
     {% if district_name %}<blockquote><em>Part of the <a href="/events/{{district_abbrev}}/{{year}}">{{district_name}} District</a></em></blockquote>{% endif %}
   </div>
 </div>
@@ -24,15 +24,18 @@
         {% endif %}
         <br>
       {% endif %}
-      {% if team.name %}<span class="glyphicon glyphicon-info-sign"></span> aka <em>{{ team.name }}</em><br>{% endif %}
-      {% if team.rookie_year %}<span class="glyphicon glyphicon-calendar"></span> Rookie Year: {{ team.rookie_year }}<br>{% endif %}
+      {% if team.name %}<span class="glyphicon glyphicon-info-sign"></span> <em>aka {{ team.org }}</em><br>{% endif %}
+      {% if team.rookie_year %}<span class="glyphicon glyphicon-calendar"></span> Rookie Year: {{ format_year(team.rookie_year) }}<br>{% endif %}
       {% if last_competed and last_competed < max_year %}<span class="glyphicon glyphicon-time"></span> Last competed in {{ last_competed }}<br>{% endif %}
       {% if team.website %}<span class="glyphicon glyphicon-globe"></span> <a href="{{team.website}}" target="_blank">{{ team.website }}</a><br>{% endif %}
-      {% if team.championship_location %}<span class="glyphicon glyphicon-flag"></span> Home Championship: {{team.championship_location.2017}}, 2017 {% if team.championship_location.2017 != team.championship_location.2018 %} | {{team.championship_location.2018}}, 2018+ {% endif %}<br>{% endif %}
+      {% if team.home_cmp %}<span class="glyphicon glyphicon-flag"></span> Home Championship: {{team.home_cmp}} <br>{% endif %}
+
+      {# hof doesn't exist in ftc!!!!!
       {% if hof.is_hof %}<span class="hall-of-fame"><span class="glyphicon glyphicon-certificate"></span> Hall of Fame ({% for year in hof.years %}{{ year }}{{ ", " if not loop.last }}{% endfor %}){% if hof.media.video or hof.media.presentation or hof.media.essay %}:{% endif %}{% if hof.media.video %} <a href="{{hof.media.video}}">Video</a>{% endif %}{% if hof.media.presentation %}, <a href="{{hof.media.presentation}}">Presentation</a>{% endif %}{% if hof.media.essay %}, <a href="{{hof.media.essay}}">Essay</a>{% endif %}</span><br>{% endif %}
+      #}
 
       <hr>
-      <a class="btn btn-xs btn-default{% if social_medias %} pull-right{% endif %}" href="/suggest/team/social_media?team_key={{team.key_name}}" target="_blank"><span class="glyphicon glyphicon-plus"></span> Add Social Media!</a>
+      <a class="btn btn-xs btn-default{% if social_medias %} pull-right{% endif %}" href="/suggest/team/social_media?team_key={{team.key}}" target="_blank"><span class="glyphicon glyphicon-plus"></span> Add Social Media!</a>
       {% for media in social_medias %}
         {{smm.social_media_icon_link(media)}}{% if not loop.last %}&middot;{% endif %}
       {% endfor %}
@@ -73,15 +76,17 @@
       {% include "media_partials/image_carousel_partial.html" %}
     {% else %}
       {% if year %}
-        <a class="btn btn-lg btn-success btn-block" href="/suggest/team/media?team_key={{team.key_name}}&year={{year}}" target="_blank"><span class="glyphicon glyphicon-plus"></span> Add Robot Image!</a>
+        <a class="btn btn-lg btn-success btn-block" href="/suggest/team/media?team_key={{team.key}}&year={{year}}" target="_blank"><span class="glyphicon glyphicon-plus"></span> Add Robot Image!</a>
       {% endif %}
     {% endif %}
     <p class="text-center">
     {% if robot %}Robot Name: <strong>{{robot.robot_name}}</strong><br>{% endif %}
       {% if year %}
+        {# not sophisticated enough for media yet oops
         {% if medias_by_slugname and medias_by_slugname.grabcad %}
          <span class="glyphicon glyphicon-hdd"></span><a href="#robot-profile"> {{ medias_by_slugname.grabcad|length }} CAD Model{% if medias_by_slugname.grabcad|length > 1 %}s{% endif %}</a>
         {% endif %}
+         #}
       {% endif %}
     </p>
 

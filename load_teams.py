@@ -6,11 +6,14 @@ import datetime
 import pprint
 import gzip
 import pickle
-from models import Team
+from models import Team, TeamMeta
 from helpers import LocationHelper, ChampSplitHelper
 from db.orm import orm
 
+record_counter = 0
+
 async def add_team(data):
+    global record_counter
     UPSERT = True
     number = data["number"]
     rookie_year = data["rookie_year"]
@@ -46,7 +49,8 @@ async def add_team(data):
                     await team.upsert(conn=conn)
                 else:
                     await team.insert(conn=conn)
-    print(f"loaded {number}")
+    record_counter += 1
+    print(f"loading {record_counter} teams...", end="\r")
 
 
 async def main():
@@ -60,6 +64,8 @@ async def main():
         async with session.get(DATA_URL) as response:
             data = pickle.loads(gzip.decompress(await response.read()))
     await asyncio.gather(*[add_team(d) for d in data.values()])
+    print("done.\nUpdating team_meta...")
+    await TeamMeta.update()
 
     await orm.close()
 

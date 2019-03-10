@@ -20,3 +20,13 @@ class Team(orm.Model):
     lat: double_precision
     lon: double_precision
 
+    @property
+    def city_state_country(self):
+        return f"{self.city}, {self.state_prov}, {self.country}"
+
+    @classmethod
+    async def most_recent(cls, number=None):
+        return Team.from_record(await orm.pool.fetchrow(
+        """SELECT * FROM teams WHERE 
+           year = (SELECT max(year) FROM teams WHERE number = $1) AND number = $1""", number))
+

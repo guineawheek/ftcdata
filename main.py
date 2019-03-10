@@ -1,10 +1,12 @@
 from sanic import Sanic
-import sanic.response
 from sanic.response import json, html
+from sanic.exceptions import abort
+
 from jinja2 import Environment, FileSystemLoader, ModuleLoader, select_autoescape
 from template_engine import jinja2_engine
 from db.orm import orm
 from models import Team
+import uvloop
 import runtime
 
 import asyncio
@@ -19,17 +21,53 @@ app = Sanic()
 app.static("/javascript", "./static/compiled/javascript")
 app.static("/css", "./static/compiled/css")
 
+def format_year(year):
+    return f"{year}-{(year+1)%1000:02d}"
+
+@app.listener("before_server_start")
+async def setup_db(app, loop):
+    await runtime.setup_orm(orm)
+
+@app.listener("after_server_stop")
+async def close_db(app, loop):
+    await orm.close()
+
 @app.route("/<name>")
 async def template(request, name):
     if not name.endswith(".html"):
         name += ".html"
     return html(env.get_template(name).render({}))
 
-@app.route("/team/<number>")
+@app.route("/team/<number:int>")
 async def teams(request, number):
-    return html(env.get_template("teams.html").render({}))
+    return await teams_year(request, number, None)
+
+@app.route("/team/<number:int>/<year:int>")
+async def teams_year(request, number, year):
+    if year is None:
+        team = await Team.most_recent(number=number)
+        year = team.year
+    else:
+        team = await Team.select_one(number=number, year=year)
+    if not team:
+        abort(404)
+    years = [r["year"] for r in await orm.pool.fetch("SELECT year FROM teams WHERE number=$1 ORDER BY year", number)]
+
+    return html(env.get_template("team_details.html").render({
+        "year": year,
+        "years": years,
+        "team": team,
+        "format_year": format_year
+    }))
+
+@app.route("/team/<number:int>/history")
+async def teams_history(request, number):
+    year = await orm.pool.fetchval("SELECT max(year) FROM teams WHERE number=$1", number)
+    team = await Team.select_one(number=number, year=year)
+    if not team:
+        abort(404)
+
 
 if __name__ == "__main__":
-    asyncio.run_until_complete(runtime.setup_orm(orm))
-    app.run(host="0.0.0.0", port=8000, debug=True)
+    app.run(host="localhost", port=8000, debug=True)
 

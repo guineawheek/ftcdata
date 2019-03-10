@@ -26,3 +26,4 @@ else:
     text = Column('text')
     real = Column('real')
     double_precision = Column('double precision')
+    timestamp = Column('timestamp')

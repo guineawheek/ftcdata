@@ -94,3 +94,6 @@ dev-datastore/
 # weird stuff #
 venv/
 build/
+
+# database misc
+tya_restore.json
