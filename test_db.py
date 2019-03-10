@@ -4,6 +4,7 @@ import datetime
 import pprint
 import runtime
 from models import Team
+from helpers import RegionHelper
 from db.orm import orm
 from data import ftcpenn
 
@@ -13,8 +14,10 @@ async def main():
     #
     # Close the connection.
 
-    await ftcpenn.FTCPennScraper.scrape_event("http://www.ftcpenn.org/ftc-events/2018-2019-season/hat-tricks-qualifier")
-    await ftcpenn.FTCPennScraper.scrape_event("http://www.ftcpenn.org/ftc-events/2012-2013-season/pennsylvania-ftc-championship-tournament")
+    #await ftcpenn.FTCPennScraper.scrape_event("http://www.ftcpenn.org/ftc-events/2018-2019-season/hat-tricks-qualifier")
+    #await ftcpenn.FTCPennScraper.scrape_event("http://www.ftcpenn.org/ftc-events/2012-2013-season/pennsylvania-ftc-championship-tournament")
+    for team in map(Team.from_record, await orm.pool.fetch("SELECT * from teams ORDER BY number")):
+        print(f"{team.number: <5} {team.name: <64} {team.city + ', ' + team.state_prov: <32} {await RegionHelper.get_region(team)}")
     await orm.close()
 
 asyncio.get_event_loop().run_until_complete(main())
