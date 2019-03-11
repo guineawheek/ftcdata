@@ -5,4 +5,4 @@ Paver
 aiohttp
 asyncpg
 pycountry
-
+async_lru

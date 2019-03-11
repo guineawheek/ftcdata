@@ -49,7 +49,6 @@ class NominatimHelper:
         return cls.wsfix.sub("+", s.strip())
 
     @classmethod
-    @functools.lru_cache(maxsize=1024)
     async def get_lat_lon(cls, city, state, postalcode=None, misc=None):
         qs = {
             "format": "json",
@@ -71,6 +70,7 @@ class NominatimHelper:
         return float(place['lat']), float(place['lon'])
 
     @classmethod
+    @functools.lru_cache(maxsize=512)
     async def get_county(cls, lat, lon, misc=None):
         # curl 'http://localhost:8080/reverse.php?format=jsonv2&lat=40.679695&lon=-73.950292'
         qs = {
