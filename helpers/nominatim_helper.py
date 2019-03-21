@@ -1,8 +1,8 @@
 from urllib.parse import urlencode
 import re
-import functools
+import async_lru
 import runtime
-from helpers import http_session
+import aiohttp
 
 """
 % curl 'http://localhost:8080/search.php?format=json&addressdetails=1&city=San+Jose&state=CA' | python -m json.tool
@@ -41,8 +41,13 @@ from helpers import http_session
 
 class NominatimHelper:
     base = runtime.NOMINATIM_URL
-    http = http_session
+    http = None
     wsfix = re.compile("\s+")
+
+    @classmethod
+    async def get_http(cls):
+        if cls.http is None:
+            cls.http = aiohttp.ClientSession(headers={"User-Agent": "ftcdata geolocation process"})
 
     @classmethod
     def _plusify(cls, s):
@@ -50,6 +55,7 @@ class NominatimHelper:
 
     @classmethod
     async def get_lat_lon(cls, city, state, postalcode=None, misc=None):
+        await cls.get_http()
         qs = {
             "format": "json",
             "addressdetails": 1,
@@ -70,9 +76,10 @@ class NominatimHelper:
         return float(place['lat']), float(place['lon'])
 
     @classmethod
-    @functools.lru_cache(maxsize=512)
+    @async_lru.alru_cache(maxsize=1024)
     async def get_county(cls, lat, lon, misc=None):
         # curl 'http://localhost:8080/reverse.php?format=jsonv2&lat=40.679695&lon=-73.950292'
+        await cls.get_http()
         qs = {
             "format": "jsonv2",
             "addressdetails": 1,
@@ -83,6 +90,8 @@ class NominatimHelper:
             place = await r.json()
 
         if not place or "error" in place:
+            if place['error'] != 'Unable to geocode':
+                raise Exception(place['error'])
             return None
 
         try:
@@ -95,5 +104,6 @@ class NominatimHelper:
                 if s.endswith("County"):
                     return s
         except Exception:
+            raise
             return None
 

@@ -6,6 +6,7 @@ from jinja2 import Environment, FileSystemLoader, ModuleLoader, select_autoescap
 from template_engine import jinja2_engine
 from db.orm import orm
 from models import Team
+from helpers import RegionHelper
 import uvloop
 import runtime
 
@@ -57,7 +58,8 @@ async def teams_year(request, number, year):
         "year": year,
         "years": years,
         "team": team,
-        "format_year": format_year
+        "format_year": format_year,
+        "region_name": await RegionHelper.get_region(team)
     }))
 
 @app.route("/team/<number:int>/history")

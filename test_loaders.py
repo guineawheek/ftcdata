@@ -17,10 +17,7 @@ async def main():
     #await ftcpenn.FTCPennScraper.scrape_event("http://www.ftcpenn.org/ftc-events/2018-2019-season/hat-tricks-qualifier")
     #await ftcpenn.FTCPennScraper.scrape_event("http://www.ftcpenn.org/ftc-events/2012-2013-season/pennsylvania-ftc-championship-tournament")
 
-    async def print_region(team):
-        print(f"{team.number: <5} {team.name: <64} {team.city + ', ' + team.state_prov: <32} {await RegionHelper.get_region(team)}")
-
-    await asyncio.gather(*[print_region(team) for team in map(Team.from_record, await orm.pool.fetch("SELECT * from teams ORDER BY number"))])
+    await ftcpenn.FTCPennScraper.get_events(2018)
     await orm.close()
 
 asyncio.get_event_loop().run_until_complete(main())

@@ -29,10 +29,12 @@ class ORM:
             # kwargs are just a way to put in fields
             def __init__(self, conn=None, **kwargs):
                 self.conn = conn
+                self.__dict__.update({k:None for k in self._columns.keys()})
                 self.__dict__.update(kwargs)
 
             def __repr__(self):
-                return self.__class__.__name__ + "(" + ", ".join(f"{key!r}={getattr(self, key)!r}" for key in self._columns.keys()) + ")"
+                return self.__class__.__name__ + "(" + ", ".join(f"{key}={val!r}" for key, val in \
+                        {key: getattr(self, key) for key in self._columns.keys() if getattr(self, key) is not None}.items()) + ")"
 
             @classmethod
             async def create_all_tables(cls):

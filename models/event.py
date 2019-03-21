@@ -1,49 +1,29 @@
 from db.orm import orm
 from db.types import *
-"""
-from first reg:
-date_end: "2019-04-20T00:00:00"
-date_start: "2019-04-16T00:00:00"
-event_address1: "1001 Avenida De Las Americas"
-event_city: "Houston"
-event_code: "FTCCMP1"
-event_country: "USA"
-event_fee_base: 2000
-event_fee_currency: "USD"
-event_name: "FIRST Championship- Houston- World Championship- FIRST Tech Challenge"
-event_name_analyzed: "FIRST Championship- Houston- World Championship- FIRST Tech Challenge"
-event_name_sort: "FIRST Championship- Houston- World Championship- FIRST Tech Challenge"
-event_postalcode: "77010"
-event_season: 2018
-event_stateprov: "TX"
-event_subtype: "World Championship"
-event_subtype_moniker: "World Championship"
-event_type: "FTC"
-event_venue: "George R. Brown Convention Center"
-event_venue_analyzed: "George R. Brown Convention Center"
-event_venue_sort: "George R. Brown Convention Center"
-"""
+__all__ = ["Event", "EventType"]
 class Event(orm.Model):
     __tablename__ = "events"
     __primary_key__ = ("key",)
     key: varchar(32)
     year: integer
+    parent_event_key: varchar(32)
+    division_keys: Column("varchar(32) array")
     region: text
     league: text
     name: text
-    comp_format: text
+    comp_format: integer # similar to playoff_type in tba
     field_count: integer
     advancement_slots: integer
     advances_to: varchar(32)
     host_team_key: varchar(20)
 
     event_code: text
-    event_type: text # means like championship or wahtever
-    event_fee_base: integer
-    event_fee_currency: text
+    event_type: integer # means like championship or wahtever
 
-    date_start: timestamp
-    date_end: timestamp
+    # first ES says date_start and date_end but everyone else does it the other way
+    # i'm inclinde to believe that first is just a big dumbdumb
+    start_date: timestamp
+    end_date: timestamp
     timezone: text # lol idk?
 
     city: text
@@ -54,3 +34,39 @@ class Event(orm.Model):
     website: text
     lat: double_precision
     lon: double_precision
+
+class EventType:
+    QUALIFIER = 1
+    MEET = 2
+    LEAGUE_CMP = 3
+    SUPER_QUAL = 4
+    REGIONAL_CMP = 5
+    SUPER_REGIONAL = 6
+    WORLD_CHAMPIONSHIP = 7
+    FOC = 8
+    SCRIMMAGE = 99
+    OTHER = -1
+
+    event_names = {
+        SCRIMMAGE: "Scrimmage",
+        QUALIFIER: "Qualifier",
+        MEET: "Meet",
+        LEAGUE_CMP: "League Championship",
+        SUPER_QUAL: "Super-Qualifier",
+        REGIONAL_CMP: "Championship",
+        SUPER_REGIONAL: "Super-Regional Championship",
+        WORLD_CHAMPIONSHIP: "World Championship",
+        FOC: "Festival of Champions",
+        OTHER: "Offseason Event",
+    }
+
+class PlayoffType:
+    # the standard bracket
+    BRACKET_4_ALLIANCE = 0
+    # FiM did this a bunch
+    BRACKET_8_ALLIANCE = 1
+
+    # for finals divisions
+    BO3_FINALS = 10
+    # for FoC
+    BO5_FINALS = 11

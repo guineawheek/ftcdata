@@ -1,8 +1,6 @@
 from helpers import NominatimHelper
 
-def dist(lat1, lon1, lat2, lon2):
-    return ((lat2-lat1)**2 + (lon2-lon2)**2) ** 0.5
-
+def dist(lat1, lon1, lat2, lon2): return ((lat2-lat1)**2 + (lon2-lon2)**2) ** 0.5 
 class RegionHelper:
     # these states lack a real state championship and so are redirected to others.
     COMBINED_STATES = {
@@ -240,6 +238,72 @@ class RegionHelper:
         "Cameron", 
     )]
 
+    # Original supers layouts, edge cases are handled by get_supers.
+    # Don't query this directly.
+    EAST_SUPERS = [
+            "Maine",
+            "New Hampshire",
+            "Vermont",
+            "Massachusetts",
+            "Rhode Island",
+            "Connecticut", 
+            "New York",
+            "Pennsylvania",
+            "New Jersey",
+            "Maryland",
+            "District of Columbia",
+            "Delaware",
+            "Virginia"
+    ]
+    NORTH_SUPERS = [
+            "West Virginia",
+            "Ohio",
+            "Michigan",
+            "Indiana",
+            "Wisconsin",
+            "Illinois",
+            "Minnesota",
+            "Iowa",
+            "Missouri",
+            "North Dakota",
+            "South Dakota",
+            "Nebraska",
+            "Kansas"
+    ]
+    WEST_SUPERS = [
+            "Montana",
+            "Wyoming",
+            "Colorado",
+            "New Mexico",
+            "Idaho",
+            "Utah",
+            "Arizona",
+            "Washington",
+            "Oregon",
+            "Nevada",
+            "California",
+            "Alaska"
+            # Hawaii omitted because they are like international 
+    ]
+    SOUTH_SUPERS = [
+            "North Carolina",
+            "South Carolina",
+            "Georgia",
+            "Florida",
+            "Kentucky",
+            "Tennessee",
+            "Alabama",
+            "Missisippi",
+            "Arkansas",
+            "Louisiana",
+            "Oklahoma",
+            "Texas"
+    ]
+
+
+    @classmethod
+    def region_abbrev(cls, region_name):
+        pass 
 
     @classmethod
     async def get_region(cls, team):
@@ -307,3 +371,35 @@ class RegionHelper:
                 return "Texas Panhandle"
 
         return team.state_prov
+
+    @classmethod
+    async def get_supers(cls, state_prov, year=None):
+        # use state_prov, don't use region!!!
+        spr = state_prov
+        if year is None:
+            year = 2018
+
+        # supers location swaps after resq
+        if year > 2015:
+            if spr == "Kentucky":
+                return "North"
+
+            if spr == "West Virginia":
+                return "East"
+        # supers location swaps because of 2champs
+        if spr in ("Missouri", "Kansas") and year > 2016:
+            return "South"
+        
+        if spr in cls.EAST_SUPERS:
+            return "East"
+        
+        elif spr in cls.NORTH_SUPERS:
+            return "North"
+        
+        elif spr in cls.WEST_SUPERS:
+            return "West"
+        
+        elif spr in cls.SOUTH_SUPERS:
+            return "South"
+
+        return None

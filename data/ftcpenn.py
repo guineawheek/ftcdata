@@ -1,6 +1,6 @@
 # need beautifulsoup
 from bs4 import BeautifulSoup
-from models import Event
+from models import Event, EventType
 import pprint
 import re
 import aiohttp
@@ -9,16 +9,23 @@ class FTCPennScraper:
     BASE_URL = "http://www.ftcpenn.org"
     TEAM_AWARD = re.compile(r"Team\s+([0-9]+)")
     AWARD_FILTER = re.compile(r"(2nd|3rd)")
+    http = None
+
+    @classmethod
+    def get_http(cls):
+        if not cls.http:
+            cls.http = aiohttp.ClientSession(headers={"User-Agent": "FTCData Project FTCPenn Scraper"})
+        return cls.http
 
     @classmethod
     async def scrape_event(cls, url):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                main_data = await response.text()
-            async with session.get(url + "/team-rankings") as response:
-                rankings_data = await response.text()
-            async with session.get(url + "/match-results-details") as response:
-                match_details_data = await response.text()
+        cls.get_http()
+        async with cls.http.get(url) as response:
+            main_data = await response.text()
+        async with cls.http.get(url + "/team-rankings") as response:
+            rankings_data = await response.text()
+        async with cls.http.get(url + "/match-results-details") as response:
+            match_details_data = await response.text()
 
         soup = BeautifulSoup(main_data, 'lxml')
 
@@ -47,3 +54,20 @@ class FTCPennScraper:
         #pprint.pprint(match_details)
 
         return awards, rankings, match_details
+    
+    @classmethod
+    async def get_events(cls, year):
+        cls.get_http()
+        url = f"http://www.ftcpenn.org/ftc-events/{year}-{year+1}-season"
+        async with cls.http.get(url) as response:
+            main_data = await response.text()
+
+        page = BeautifulSoup(main_data, 'lxml')
+        table = page.find("table", border="1", bordercolor="#888", cellspacing="0")
+        for tr in table.find_all("tr"):
+            row = [td for td in tr.find_all("td")]
+            event_type = row[1].get_text().lower()
+            if event_type.find("tournament") >= 0 || event_type.find("championship") >= 0:
+                if "qualifying" in event_type:
+                    
+                print(row[1], row[2], row[3], row[4])

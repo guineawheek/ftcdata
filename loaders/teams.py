@@ -38,7 +38,7 @@ async def add_team(data):
                         lat=s["location"][0],
                         lon=s["location"][1]
                 )
-                team.state_prov = LocationHelper.unabbreviated_state_prov(team)
+                team.state_prov = LocationHelper.unabbrev_state_prov_team(team)
                 cmps = ChampSplitHelper.get_champ(team)
                 if cmps is not None:
                     if team.year > 2016:

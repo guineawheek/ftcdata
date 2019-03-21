@@ -11,7 +11,7 @@ class LocationHelper:
 
     @classmethod
     @functools.lru_cache(maxsize=256)
-    def _unabbreviated_state_prov(cls, country, state_prov):
+    def unabbrev_state_prov(cls, country, state_prov):
         # these are military overseas addresses
         # there are ways to resolve this to correct championships
         # i'm just too lazy rn
@@ -50,5 +50,10 @@ class LocationHelper:
         return st.name if st else state_prov
 
     @classmethod
-    def unabbreviated_state_prov(cls, team):
-        return cls._unabbreviated_state_prov(team.country, team.state_prov)
+    def unabbrev_state_prov_team(cls, team):
+        return cls.unabbrev_state_prov(team.country, team.state_prov)
+
+    @classmethod
+    def abbrev_state_prov(cls, country, state_prov):
+        pass
+

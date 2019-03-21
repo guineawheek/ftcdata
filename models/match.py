@@ -4,8 +4,8 @@ class Match(orm.Model):
     __tablename__ = "matches"
     __primary_key__ = ("key",)
     key: varchar(32)
-    event_key: varchar(32)
-    comp_level: text
+    event_key: varchar(32) # can be a division key
+    comp_level: text # quals/elims basically
     match_number: integer
     set_number: integer
     red: varchar(32)
