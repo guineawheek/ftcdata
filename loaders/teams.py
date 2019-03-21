@@ -7,14 +7,14 @@ import pprint
 import gzip
 import pickle
 from models import Team, TeamMeta
-from helpers import LocationHelper, ChampSplitHelper
+from helpers import LocationHelper, ChampSplitHelper, RegionHelper
 from db.orm import orm
 
 record_counter = 0
 
 async def add_team(data):
     global record_counter
-    UPSERT = True
+    UPSERT = False
     number = data["number"]
     rookie_year = data["rookie_year"]
     async with orm.pool.acquire() as conn:
@@ -45,6 +45,7 @@ async def add_team(data):
                         team.home_cmp = cmps[2017]
                     elif team.year == 2016:
                         team.home_cmp = cmps[2016]
+                team.region = await RegionHelper.get_region(team)
                 if UPSERT:
                     await team.upsert(conn=conn)
                 else:

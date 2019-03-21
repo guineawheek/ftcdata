@@ -1,11 +1,13 @@
-from models import Event, EventType
+from models import Event, EventType, PlayoffType, Award, AwardType, Match, MatchScore
 from helpers import RegionHelper
 from db.orm import orm
 import aiohttp
 import uvloop
 import asyncio
 import datetime
+import re
 
+__all__ = ["TheYellowAlliance"]
 DEBUG = False
 to_datetime = lambda s: datetime.datetime.strptime(s, "%Y-%m-%d %H:%M:%S")
 
@@ -24,6 +26,20 @@ class TheYellowAlliance:
         "azcmp": "Arizona/New Mexico",
     }
 
+    # maps tya awards values to AwardType values
+    AWARDS_MAP = {
+        '1': AwardType.INSPIRE,
+        '2': AwardType.CONNECT,
+        '3': AwardType.INNOVATE,
+        '4': AwardType.DESIGN,
+        '5': AwardType.THINK,
+        '6': AwardType.MOTIVATE,
+        '7': AwardType.PROMOTE,
+        '8': AwardType.COMPASS,
+        '9': AwardType.CONTROL,
+        '10': AwardType.JUDGES,
+    }
+
     @classmethod
     def event_type(cls, edata):
         if edata['event_uuid'] == 'cmp':
@@ -36,6 +52,7 @@ class TheYellowAlliance:
             return EventType.QUALIFIER
         else:
             raise RuntimeError(f"unknown type {edata['type']}")
+
     @classmethod
     async def load(cls, year):
         DATA_URL = "https://ocf.berkeley.edu/~liuderek/ftc/tya_restore.json"
@@ -52,7 +69,17 @@ class TheYellowAlliance:
         # then we'll "flatten" the events table into an Event object table
         # with different Events for different divisions.
         # The keys are the tya division ids while the values are actual Event objects.
+        events, event_key_map = await cls.load_events(tya_events)
+        events_obj = list(events.values())
+        awards_obj = await cls.load_awards(events, event_key_map, data[3]['data'])
+        matches_obj = await cls.load_matches(events, data[6]['data'])
+        print("Inserting all objects....")
+        await asyncio.gather(*[o.upsert() for o in events_obj + awards_obj + matches_obj])
+
+    @classmethod
+    async def load_events(cls, tya_events):
         events = {}
+        event_key_map = {}
         for event in tya_events.values():
             if len(event) < 2:
                 raise RuntimeError(f"event {e[0]['event_uuid']} lacks divisions!")
@@ -72,31 +99,111 @@ class TheYellowAlliance:
                           country=edata['country'],
                           start_date=to_datetime(edata['start_date']),
                           end_date=to_datetime(edata['end_date']),
-                          event_type=event_type)
+                          event_type=event_type,
+                          playoff_type=PlayoffType.STANDARD)
                 if multi_div:
                     if i == 3:
                         e.division_keys = [basename + "1", basename + "2"]
+                        e.playoff_type = PlayoffType.BO3_FINALS
+                        event_key_map[edata['id']] = e.key
                     else:
                         e.parent_event_key = basename + "0"
                         e.name += f" {ediv['name']} Division"
+                else:
+                    event_key_map[edata['id']] = e.key
+
                 supers = await RegionHelper.get_supers(e.state_prov)
+                # calculate advances_to for quals
                 if event_type == EventType.QUALIFIER:
                     if e.state_prov != "Nebraska":
                         e.advances_to = "2013iacmp" # all TYA qualifiers are in Iowa
                     else:
                         e.advances_to = "2013necmp"
+                # calculate advances_to for championships and supers
                 elif event_type == EventType.REGIONAL_CMP and supers:
                     e.advances_to = f"2013{supers[0].lower()}sr0"
                 elif not e.key.startswith("2013cmp"):
                     e.advances_to = "2013cmp0"
+                # calculate region of event
                 if event_type not in (EventType.SUPER_REGIONAL, EventType.WORLD_CHAMPIONSHIP):
                     if e.key[4:] in cls.REGION_MAP:
                         e.region = cls.REGION_MAP[e.key[4:]]
                     else:
                         e.region = e.state_prov
+
                 events[ediv['id']] = e
+                if DEBUG:
+                    print(e)
                 #e.insert(upsert="NOTHING")
-         
+        return events, event_key_map
+    
+    @classmethod
+    async def load_awards(cls, events, event_key_map, tya_awards):
+        awards = []
+        for award in tya_awards:
+            if award['event_id'] not in event_key_map:
+                continue
+            award_type = cls.AWARDS_MAP[award['award_id']]
+            a = Award(name=AwardType.get_names(award_type, year=2013),
+                      award_type=award_type,
+                      award_place=int(award['place']),
+                      event_key=event_key_map[award['event_id']],
+                      team_key='ftc'+award['team_id'],
+                      recipient_name=None)
+            if DEBUG:
+                print(a)
+            awards.append(a)
+        return awards
+    
+    @classmethod
+    async def load_matches(cls, events, matches):
+        match_ret = []
+        find_matchno = re.compile(".*-([0-9]*)")
+        type_map = {
+                "QUALIFICATION": "q",
+                "PRACTICE": "p",
+                "SEMIFINAL": "sf",
+                "FINAL": "f",
+        }
+        for match in matches:
+            if match['division_id'] not in events:
+                continue
+            nmo = match['name'].split('-')
+            # always last number
+            match_number = int(nmo[-1])
+            if len(nmo) == 3:
+                set_number = int(nmo[1])
+            else:
+                set_number = None
+            m = Match(event_key=events[match['division_id']].key,
+                      comp_level=type_map.get(match['type']),
+                      match_number=match_number,
+                      set_number=set_number)
+            m.gen_keys()
+            if match['video']:
+                m.videos = [match['video']]
+            ms_red = MatchScore(key=m.red, 
+                                alliance_color="red",
+                                event_key=m.event_key,
+                                teams=[match[t] for t in ('team_id_r1', 'team_id_r2', 'team_id_r3') if match[t] != '0'],
+                                total=int(match['total_red']),
+                                penalty=int(match['total_red']) - int(match['scored_red']))
+            ms_blue = MatchScore(key=m.blue, 
+                                alliance_color="blue",
+                                event_key=m.event_key,
+                                teams=[match[t] for t in ('team_id_b1', 'team_id_b2', 'team_id_b3') if match[t] != '0'],
+                                total=int(match['total_blue']),
+                                penalty=int(match['total_blue']) - int(match['scored_blue']))
+            if ms_red.total > ms_blue.total:
+                m.winner = "red"
+            elif ms_blue.total > ms_red.total:
+                m.winner = "blue"
+            else:
+                m.winner = "tie"
+            if DEBUG:
+                print(m, ms_red, ms_blue)
+            match_ret.extend([m, ms_red, ms_blue])
+        return match_ret
 
 
 async def main():

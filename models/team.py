@@ -3,7 +3,7 @@ from db.types import *
 class Team(orm.Model):
     __tablename__ = "teams"
     __primary_key__ = ("key", "year")
-    key: varchar(20)
+    key: text
     number: integer
     year: integer
     rookie_year: integer
@@ -15,6 +15,7 @@ class Team(orm.Model):
     state_prov: text
     country: text
     postalcode: text
+    region: text
     normalized_location: text
     website: text
     lat: double_precision

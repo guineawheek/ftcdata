@@ -4,13 +4,14 @@ from db.types import *
 __all__ = ["Award", "AwardType"]
 class Award(orm.Model):
     __tablename__ = "awards"
-    __primary_key__ = ("event_key", "award_type")
+    __primary_key__ = ("event_key", "award_type", "award_place", "team_key")
     name: text
     award_type: integer
-    event_key: varchar(32)
-    recipient_list: Column("varchar(20)[]")
-    # for awards given to teams
-    recipient_names: Column("text[]")
+    award_place: integer
+    event_key: text
+    team_key: text
+    # for awards given to real people like Dean's List or Compass
+    recipient_name: text
 
 class AwardType:
     INSPIRE = 1
@@ -32,6 +33,7 @@ class AwardType:
             INSPIRE: "Inspire Award",
             THINK: "Think Award",
             CONNECT: "Connect Award",
+            INNOVATE: "Innovate Award", 
             DESIGN: "Design Award",
             MOTIVATE: "Motivate Award",
             CONTROL: "Control Award",
@@ -47,7 +49,7 @@ class AwardType:
         base = cls.base_names.get(const, given)
         if const == cls.INNOVATE:
             # Rockwell Collins -> Collins Aerospace for 2018-2019+
-            return "Collins Aerospace " + base if year > 2017 else "Rockwell Collins " + base
+            return ("Collins Aerospace " if year > 2017 else "Rockwell Collins ") + base
         elif const == cls.DESIGN and year < 2017:
             # PTC got dropped after 2016-2017
             return "PTC " + base

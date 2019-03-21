@@ -3,10 +3,11 @@ from db.types import *
 class TeamMeta(orm.Model):
     __tablename__ = "team_meta"
     __primary_key__ = ("key",)
-    key: varchar(20)
+    key: text
     number: integer
     rookie_year: integer
     last_competed: integer
+    region: text
 
     @classmethod
     async def update(cls):

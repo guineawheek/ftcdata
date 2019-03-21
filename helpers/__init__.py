@@ -1,4 +1,3 @@
-from .http import http_session
 from .location_helper import LocationHelper
 from .champ_split_helper import ChampSplitHelper
 from .nominatim_helper import NominatimHelper

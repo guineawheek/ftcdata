@@ -56,7 +56,7 @@ class ORM:
                                 db_column_names = set(map(lambda r: r["column_name"], db_columns))
                                 column_names = set(columns.keys())
                                 if column_names - db_column_names:
-                                    raise TypeError(f"columns {column_names - db_column_names} are missing from the database!")
+                                    raise TypeError(f"columns {column_names - db_column_names} are missing from the {scls.__schemaname__}.{scls.__tablename__} table!")
                             else:
 
                                 query_params = ", ".join(map(" ".join, zip(columns.keys(), columns.values())))

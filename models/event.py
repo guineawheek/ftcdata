@@ -1,21 +1,21 @@
 from db.orm import orm
 from db.types import *
-__all__ = ["Event", "EventType"]
+__all__ = ["Event", "EventType", "PlayoffType"]
 class Event(orm.Model):
     __tablename__ = "events"
     __primary_key__ = ("key",)
-    key: varchar(32)
+    key: text
     year: integer
-    parent_event_key: varchar(32)
-    division_keys: Column("varchar(32) array")
+    parent_event_key: text
+    division_keys: Column("text[]")
     region: text
     league: text
     name: text
-    comp_format: integer # similar to playoff_type in tba
+    playoff_type: integer # similar to playoff_type in tba
     field_count: integer
     advancement_slots: integer
-    advances_to: varchar(32)
-    host_team_key: varchar(20)
+    advances_to: text
+    host_team_key: text
 
     event_code: text
     event_type: integer # means like championship or wahtever
@@ -62,6 +62,7 @@ class EventType:
 
 class PlayoffType:
     # the standard bracket
+    STANDARD = 0
     BRACKET_4_ALLIANCE = 0
     # FiM did this a bunch
     BRACKET_8_ALLIANCE = 1
