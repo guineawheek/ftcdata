@@ -16,6 +16,7 @@ if typing.TYPE_CHECKING:
     integer = int2 = int4 = int8 = smallint = bigint = int
     text = str
     real = double_precision = float
+    boolean = bool
 else:
     integer = Column('integer')
     int2 = Column('int2')
@@ -27,3 +28,4 @@ else:
     real = Column('real')
     double_precision = Column('double precision')
     timestamp = Column('timestamp')
+    boolean = Column('boolean')

@@ -25,6 +25,8 @@ class MatchScore(orm.Model):
     event_key: text
     alliance_color: text
     teams: Column("text[]")
+    surrogates: Column("text[]")
+    dqed: boolean
     total: integer
     auto: integer
     auto_bonus: integer # typically not used in modern games

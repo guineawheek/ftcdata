@@ -21,6 +21,7 @@ env = jinja2_engine.get_jinja_env(force_filesystemloader=True)
 app = Sanic()
 app.static("/javascript", "./static/compiled/javascript")
 app.static("/css", "./static/compiled/css")
+app.static("/images", "./static/images")
 
 def format_year(year):
     return f"{year}-{(year+1)%1000:02d}"
