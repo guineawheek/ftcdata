@@ -1,5 +1,6 @@
 from db.orm import orm
 from db.types import *
+__all__ = ["Team"]
 class Team(orm.Model):
     __tablename__ = "teams"
     __primary_key__ = ("key", "year")

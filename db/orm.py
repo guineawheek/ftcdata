@@ -11,6 +11,8 @@ Shouldn't be vulnerable to SQL injection provided that
 __schemaname__, __tablename__, __primary_key__, and _columns are not set to 
 arbitrary user input. 
 
+And that the keys of `properties=` arguments isn't arbitrary either apparently.
+
 That would be really, really bad.
 
 One can use the defualt orm instance or instantiate your own for other dbs.
@@ -106,17 +108,17 @@ class ORM:
                 await self.fetch(*args, conn=conn)
 
             @classmethod
-            async def select(cls, conn=None, **properties):
+            async def select(cls, conn=None, properties=None, extra_sql=""):
                 if properties is None:
                     return await cls.fetch(f"SELECT * FROM {cls.__schemaname__}.{cls.__tablename__}")
                 else:
                     fields = properties.keys()
                     qs = f"SELECT * FROM {cls.__schemaname__}.{cls.__tablename__} WHERE " + " AND ".join(
-                        f"${f}=${i}" for i, f in enumerate(fields, 1))
+                        f"{f}=${i}" for i, f in enumerate(fields, 1)) + extra_sql
                     return await cls.fetch(*([qs] + list(properties.values())), conn=conn)
 
             @classmethod
-            async def select_one(cls, conn=None, **properties):
+            async def select_one(cls, conn=None, properties=None):
                 fields = properties.keys()
                 qs = f"SELECT * FROM {cls.__schemaname__}.{cls.__tablename__} WHERE " + " AND ".join(f"{f}=${i}" for i, f in enumerate(fields, 1))
                 return await cls.fetchrow(*([qs] + list(properties.values())), conn=conn)
@@ -169,7 +171,7 @@ class ORM:
                 if not self.__primary_key__:
                     # ig i could implement a checker?
                     raise TypeError("upsert() requires a primary key on the table")
-                if await self.select_one(**{k: getattr(self, k) for k in self.__primary_key__}, conn=conn):
+                if await self.select_one(properties={k: getattr(self, k) for k in self.__primary_key__}, conn=conn):
                     await self.update(conn=conn)
                 else:
                     await self.insert(conn=conn)

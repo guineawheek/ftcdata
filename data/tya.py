@@ -1,5 +1,5 @@
-from models import Event, EventType, PlayoffType, Award, AwardType, Match, MatchScore
-from helpers import RegionHelper
+from models import *
+from helpers import RegionHelper, OPRHelper
 from db.orm import orm
 import aiohttp
 import uvloop
@@ -73,8 +73,16 @@ class TheYellowAlliance:
         events_obj = list(events.values())
         awards_obj = await cls.load_awards(events, event_key_map, data[3]['data'])
         matches_obj = await cls.load_matches(events, data[6]['data'])
+        rankings_obj = await cls.load_rankings(events, data[9]['data'])
+        event_keys = list(map(lambda x: x.key, events_obj))
         print("Inserting all objects....")
-        await asyncio.gather(*[o.upsert() for o in events_obj + awards_obj + matches_obj])
+        await asyncio.gather(*[o.upsert() for o in events_obj + awards_obj + matches_obj + rankings_obj])
+        print('...done')
+
+        print("Updating rank column....")
+        await asyncio.gather(*[Ranking.update_ranks(k) for k in event_keys])
+        print("Calculating OPRs....")
+        await asyncio.gather(*[OPRHelper.update_oprs(k) for k in event_keys])
 
     @classmethod
     async def load_events(cls, tya_events):
@@ -185,13 +193,15 @@ class TheYellowAlliance:
             ms_red = MatchScore(key=m.red, 
                                 alliance_color="red",
                                 event_key=m.event_key,
-                                teams=[match[t] for t in ('team_id_r1', 'team_id_r2', 'team_id_r3') if match[t] != '0'],
+                                match_key=m.key,
+                                teams=["ftc" + match[t] for t in ('team_id_r1', 'team_id_r2', 'team_id_r3') if match[t] != '0'],
                                 total=int(match['total_red']),
                                 penalty=int(match['total_red']) - int(match['scored_red']))
             ms_blue = MatchScore(key=m.blue, 
                                 alliance_color="blue",
                                 event_key=m.event_key,
-                                teams=[match[t] for t in ('team_id_b1', 'team_id_b2', 'team_id_b3') if match[t] != '0'],
+                                match_key=m.key,
+                                teams=["ftc" + match[t] for t in ('team_id_b1', 'team_id_b2', 'team_id_b3') if match[t] != '0'],
                                 total=int(match['total_blue']),
                                 penalty=int(match['total_blue']) - int(match['scored_blue']))
             if ms_red.total > ms_blue.total:
@@ -205,7 +215,24 @@ class TheYellowAlliance:
             match_ret.extend([m, ms_red, ms_blue])
         return match_ret
 
-
+    @classmethod
+    async def load_rankings(cls, events, tya_rank):
+        ret = []
+        for rank in tya_rank:
+            if rank['division_id'] not in events:
+                continue
+            r = Ranking(event_key=events[rank['division_id']].key,
+                        team_key="ftc" + rank['team_id'],
+                        qp_rp=int(rank['qp']),
+                        rp_tbp=int(rank['rp']),
+                        high_score=int(rank['high']),
+                        wins=int(rank['qual_wins']),
+                        losses=int(rank['qual_losses']),
+                        ties=int(rank['qual_ties']),)
+            r.played = r.wins + r.losses + r.ties
+            ret.append(r)
+        return ret
+            
 async def main():
     global DEBUG
     DEBUG = True

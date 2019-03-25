@@ -1,5 +1,6 @@
 from db.orm import orm
 from db.types import *
+__all__ = ["TeamMeta"]
 class TeamMeta(orm.Model):
     __tablename__ = "team_meta"
     __primary_key__ = ("key",)

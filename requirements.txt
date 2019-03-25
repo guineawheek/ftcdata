@@ -6,3 +6,4 @@ aiohttp
 asyncpg
 pycountry
 async_lru
+numpy

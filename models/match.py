@@ -23,6 +23,7 @@ class MatchScore(orm.Model):
     __primary_key__ = ("key",)
     key: text
     event_key: text
+    match_key: text
     alliance_color: text
     teams: Column("text[]")
     surrogates: Column("text[]")
