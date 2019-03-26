@@ -35,6 +35,15 @@ class Event(orm.Model):
     lat: double_precision
     lon: double_precision
 
+    @property
+    def short_name(self):
+        last = self.name.split()[0]
+        for part in self.name.split():
+            if part.lower() == "division":
+                return last
+            last = part
+        return self.name
+
 class EventType:
     QUALIFIER = 1
     MEET = 2

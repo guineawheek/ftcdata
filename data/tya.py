@@ -97,7 +97,7 @@ class TheYellowAlliance:
                 continue
             event_type = cls.event_type(edata)
             multi_div = len(event) > 2
-            basename = '2013' + edata['event_uuid']
+            basename = '1314' + edata['event_uuid']
             for i, ediv in enumerate(event[1:], 1):
                 e = Event(key=f"{basename}{i % 3 if multi_div else ''}",
                           year=2013,
@@ -124,14 +124,14 @@ class TheYellowAlliance:
                 # calculate advances_to for quals
                 if event_type == EventType.QUALIFIER:
                     if e.state_prov != "Nebraska":
-                        e.advances_to = "2013iacmp" # all TYA qualifiers are in Iowa
+                        e.advances_to = "1314iacmp" # all TYA qualifiers are in Iowa
                     else:
-                        e.advances_to = "2013necmp"
+                        e.advances_to = "1314necmp"
                 # calculate advances_to for championships and supers
                 elif event_type == EventType.REGIONAL_CMP and supers:
-                    e.advances_to = f"2013{supers[0].lower()}sr0"
-                elif not e.key.startswith("2013cmp"):
-                    e.advances_to = "2013cmp0"
+                    e.advances_to = f"1314{supers[0].lower()}sr0"
+                elif not e.key.startswith("1314cmp"):
+                    e.advances_to = "1314cmp0"
                 # calculate region of event
                 if event_type not in (EventType.SUPER_REGIONAL, EventType.WORLD_CHAMPIONSHIP):
                     if e.key[4:] in cls.REGION_MAP:

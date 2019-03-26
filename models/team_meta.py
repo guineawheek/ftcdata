@@ -16,7 +16,7 @@ class TeamMeta(orm.Model):
             async with conn.transaction():
                 #select key, number, rookie_year, max(year) as last_competed from teams group by key,number,rookie_year;
                 return await cls.fetch(f"INSERT INTO {cls.__schemaname__}.{cls.__tablename__} "
-                                        "(key, number, rookie_year, last_competed) "
-                                        "SELECT key, number, rookie_year, max(year) as last_competed "
-                                        "FROM public.teams GROUP BY key, number, rookie_year "
-                                        "ON CONFLICT (key) DO UPDATE SET last_competed=EXCLUDED.last_competed")
+                                        "(key, number, rookie_year, last_competed, region) "
+                                        "SELECT a.key, a.number, a.rookie_year, a.year AS last_competed, a.region FROM teams AS a "
+                                        "INNER JOIN (SELECT key, max(year) AS year FROM teams GROUP BY key) AS b ON (a.key = b.key AND a.year = b.year) "
+                                        "ON CONFLICT (key) DO UPDATE SET last_competed=EXCLUDED.last_competed, region=EXCLUDED.region")

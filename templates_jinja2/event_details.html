@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% import 'match_partials/match_table_macros.html' as mtm %}
 
-{% block title %}{{event.name}} ({{event.year}}) - The Blue Alliance{% endblock %}
+{% block title %}{{event.name}} ({{season}}) - The Blue Alliance{% endblock %}
 
 {% block meta_description %}Videos and match results for the {{event.year}} {{event.name}} FIRST Robotics Competition in {{event.location}}.{% endblock %}
 
 {% block more_head_tags %}
-  <meta property="og:title" content="{{ event.year }} {{ event.name }}"
+  <meta property="og:title" content="{{ season }} {{ event.name }}"
           xmlns="http://www.w3.org/1999/html"/>
   <meta property="og:type" content="article" />
   <meta property="og:image" content="http://www.thebluealliance.com/images/logo_square_512.png" />
@@ -34,10 +34,12 @@
 <div class="container" itemscope itemtype="http://data-vocabulary.org/Event">
   <div class="row">
     <div class="col-sm-12">
+	{# not in ftc lol
       {% if event.year == 2016 and event.event_type_enum == 3 %}
-      <p class="pull-right"><a class="btn btn-primary" href="/event/{{event.key_name}}/insights"><span class="glyphicon glyphicon-align-left"></span> Advanced Insights</a></p>
+      <p class="pull-right"><a class="btn btn-primary" href="/event/{{event.key}}/insights"><span class="glyphicon glyphicon-align-left"></span> Advanced Insights</a></p>
       {% endif %}
-      <h1 itemprop="summary">{{event.name}} {{event.year}}</h1>
+      #}
+      <h1 itemprop="summary">{{event.name}} {{format_year(event.year)}}</h1>
       {% if event_divisions %}
       <div class="btn-group division-button">
         <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
@@ -46,8 +48,8 @@
         </a>
         <ul class="dropdown-menu tba-dropdown-menu-limited">
           {% for division in event_divisions%}
-            {% if division.key_name != event.key_name %}
-              <li><a href="/event/{{division.key_name}}">{{division.short_name}}</a></li>
+            {% if division.key != event.key %}
+              <li><a href="/event/{{division.key}}">{{division.short_name}}</a></li>
             {% endif %}
           {% endfor %}
         </ul>
@@ -57,13 +59,13 @@
   </div>
   <div class="row">
     <div class="col-sm-12">
-      <a class="btn btn-success pull-right hidden-xs" href="/suggest/event/video?event_key={{event.key_name}}" target="_blank"><span class="glyphicon glyphicon-plus"></span> Add Match Videos!</a>
+      <a class="btn btn-success pull-right hidden-xs" href="/suggest/event/video?event_key={{event.key}}" target="_blank"><span class="glyphicon glyphicon-plus"></span> Add Match Videos!</a>
       <p>
         {% if district_name %}
-          <span class="glyphicon glyphicon-globe"></span> <a href="/events/{{district_abbrev}}/{{event.year}}">{{district_name}} District</a> Event<br />
+          <span class="glyphicon glyphicon-globe"></span> <a href="/events/{{district_abbrev}}/{{season}}">{{district_name}} District</a> Event<br />
         {% endif %}
         {% if parent_event %}
-          <span class="glyphicon glyphicon-circle-arrow-right"></span> Winners advance to the <a href="/event/{{ parent_event.key_name }}">{{ parent_event.name }}</a><br />
+          <span class="glyphicon glyphicon-circle-arrow-right"></span> Winners advance to the <a href="/event/{{ parent_event.key }}">{{ parent_event.name }}</a><br />
         {% endif %}
         {% if event.start_date %}
           <span class="glyphicon glyphicon-calendar"></span> <time itemprop="startDate" datetime="{{event.start_date.isoformat()}}">{{ event.start_date|strftime("%B %d") }}{% if event.start_date.date() != event.end_date.date() %}</time> to <time itemprop="endDate" datetime="{{event.end_date.isoformat()}}">{{ event.end_date|strftime("%B %d") }}{% endif %}, {{ event.end_date|strftime("%Y") }}</time>
@@ -93,19 +95,21 @@
   <div class="row">
     <div class="col-sm-12">
       <ul class="nav nav-tabs nav-justified">
-        {% if matches.num > 0 %}<li class="active"><a href="#results" data-toggle="tab">Results</a></li>{% endif %}
+        {% if matches|length > 0 %}<li class="active"><a href="#results" data-toggle="tab">Results</a></li>{% endif %}
         {% if event.details and event.details.rankings_table %}<li><a href="#rankings" data-toggle="tab">Rankings</a></li>{% endif %}
         {% if awards %}<li><a href="#awards" data-toggle="tab">Awards</a></li>{% endif %}
         {% if district_points_sorted %}<li><a href="#district-points" data-toggle="tab">District Points</a></li>{% endif %}
         <li class="{% if matches.num == 0 %}active{% endif %}"><a href="#teams" data-toggle="tab">Teams <span class="badge">{{num_teams}}</span></a></li>
         {% if event_insights_qual or event_insights_playoff or oprs|length > 0 %}<li><a href="#event-insights" data-toggle="tab">Insights</a></li>{% endif %}
+	{# i don't have media models like at all lmao
         <li><a href="#media" data-toggle="tab">Media <span class="badge">{{medias_by_slugname.youtube|length}}</span></a></li>
+	#}
       </ul>
     </div>
   </div>
 
   <div class="tab-content">
-    {% if matches.num > 0 %}
+    {% if matches|length > 0 %}
     <div class="tab-pane active" id="results">
       {% if event.now %}
       <br />
@@ -121,14 +125,14 @@
                     <a class="btn btn-success btn-xs" href="{{event.gameday_url}}" target="_blank"><span class="glyphicon glyphicon-facetime-video"></span> Watch Now</a>
                   {% endif %}
                 {% else %}
-                  <a class="btn btn-xs btn-default" href="/suggest/event/webcast?event_key={{event.key_name}}" target="_blank">Add webcast</a>
+                  <a class="btn btn-xs btn-default" href="/suggest/event/webcast?event_key={{event.key}}" target="_blank">Add webcast</a>
                 {% endif %}
               </div>
               <h3 class="panel-title">Event in progress</h3>
             </div>
             <div class="clearfix"></div>
 
-            <div class="liveevent-content" data-eventkey="{{event.key.id()}}">
+            <div class="liveevent-content" data-eventkey="{{event.key}}">
               {% if matches_recent %}
               <div class="col-sm-6 text-center">
                 <h4>Last Matches</h4>
@@ -162,7 +166,7 @@
           {% include "event_partials/event_alliances_table.html" %}
           {% endif %}
 
-          <h3>{% if event.year >= 2015 %}Playoff{% else %}Elimination{% endif %} Results</h3>
+          <h3>{% if season >= 2015 %}Playoff{% else %}Elimination{% endif %} Results</h3>
           {% if event.playoff_type in double_elim_playoff_types %}
             {{ mtm.double_elim_table(double_elim_matches) }}
           {% else %}
@@ -175,7 +179,7 @@
                 <h3>Playoff Advancement</h3>
                 {% include "playoff_partials/{}.html".format(playoff_template) %}
               {% else %}
-                <h3>{% if event.year >= 2015 %}Playoff{% else %}Elimination{% endif %} Bracket</h3>
+                <h3>{% if season >= 2015 %}Playoff{% else %}Elimination{% endif %} Bracket</h3>
                 {% include "bracket_partials/bracket_table.html" %}
               {% endif %}
             {% endif %}
@@ -196,7 +200,7 @@
               <h3>Playoff Advancement</h3>
               {% include "playoff_partials/{}.html".format(playoff_template) %}
             {% else %}
-              <h3>{% if event.year >= 2015 %}Playoff{% else %}Elimination{% endif %} Bracket</h3>
+              <h3>{% if season >= 2015 %}Playoff{% else %}Elimination{% endif %} Bracket</h3>
               {% include "bracket_partials/bracket_table.html" %}
             {% endif %}
           {% endif %}
@@ -207,7 +211,7 @@
         <div class="col-sm-12">
           {% if has_time_predictions %}<p>Match times listed with a <em>*</em> are unofficial predicted times computed by The Blue Alliance for your convenience.</p>{% endif %}
           <p><a class="btn btn-default" href="/contact"><span class="glyphicon glyphicon-upload"></span> Tell us about YouTube videos</a></p>
-          <p><a class="btn btn-default" href="/event/{{ event.key_name }}/feed"><span class="glyphicon glyphicon-barcode"></span> Matches in RSS</a></p>
+          <p><a class="btn btn-default" href="/event/{{ event.key }}/feed"><span class="glyphicon glyphicon-barcode"></span> Matches in RSS</a></p>
         </div>
       </div>
     </div>
@@ -232,7 +236,7 @@
                 {% for element in row %}
                 <td>
                   {% if loop.index0 == 1 %}
-                    <a href="/team/{{ element|digits }}/{{event.year}}">{{ element }}</a>
+                    <a href="/team/{{ element|digits }}/{{season}}">{{ element }}</a>
                   {% else %}
                     {{ element }}
                   {% endif %}
@@ -258,21 +262,21 @@
               <tr><th>Team</th><th>Location</th><th>Image</th></tr>
             </thead>
             <tbody>
-              {% for team, image_medias in teams_a %}
+              {% for team in teams_a %} {# image_medias not a thing :(#}
               <tr>
                 <td>
                   <div class="team-name-container">
-                    <div class="favorite-team-icon" data-team="{{team.key.id()}}">
+                    <div class="favorite-team-icon" data-team="{{team.key}}">
                         <span class="favorite-team-icon-spacer"></span>
                         <span class="glyphicon glyphicon-star"></span>
                     </div>
                     <div class="team-name">
-                      <a href="/team/{{ team.team_number }}/{{event.year}}">{{ team.team_number }}<br>{% if team.nickname %}{{ team.nickname }}{% else %}--{% endif %}</a>
+                      <a href="/team/{{ team.number }}/{{ season }}">{{ team.number }}<br>{% if team.name %}{{ team.name }}{% else %}--{% endif %}</a>
                     </div>
                   </div>
                 </td>
                 <td>{% if team.city_state_country %}{{ team.city_state_country }}{% else %}--{% endif %}</td>
-                <td>{% if image_medias %}{% set small_thumbnail = True %}{% include "media_partials/image_carousel_partial.html" %}{% else %}<a class="btn btn-success" href="/suggest/team/media?team_key={{team.key_name}}&year={{event.year}}" target="_blank"><span class="glyphicon glyphicon-plus"></span></a>{% endif %}</td>
+                <td>{% if image_medias %}{% set small_thumbnail = True %}{% include "media_partials/image_carousel_partial.html" %}{% else %}<a class="btn btn-success" href="/suggest/team/media?team_key={{team.key}}&year={{event.year}}" target="_blank"><span class="glyphicon glyphicon-plus"></span></a>{% endif %}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -290,21 +294,21 @@
               <tr><th>Team</th><th>Location</th><th>Image</th></tr>
             </thead>
             <tbody>
-              {% for team, image_medias in teams_b %}
+              {% for team in teams_b %}
               <tr>
                 <td>
                   <div class="team-name-container">
-                    <div class="favorite-team-icon" data-team="{{team.key.id()}}">
+                    <div class="favorite-team-icon" data-team="{{team.key}}">
                         <span class="favorite-team-icon-spacer"></span>
                         <span class="glyphicon glyphicon-star"></span>
                     </div>
                     <div class="team-name">
-                      <a href="/team/{{ team.team_number }}/{{event.year}}">{{ team.team_number }}<br>{% if team.nickname %}{{ team.nickname }}{% else %}--{% endif %}</a>
+                      <a href="/team/{{ team.number }}/{{season}}">{{ team.number }}<br>{% if team.name %}{{ team.name }}{% else %}--{% endif %}</a>
                     </div>
                   </div>
                 </td>
                 <td>{% if team.city_state_country %}{{ team.city_state_country }}{% else %}--{% endif %}</td>
-                <td>{% if image_medias %}{% set small_thumbnail = True %}{% include "media_partials/image_carousel_partial.html" %}{% else %}<a class="btn btn-success" href="/suggest/team/media?team_key={{team.key_name}}&year={{event.year}}" target="_blank"><span class="glyphicon glyphicon-plus"></span></a>{% endif %}</td>
+                <td>{% if image_medias %}{% set small_thumbnail = True %}{% include "media_partials/image_carousel_partial.html" %}{% else %}<a class="btn btn-success" href="/suggest/team/media?team_key={{team.key}}&year={{event.year}}" target="_blank"><span class="glyphicon glyphicon-plus"></span></a>{% endif %}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -334,10 +338,10 @@
                 <td>
                 {% if awardee %}
                   {{ awardee }}
-                  {% if team_number %}(<a href="/team/{{team_number|digits}}/{{event.year}}">{{team_number}}</a>){% endif %}
+                  {% if team_number %}(<a href="/team/{{team_number|digits}}/{{season}}">{{team_number}}</a>){% endif %}
                 {% else %}
                   {% if team_number %}
-                  <a href="/team/{{team_number|digits}}/{{event.year}}">{{team_number}}</a>
+                  <a href="/team/{{team_number|digits}}/{{season}}">{{team_number}}</a>
                   {% else %}
                   --
                   {% endif %}
@@ -374,7 +378,7 @@
               {% for team_key, breakdown in district_points_sorted %}
               <tr>
                 <td>{{loop.index}}</td>
-                <td><a href="/team/{{team_key|strip_frc}}/{{event.year}}">{{team_key|strip_frc}}</a></td>
+                <td><a href="/team/{{team_key|strip_frc}}/{{season}}">{{team_key|strip_frc}}</a></td>
                 <td>{{breakdown.qual_points}}</td>
                 <td>{{breakdown.elim_points}}</td>
                 <td>{{breakdown.alliance_points}}</td>
@@ -422,19 +426,19 @@
 
     <div class="tab-pane" id="media">
         <div class="col-xs-12">
-          <a class="btn btn-success pull-right" href="/suggest/event/media?event_key={{event.key_name}}" target="_blank"><span class="glyphicon glyphicon-plus"></span> Add Other Media!</a>
+          <a class="btn btn-success pull-right" href="/suggest/event/media?event_key={{event.key}}" target="_blank"><span class="glyphicon glyphicon-plus"></span> Add Other Media!</a>
           <h2 id="media">Media</h2>
 
           <div class="row">
             <div class="col-xs-12">
-              {% if medias_by_slugname.youtube %}
+	      {% if False %} {#or medias_by_slugname.youtube %}#}
                 {% for media in medias_by_slugname.youtube %}
                   <div class="col-xs-12 col-md-6 fitvids">
                   {% include "media_partials/media_display_partial.html" %}
                   </div>
                 {% endfor %}
               {% else %}
-                <p>No videos for this event... <a href="/suggest/event/media?event_key={{event.key_name}}" target="_blank">Why not add one</a>?</p>
+                <p>No videos for this event... <a href="/suggest/event/media?event_key={{event.key}}" target="_blank">Why not add one</a>?</p>
               {% endif %}
             </div>
           </div>

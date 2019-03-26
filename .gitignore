@@ -99,3 +99,6 @@ build/
 tya_restore.json
 
 scoring-system
+
+# the generated files
+rendered/

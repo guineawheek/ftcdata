@@ -7,7 +7,7 @@
     <ul class="dropdown-menu tba-dropdown-menu-limited">
       <li><a href="/team/{{team.number}}/history">History</a></li>
       {% for a_year in years|reverse %}
-        <li><a href="/team/{{team.number}}/{{a_year}}">{{format_year(a_year)}} Season</a></li>
+        <li><a href="/team/{{team.number}}/{{year_to_season(a_year)}}">{{format_year(a_year)}} Season</a></li>
       {% endfor %}
     </ul>
   </div>

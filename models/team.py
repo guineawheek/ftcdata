@@ -31,4 +31,17 @@ class Team(orm.Model):
         return Team.from_record(await orm.pool.fetchrow(
         """SELECT * FROM teams WHERE 
            year = (SELECT max(year) FROM teams WHERE number = $1) AND number = $1""", number))
+    
+    @classmethod
+    async def team_list(cls, k=None):
+        if k == None:
+            k = 1
+        return await Team.fetch("SELECT * FROM teams AS a WHERE " + \
+                          "year = (SELECT last_competed FROM team_meta AS b WHERE a.key = b.key) " + \
+                          "AND number >= $1 AND number < $2 ORDER BY a.number", (k - 1) * 1000, k * 1000)
 
+    @classmethod
+    async def at_event(cls, event):
+        return await Team.fetch("SELECT * FROM rankings INNER JOIN teams ON " + \
+                "(teams.key = rankings.team_key AND rankings.event_key = $1 AND teams.year = $2) ORDER BY number",
+                event.key, event.year)
