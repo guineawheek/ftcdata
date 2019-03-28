@@ -6,9 +6,11 @@ from jinja2 import Environment, FileSystemLoader, ModuleLoader, select_autoescap
 from template_engine import jinja2_engine
 from db.orm import orm
 from models import Team, Event, Ranking
+from helpers import MatchHelper, BracketHelper
 import uvloop
 import runtime
 import re
+import logging
 
 import asyncio
 #env = Environment(
@@ -30,7 +32,7 @@ def format_season(season):
     return format_year(season_to_year(season))
 
 def year_to_season(year):
-    return f"{year % 100}{(year + 1) % 100}"
+    return f"{year % 100:02}{(year + 1) % 100:02}"
 
 def season_to_year(season):
     season = int(season)
@@ -43,6 +45,10 @@ async def setup_db(app, loop):
 @app.listener("after_server_stop")
 async def close_db(app, loop):
     await orm.close()
+
+@app.route("/favicon.ico")
+async def favicon(request):
+    abort(404)
 
 @app.route("/<name>")
 async def template(request, name):
@@ -123,21 +129,22 @@ async def event_details(request, event_key):
 
     teams = await Team.at_event(event)
     num_teams = len(teams)
-
-    rankings = await Ranking.select(properties={'event_key': event_key})
-
-
+    await event.prep_render()
+    matches_rendered = await MatchHelper.get_render_matches_event(event)
+    bracket_table = BracketHelper.get_bracket(matches_rendered)
+    event.alliance_selections = BracketHelper.get_alliances_from_bracket(bracket_table)
     return html(env.get_template("event_details.html").render({
         "format_year": format_year,
         "season": year_to_season(event.year),
         "event": event,
         "parent_event": parent_event,
         "event_divisions": event_divisions,
-        "matches": [], # TODO: populate
+        "matches": matches_rendered,
+        "bracket_table": bracket_table,
         "teams_a": teams[:num_teams//2],
         "teams_b": teams[num_teams//2:],
         "num_teams": num_teams,
-        "oprs": sorted([(r.team_key, r.opr) for r in rankings], key=lambda z: -z[1])[:15]
+        "oprs": sorted([(r.team_key, r.opr) for r in event.rankings], key=lambda z: -z[1])[:15]
     }))
     
 if __name__ == "__main__":

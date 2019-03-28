@@ -195,6 +195,8 @@ class TheYellowAlliance:
                                 event_key=m.event_key,
                                 match_key=m.key,
                                 teams=["ftc" + match[t] for t in ('team_id_r1', 'team_id_r2', 'team_id_r3') if match[t] != '0'],
+                                surrogates=[],
+                                dqed=[],
                                 total=int(match['total_red']),
                                 penalty=int(match['total_red']) - int(match['scored_red']))
             ms_blue = MatchScore(key=m.blue, 
@@ -202,6 +204,8 @@ class TheYellowAlliance:
                                 event_key=m.event_key,
                                 match_key=m.key,
                                 teams=["ftc" + match[t] for t in ('team_id_b1', 'team_id_b2', 'team_id_b3') if match[t] != '0'],
+                                surrogates=[],
+                                dqed=[],
                                 total=int(match['total_blue']),
                                 penalty=int(match['total_blue']) - int(match['scored_blue']))
             if ms_red.total > ms_blue.total:
@@ -228,7 +232,8 @@ class TheYellowAlliance:
                         high_score=int(rank['high']),
                         wins=int(rank['qual_wins']),
                         losses=int(rank['qual_losses']),
-                        ties=int(rank['qual_ties']),)
+                        ties=int(rank['qual_ties']),
+                        dqed=0)
             r.played = r.wins + r.losses + r.ties
             ret.append(r)
         return ret

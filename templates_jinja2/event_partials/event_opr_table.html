@@ -10,7 +10,7 @@
     <tbody>
       {% for team, opr in oprs %}
       <tr>
-        <td><a href="/team/{{ team|digits }}/{{ season }}">{{ team|digits }}</a></td>
+        <td><a href="/team/{{ team|digits }}/{{ event.season }}">{{ team|digits }}</a></td>
         <td>{{ opr|floatformat(2) }}</td>
       </tr>
       {% endfor %}

@@ -71,7 +71,7 @@
   {{mtcm.breach_prob_td(match, 'red', predictions)}}
   <td rowspan="2" style="width: 300px;">
     <div style="width: 300px; height: 90px;">
-      <canvas id="chart_{{match.key.id()}}" class="score_chart" data-match-key="{{match.key.id()}}"></canvas>
+      <canvas id="chart_{{match.key}}" class="score_chart" data-match-key="{{match.key}}"></canvas>
     </div>
   </td>
   {{mtcm.prob_td(match, predictions)}}
@@ -108,7 +108,7 @@
     </div>
   </td>
   <td colspan="2" rowspan="2">
-    <input type="checkbox" name="subscribed_matches" value="{{match.key.id()}}"{% if match.already_subscribed %} checked{% endif %}/>
+    <input type="checkbox" name="subscribed_matches" value="{{match.key}}"{% if match.already_subscribed %} checked{% endif %}/>
   </td>
 </tr>
 <tr>

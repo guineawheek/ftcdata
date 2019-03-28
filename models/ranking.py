@@ -14,6 +14,7 @@ class Ranking(orm.Model):
     losses: integer
     ties: integer
     played: integer
+    dqed: integer
     opr: double_precision
     dpr: double_precision
     ccwm: double_precision

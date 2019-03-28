@@ -1,5 +1,6 @@
 from db.orm import orm
 from db.types import *
+from models.ranking import Ranking
 __all__ = ["Event", "EventType", "PlayoffType"]
 class Event(orm.Model):
     __tablename__ = "events"
@@ -43,6 +44,21 @@ class Event(orm.Model):
                 return last
             last = part
         return self.name
+
+    @property
+    def season(self):
+        return f"{self.year % 100:02}{(self.year + 1) % 100:02}"
+
+    async def prep_render(self):
+        labels = ["Rank", "Team", "Qual Points", "Rank Points", "High Score", "Record (W-L-T)", "DQ", 
+                  "Played", "Qual Points/Match*"]
+        if self.year > 2017:
+            labels[2] = "Rank Points"
+            labels[3] = "Tiebreaker Points"
+            labels[-1] = "Rank Points/Match*"
+        self.rankings = await Ranking.fetch("SELECT * from rankings WHERE event_key=$1 ORDER BY rank", self.key)
+        self.rankings_table = [labels] + \
+                [(r.rank, r.team_key, r.qp_rp, r.rp_tbp, r.high_score, f"{r.wins}-{r.losses}-{r.ties}", 0, r.played, r.qp_rp / r.played) for r in self.rankings]
 
 class EventType:
     QUALIFIER = 1
