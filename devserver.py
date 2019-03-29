@@ -178,6 +178,23 @@ async def events_list(request, season):
 async def events_list_default(request):
     return await events_list(request, 1819)
 
+@app.route("/match/<match_key>")
+async def match_details(request, match_key):
+    try:
+        match, red, blue = (await MatchHelper.get_match_data(where="m.key=$1", params=[match_key], use_dict=False))[0]
+    except IndexError:
+        abort(404)
+    match_breakdown_template = "match_partials/match_breakdown/match_breakdown_default.html"
+    event = await Event.select_one(properties={"key": match.event_key})
+    match_render = MatchHelper.MatchRender(match, (red, blue), event)
+    return html(env.get_template("match_details.html").render({
+        "event": event,
+        "match": match_render,
+        "red": red,
+        "blue": blue,
+        "match_breakdown_template": match_breakdown_template
+    }))
+    
     
 if __name__ == "__main__":
     app.run(host="localhost", port=8000, debug=True)

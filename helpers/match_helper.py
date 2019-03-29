@@ -1,6 +1,7 @@
 import logging
-import numpy as np
+from urllib.parse import urlparse
 from models import Event, Ranking, Match, MatchScore
+from helpers import YouTubeVideoHelper
 from db.orm import orm
 
 class MatchHelper:
@@ -22,12 +23,26 @@ class MatchHelper:
             self.match_number = match.match_number
             self.has_been_played = True
             self.key = match.key
+            self.video = {}
+            self.youtube_videos_formatted = MatchHelper.youtube_videos_formatted(match)
     class MatchScoreRender:
         def __init__(self, match_score: MatchScore):
             self.score = match_score.total
             self.teams = match_score.teams
             self.surrogates = match_score.surrogates
             self.dqs = match_score.dqed
+
+    @classmethod
+    def youtube_videos_formatted(cls, match):
+        # adapted from tba code
+        if match.videos is None:
+            return []
+        ret = []
+        for video in match.videos:
+            yid = YouTubeVideoHelper.parse_id_from_url(video)
+            if yid is not None:
+                ret.append(yid)
+        return ret
 
     @classmethod
     def verbose_name(cls, match):

@@ -1,0 +1,72 @@
+<table class="match-table">
+  <tbody>
+    {# A lot of match data only has auton/tele/endgame stats. Or less. This should cover all the bases. #}
+    <!-- Auto Bonus -->
+    {% if red.auto_bonus is not none %}
+    <tr>
+      <td class="red" colspan="2">{% if red.auto %} {{red.auto}} {% else %} 0 {% endif %}</td>
+      <td>Autonomous</td>
+      <td class="blue" colspan="2">{% if blue.auto %} {{blue.auto}} {% else %} 0 {% endif %}</td>
+    </tr>
+    <tr>
+      <td class="red" colspan="2">+{% if red.auto_bonus %} {{red.auto_bonus}} {% else %}0 {% endif %}</td>
+      <td>Autonomous Bonus</td>
+      <td class="blue" colspan="2">+{% if blue.auto_bonus %}{{blue.auto_bonus}} {% else %}0 {% endif %}</td>
+    </tr>
+    {% endif %}
+
+    <!-- Auto Total -->
+    {% if red.auto is not none %}
+    <tr class="key">
+	    <td class="red" colspan="2">{% if red.auto_bonus %} {{red.auto_bonus + red.auto}} {% else %}{{red.auto}} {% endif %}</td>
+      <th>Total Auto</th>
+      <td class="blue" colspan="2">{% if blue.auto_bonus %}{{blue.auto_bonus + blue.auto}} {% else %}{{blue.auto}} {% endif %}</td>
+    </tr>
+    {% endif %}
+
+    <!-- Teleop Total -->
+    {% if red.teleop is not none %}
+    <tr class="key">
+      <td class="red" colspan="2">{% if red.teleop %} {{red.teleop}} {% else %} 0 {% endif %}</td>
+      <th>Total Teleop</th>
+      <td class="blue" colspan="2">{% if blue.teleop %}{{blue.teleop}} {% else %} 0 {% endif %}</td>
+    </tr>
+    {% endif %}
+
+    <!-- Endgame Total -->
+    {% if red.endgame is not none %}
+    <tr class="key">
+      <td class="red" colspan="2">{% if red.endgame %} {{red.endgame}} {% else %} 0 {% endif %}</td>
+      <th>Total Endgame</th>
+      <td class="blue" colspan="2">{% if blue.endgame %}{{blue.endgame}} {% else %} 0 {% endif %}</td>
+    </tr>
+    {% endif %}
+    
+    <!-- Penalties -->
+    {% if red.penalty is not none %}
+    <tr>
+      <td class="red" colspan="2">{% if red.penalty %}+{{red.penalty}} {% else %}+0 {% endif %}</td>
+      <td>Penalties</td>
+      <td class="blue" colspan="2">{% if blue.penalty %}+{{blue.penalty}} {% else %}+0 {% endif %}</td>
+    </tr>
+    {% endif %}
+
+    <!-- Endgame Total -->
+    {% if red.endgame is not none %}
+    <tr class="key">
+      <td class="red" colspan="2">{% if red.endgame %} {{red.endgame}} {% else %} 0 {% endif %}</td>
+      <th>Total Endgame</th>
+      <td class="blue" colspan="2">{% if blue.endgame %}{{blue.endgame}} {% else %} 0 {% endif %}</td>
+    </tr>
+    {% endif %}
+
+    <!-- Total Score -->
+    {% if red.total is not none %}
+    <tr class="key">
+      <td class="red" colspan="2">{% if red.total %} {{red.total}} {% else %} 0 {% endif %}</td>
+      <th>Total Score</th>
+      <td class="blue" colspan="2">{% if blue.total %}{{blue.total}} {% else %} 0 {% endif %}</td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table>

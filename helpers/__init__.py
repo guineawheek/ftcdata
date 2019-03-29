@@ -3,6 +3,7 @@ from .champ_split_helper import ChampSplitHelper
 from .nominatim_helper import NominatimHelper
 from .region_helper import RegionHelper
 from .opr_helper import OPRHelper
+from .youtube_video_helper import YouTubeVideoHelper
 from .match_helper import MatchHelper
 from .bracket_helper import BracketHelper
 from .award_helper import AwardHelper
