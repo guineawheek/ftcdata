@@ -62,7 +62,7 @@
   {% if fake_matches %}
   {{ team_key|strip_frc }}
   {% else %}
-  <a href="/team/{{team_key|digits}}/{{match.year}}"{% if team_key in match.alliances.get(alliance_color).surrogates and team_key in match.alliances.get(alliance_color).dqs %} class="surrogate dq" rel="tooltip" title="Surrogate | DQ"{% elif team_key in match.alliances.get(alliance_color).surrogates %} class="surrogate" rel="tooltip" title="Surrogate"{% elif team_key in match.alliances.get(alliance_color).dqs %} class="dq" rel="tooltip" title="DQ"{% endif %}>{{ team_key|strip_frc }}</a>
+  <a href="/team/{{team_key|digits}}/{{match.year|season}}"{% if team_key in match.alliances.get(alliance_color).surrogates and team_key in match.alliances.get(alliance_color).dqs %} class="surrogate dq" rel="tooltip" title="Surrogate | DQ"{% elif team_key in match.alliances.get(alliance_color).surrogates %} class="surrogate" rel="tooltip" title="Surrogate"{% elif team_key in match.alliances.get(alliance_color).dqs %} class="dq" rel="tooltip" title="DQ"{% endif %}>{{ team_key|strip_frc }}</a>
   {% endif %}
 </td>
 {% endmacro %}
@@ -75,7 +75,7 @@
       or match.score_breakdown.get(alliance_color).kPaRankingPointAchieved
       or match.score_breakdown.get(alliance_color).kPaBonusPoints
       or match.score_breakdown.get(alliance_color).autoQuestRankingPoint %}
-    <svg class="top-left-dot" rel="tooltip" title="{% if match.year == 2016 %}Defenses Breached{% elif match.year == 2017 %}Pressure Reached{% elif match.year == 2018 %}Auto Quest{% endif %}">
+    <svg class="top-left-dot" rel="tooltip" title="{% if match.year|season == 2016 %}Defenses Breached{% elif match.year|season == 2017 %}Pressure Reached{% elif match.year|season == 2018 %}Auto Quest{% endif %}">
       <circle cx="2" cy="2" r="2"/>
     </svg>
     {% endif %}
@@ -83,7 +83,7 @@
       or match.score_breakdown.get(alliance_color).rotorRankingPointAchieved
       or match.score_breakdown.get(alliance_color).rotorBonusPoints
       or match.score_breakdown.get(alliance_color).faceTheBossRankingPoint %}
-    <svg class="top-left-dot-2" rel="tooltip" title="{% if match.year == 2016 %}Tower Captured{% elif match.year == 2017 %}All Rotors Engaged{% elif match.year == 2018 %}Face The Boss{% endif %}">
+    <svg class="top-left-dot-2" rel="tooltip" title="{% if match.year|season == 2016 %}Tower Captured{% elif match.year|season == 2017 %}All Rotors Engaged{% elif match.year|season == 2018 %}Face The Boss{% endif %}">
       <circle cx="2" cy="2" r="2"/>
     </svg>
     {% endif %}
@@ -95,7 +95,7 @@
 
 {% macro breach_prob_td(match, alliance_color, predictions) %}
 <td class="{{alliance_color}}">
-  {% if match.year == 2016 and match.has_been_played and match.score_breakdown %}
+  {% if match.year|season == 2016 and match.has_been_played and match.score_breakdown %}
     {% if "teleopDefensesBreached" in match.score_breakdown.get(alliance_color) and
     match.score_breakdown.get(alliance_color).teleopDefensesBreached and
     "teleopTowerCaptured" in match.score_breakdown.get(alliance_color) and
@@ -106,7 +106,7 @@
       {% elif "teleopTowerCaptured" in match.score_breakdown.get(alliance_color) and match.score_breakdown.get(alliance_color).teleopTowerCaptured %}C
       {% else %}--{% endif %}
     {% endif %}
-  {% elif match.year == 2017 and match.has_been_played and match.score_breakdown %}
+  {% elif match.year|season == 2017 and match.has_been_played and match.score_breakdown %}
     {% if (match.score_breakdown.get(alliance_color).get('kPaRankingPointAchieved') or match.score_breakdown.get(alliance_color).get('kPaBonusPoints')) and (match.score_breakdown.get(alliance_color).get('rotorRankingPointAchieved') or match.score_breakdown.get(alliance_color).get('rotorBonusPoints')) %}
     P / R
     {% else %}
@@ -114,7 +114,7 @@
       {% elif match.score_breakdown.get(alliance_color).get('rotorRankingPointAchieved') or match.score_breakdown.get(alliance_color).get('rotorBonusPoints') %}R
       {% else %}--{% endif %}
     {% endif %}
-  {% elif match.year == 2018 and match.has_been_played and match.score_breakdown %}
+  {% elif match.year|season == 2018 and match.has_been_played and match.score_breakdown %}
     {% if match.score_breakdown.get(alliance_color).get('autoQuestRankingPoint') and match.score_breakdown.get(alliance_color).get('faceTheBossRankingPoint') %}
     AQ / FtB
     {% else %}
@@ -126,11 +126,11 @@
     ?
   {% endif %}
   <br>
-  {% if match.year == 2016 %}
+  {% if match.year|season == 2016 %}
   <em>{{(predictions.get(match.key.id()).get(alliance_color).prob_breach)|limit_prob}}% / {{(predictions.get(match.key.id()).get(alliance_color).prob_capture)|limit_prob}}%</em>
-  {% elif match.year == 2017 %}
+  {% elif match.year|season == 2017 %}
   <em>{{(predictions.get(match.key.id()).get(alliance_color).prob_pressure)|limit_prob}}% / {{(predictions.get(match.key.id()).get(alliance_color).prob_gears)|limit_prob}}%</em>
-  {% elif match.year == 2018 %}
+  {% elif match.year|season == 2018 %}
   <em>{{(predictions.get(match.key.id()).get(alliance_color).prob_auto_quest)|limit_prob}}% / {{(predictions.get(match.key.id()).get(alliance_color).prob_face_boss)|limit_prob}}%</em>
   {% endif %}
 </td>

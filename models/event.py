@@ -49,7 +49,25 @@ class Event(orm.Model):
     def season(self):
         return f"{self.year % 100:02}{(self.year + 1) % 100:02}"
 
+    @property
+    def award_prefix(self):
+        ret = ""
+        if self.event_type in [EventType.REGIONAL_CMP, EventType.SUPER_REGIONAL, EventType.WORLD_CHAMPIONSHIP, EventType.FOC]:
+            ret += EventType.event_names[self.event_type] + " "
+        if self.parent_event_key:
+            ret += "Division "
+        return ret
+    
+    @property
+    def location(self):
+        return f"{self.city}, {self.state_prov}, {self.country}"
+
+    @property
+    def city_state_country(self):
+        return self.location
+
     async def prep_render(self):
+        # TODO: move this into a helper LOL
         labels = ["Rank", "Team", "Qual Points", "Rank Points", "High Score", "Record (W-L-T)", "DQ", 
                   "Played", "Qual Points/Match*"]
         if self.year > 2017:
@@ -58,7 +76,7 @@ class Event(orm.Model):
             labels[-1] = "Rank Points/Match*"
         self.rankings = await Ranking.fetch("SELECT * from rankings WHERE event_key=$1 ORDER BY rank", self.key)
         self.rankings_table = [labels] + \
-                [(r.rank, r.team_key, r.qp_rp, r.rp_tbp, r.high_score, f"{r.wins}-{r.losses}-{r.ties}", 0, r.played, r.qp_rp / r.played) for r in self.rankings]
+                [(r.rank, r.team_key, r.qp_rp, r.rp_tbp, r.high_score, f"{r.wins}-{r.losses}-{r.ties}", 0, r.played, round(r.qp_rp / r.played, 2)) for r in self.rankings if r.played]
 
 class EventType:
     QUALIFIER = 1

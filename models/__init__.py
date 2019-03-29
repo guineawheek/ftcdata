@@ -4,3 +4,4 @@ from .event import *
 from .match import *
 from .awards import *
 from .ranking import *
+from .event_participant import *

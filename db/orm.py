@@ -81,24 +81,23 @@ class ORM:
                 return ret
 
             @classmethod
-            async def fetch(cls, *args, conn=None):
+            async def _fetch(cls, args, _one=False, conn=None):
+                f = 'fetchrow' if _one else 'fetch'
                 if conn is None:
                     async with cls._orm.pool.acquire() as conn:
                         async with conn.transaction():
-                            return [cls.from_record(r) for r in await conn.fetch(*args)]
+                            return await getattr(conn, f)(*args)
                 else:
                     async with conn.transaction():
-                        return [cls.from_record(r) for r in await conn.fetch(*args)]
+                        return await getattr(conn, f)(*args)
+
+            @classmethod
+            async def fetch(cls, *args, conn=None):
+                return [cls.from_record(r) for r in await cls._fetch(args, conn=conn)]
 
             @classmethod
             async def fetchrow(cls, *args, conn=None):
-                if conn is None:
-                    async with cls._orm.pool.acquire() as conn:
-                        async with conn.transaction():
-                            return cls.from_record(await conn.fetchrow(*args))
-                else:
-                    async with conn.transaction():
-                        return cls.from_record(await conn.fetchrow(*args))
+                return cls.from_record(await cls._fetch(args, _one=True, conn=conn))
 
             async def insert(self, conn=None, upsert=""):
                 fields = self._columns.keys()
@@ -165,6 +164,10 @@ class ORM:
                     return None
                 return tuple(getattr(self, k) for k in self.__primary_key__)
 
+            @classmethod
+            def table_name(cls):
+                return f"{cls.__schemaname__}.{cls.__tablename__}"
+
             async def upsert(self, conn=None):
                 """this performs an upsert by doing a select then an insert/update, this can be subject to race conditions
                 and should be avoided if possible."""
@@ -179,6 +182,53 @@ class ORM:
         self.Model = Model
         self.pool: asyncpg.pool.Pool
 
+    async def join(self, tables, tnames, join_on, where=None, addn_sql="", params=None, use_dict=True):
+        """tables, tnames, and on are NOT injection safe!"""
+        if len(tables) != (len(join_on) + 1) or len(tables) != len(tnames):
+            raise TypeError("tables not same length as join_on") 
+
+        qs_tables = ",'' AS \".\",".join(f'{t}.*' for t in tnames)
+        qs_joins = ""
+        for table, tname, on in zip(tables[1:], tnames[1:], join_on):
+            qs_joins += f"INNER JOIN {table.table_name()} AS {tname} ON ({on}) "
+        
+        qs_where = ""
+        if where:
+            qs_where = f"WHERE {where}"
+        if not params:
+            params = tuple()
+        qs = f"SELECT {qs_tables} FROM {tables[0].table_name()} AS {tnames[0]} {qs_joins} {qs_where} {addn_sql}"
+        async with self.pool.acquire() as conn:
+            rows = await conn.fetch(qs, *params)
+        
+        ret = []
+        for row in rows:
+            t_idx = 0
+            obj_data = {}
+            ret_row = {} if use_dict else []
+            for column_name, value in row.items():
+                if column_name == '.':
+                    if use_dict:
+                        ret_row[tnames[t_idx]] = tables[t_idx].from_record(obj_data)
+                    else:
+                        ret_row.append(tables[t_idx].from_record(obj_data))
+                    t_idx += 1
+                    obj_data = {}
+                else:
+                    obj_data[column_name] = value
+
+            if use_dict:
+                ret_row[tnames[t_idx]] = tables[t_idx].from_record(obj_data)
+            else:
+                ret_row.append(tables[t_idx].from_record(obj_data))
+
+            if use_dict:
+                ret.append(ret_row)
+            else:
+                ret.append(tuple(ret_row))
+        return ret
+
+
     async def connect(self, **kwargs):
         async def connection_initer(conn):
             await conn.set_type_codec(
@@ -190,6 +240,7 @@ class ORM:
 
         kwargs["init"] = connection_initer
         self.pool = await asyncpg.create_pool(**kwargs)
+
 
     async def close(self):
         await self.pool.close()

@@ -15,7 +15,7 @@
     {% for event in events %}
       <tr itemscope itemtype="http://data-vocabulary.org/Event">
         <td>
-          <a href="/event/{{event.key_name}}" title="{{event.name}}" itemprop="url"><span itemprop="summary">{{event.name}}</span></a>
+          <a href="/event/{{event.key}}" title="{{event.name}}" itemprop="url"><span itemprop="summary">{{event.name}}</span></a>
           {% if event.city_state_country %}
             <br>
             <small>{{event.city_state_country}}</small>

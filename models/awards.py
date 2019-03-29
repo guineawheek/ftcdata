@@ -15,22 +15,26 @@ class Award(orm.Model):
 
 class AwardType:
     INSPIRE = 1
-    THINK = 2
-    CONNECT = 3
-    INNOVATE = 4
-    DESIGN = 5
-    MOTIVATE = 6
-    CONTROL = 7
-    JUDGES = 8
-    PROMOTE = 9
-    COMPASS = 10
-    DEANS_LIST_W = 11
-    DEANS_LIST_F = 12
-    DEANS_LIST_SF = 13
-    CUSTOM = -1
+    WINNING_ALLIANCE = 2
+    FINALIST_ALLIANCE = 3
+    THINK = 4
+    CONNECT = 5
+    INNOVATE = 6
+    DESIGN = 7
+    MOTIVATE = 8
+    CONTROL = 9
+    JUDGES = 10
+    PROMOTE = 11
+    COMPASS = 12
+    DEANS_LIST_W = 13
+    DEANS_LIST_F = 14
+    DEANS_LIST_SF = 15
+    CUSTOM = 9999
 
     base_names = {
             INSPIRE: "Inspire Award",
+            WINNING_ALLIANCE: "Winner",
+            FINALIST_ALLIANCE: "Finalist",
             THINK: "Think Award",
             CONNECT: "Connect Award",
             INNOVATE: "Innovate Award", 

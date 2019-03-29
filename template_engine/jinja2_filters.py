@@ -59,7 +59,6 @@ def strip_frc(s):
         return ''
     return s[3:]
 
-
 def urlencode(s):
     return urllib.parse.quote(s.encode('utf8'))
 
@@ -102,3 +101,10 @@ def match_short(match_key):
     if match_id.startswith('qm'):
         return 'Q{}'.format(match_id[2:])
     return match_id.replace('m', '-').upper()
+
+
+def season(year):
+    return f"{year % 100:02}{(year + 1) % 100:02}"
+
+def fseason(year):
+    return f"{year}-{(year+1)%1000:02d}"

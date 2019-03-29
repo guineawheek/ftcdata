@@ -14,20 +14,25 @@ Backend:
 * somehow cross-correlate events in db with first's team and event search (hard problem)
 * find the real locations of those APO,AE teams
 
-Frontend:
-* events list page doesn't work
-* team history doesn't work
-* teams don't have events
-* team links are still using year format instead of season format (oops!)
 
-* default events page tries to show teams and results at once and it's bad
-* qual points/match is overfull
-* finals divisions don't have event divisions dropdowns
-* elimination brackets don't have alliance numbers
-* alliances aren't rendered
+* make a model that represents teams at events rather than rev-engineering it from the rankings table
+* region of events
+* bijection between region codenames and regions
+
+Frontend:
+FIXED events list page doesn't work
+* team history doesn't work
+FIXED teams don't have events
+FIXED team links are still using year format instead of season format (oops!)
+
+FIXED default events page tries to show teams and results at once and it's bad
+FIXED qual points/match is overfull
+FIXED finals divisions don't have event divisions dropdowns
+FIXED* (until 8 alliance business) * elimination brackets don't have alliance numbers
+FIXED alliances aren't rendered
 * match details page doesn't work
-* match details links don't exist from events
-* awards page literally doesn't exist yet
+FIXED match details links don't exist from events
+FIXED awards page literally doesn't exist yet
 
 Down the road:
 * create a media model 
@@ -36,5 +41,8 @@ Down the road:
 * make sure you yourself don't have xss/csrf vulns
 * actually make the UI a useful UI
 * make better insights pages than top 15 oprs lol
-
-
+* old champs data
+* ftcpenn data
+* ftc-data data
+* ftcscores data
+* toa data

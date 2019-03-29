@@ -5,3 +5,5 @@ from .region_helper import RegionHelper
 from .opr_helper import OPRHelper
 from .match_helper import MatchHelper
 from .bracket_helper import BracketHelper
+from .award_helper import AwardHelper
+from .event_helper import EventHelper

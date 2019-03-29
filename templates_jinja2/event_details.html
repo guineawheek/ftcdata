@@ -43,7 +43,7 @@
       {% if event_divisions %}
       <div class="btn-group division-button">
         <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
-          {% if event.divisions %}Event Divisions{% elif parent_event %}Other Divisions{% endif %}
+          {% if not parent_event %}Event Divisions{% else %}Other Divisions{% endif %}
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu tba-dropdown-menu-limited">
@@ -96,7 +96,7 @@
     <div class="col-sm-12">
       <ul class="nav nav-tabs nav-justified">
         {% if matches|length > 0 %}<li class="active"><a href="#results" data-toggle="tab">Results</a></li>{% endif %}
-        {% if event.rankings_table %}<li><a href="#rankings" data-toggle="tab">Rankings</a></li>{% endif %}
+	{% if event.rankings_table|length > 1 %}<li><a href="#rankings" data-toggle="tab">Rankings</a></li>{% endif %}
         {% if awards %}<li><a href="#awards" data-toggle="tab">Awards</a></li>{% endif %}
         {% if district_points_sorted %}<li><a href="#district-points" data-toggle="tab">District Points</a></li>{% endif %}
         <li class="{% if matches.num == 0 %}active{% endif %}"><a href="#teams" data-toggle="tab">Teams <span class="badge">{{num_teams}}</span></a></li>
@@ -332,25 +332,25 @@
             <tbody>
               {# TODO: our award schema is completely different, gotta do! #}
               {% for award in awards %}
-              {% for team_number, awardees in award.recipient_dict.items() %}
-              {% for awardee in awardees %}
+	      {#{% for team_number, awardees in award.recipient_dict.items() %}#}
+	      {#{% for awardee in awardees %}#}
               <tr>
-                <td>{{award.name_str}}</td>
+	        <td>{{award.name}}</td>
                 <td>
-                {% if awardee %}
-                  {{ awardee }}
-                  {% if team_number %}(<a href="/team/{{team_number|digits}}/{{event.season}}">{{team_number}}</a>){% endif %}
+                {% if award.recipient_name %}
+                  {{ award.recipient_name }}
+                  {% if award.team_key %}(<a href="/team/{{award.team_key|strip_ftc}}/{{event.season}}">{{award.team_key|strip_ftc}}</a>){% endif %}
                 {% else %}
-                  {% if team_number %}
-                  <a href="/team/{{team_number|digits}}/{{event.season}}">{{team_number}}</a>
+                  {% if award.team_key %}
+                  <a href="/team/{{award.team_key|strip_ftc}}/{{event.season}}">{{award.team_key|strip_ftc}}</a>
                   {% else %}
                   --
                   {% endif %}
                 {% endif %}
                 </td>
               </tr>
-              {% endfor %}
-              {% endfor %}
+	      {#{% endfor %}#}
+	      {#{% endfor %}#}
               {% endfor %}
             </tbody>
           </table>

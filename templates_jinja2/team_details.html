@@ -38,7 +38,7 @@
               <a class="smooth-scroll" href="#event-results">Event Results</a>
               <ul class="nav">
                 {% for comp in participation %}
-                  <li><a class="smooth-scroll" href="#{{ comp.event.key_name}}">{% if comp.event.short_name %}{{comp.event.short_name}}{% else %}{{comp.event.name}}{% endif %}</a></li>
+                  <li><a class="smooth-scroll" href="#{{ comp.event.key}}">{% if comp.event.short_name and False %}{{comp.event.short_name}}{% else %}{{comp.event.name}}{% endif %}</a></li>
                 {% endfor %}
               </ul>
             </li>
@@ -59,11 +59,11 @@
           <hr>
           <h2 id="event-results">Event Results</h2>
           {% if season_wlt %}
-            <p>Team {{team.number}} was <strong>{{season_wlt.win}}-{{season_wlt.loss}}-{{season_wlt.tie}}</strong> in official play
-            {% if offseason_wlt %}and <strong>{{season_wlt.win+offseason_wlt.win}}-{{season_wlt.loss+offseason_wlt.loss}}-{{season_wlt.tie+offseason_wlt.tie}}</strong> overall
-            {% endif %} in {{format_year(year)}}.</p>
+            <p>Team {{team.number}} was <strong>{{season_wlt.wins}}-{{season_wlt.losses}}-{{season_wlt.ties}}</strong> in official play
+            {% if offseason_wlt %}and <strong>{{season_wlt.wins+offseason_wlt.wins}}-{{season_wlt.losses+offseason_wlt.losses}}-{{season_wlt.ties+offseason_wlt.ties}}</strong> overall
+            {% endif %} in {{year|fseason}}.</p>
           {% elif offseason_wlt %}
-            <p>Team {{team.number}} was <strong>{{offseason_wlt.win}}-{{offseason_wlt.loss}}-{{offseason_wlt.tie}}</strong> during the {{format_year(year)}} offseason.</p>
+            <p>Team {{team.number}} was <strong>{{offseason_wlt.wins}}-{{offseason_wlt.losses}}-{{offseason_wlt.ties}}</strong> during the {{year|fseason}} offseason.</p>
           {% else %}
             {% if year_qual_avg or year_elim_avg %}
               <p>Overall, Team {{team.number}} had
@@ -99,9 +99,9 @@
           </div>
 
           {% for comp in participation %}
-            <div class="row" id="{{ comp.event.key_name }}">
+            <div class="row" id="{{ comp.event.key }}">
               <div class="col-sm-4">
-                <h3><a href="/event/{{ comp.event.key_name }}">{{ comp.event.name }}</a></h3>
+                <h3><a href="/event/{{ comp.event.key }}">{{ comp.event.name }}</a></h3>
                 <p>
                   {% if comp.event.location %}<span class="glyphicon glyphicon-map-marker"></span> in <a href="http://maps.google.com/maps?q={{ comp.event.location }}" target="_blank">{{ comp.event.location }}</a><br />{% endif %}
                   {% if comp.event.start_date %}<span class="glyphicon glyphicon-calendar"></span> {{ comp.event.start_date|strftime("%B %d") }}{% if comp.event.start_date != comp.event.end_date %} - {{ comp.event.end_date|strftime("%B %d") }}{% endif %}, {{ comp.event.end_date|strftime("%Y") }}{% endif %}
@@ -112,7 +112,7 @@
                   {% if comp.rank %}was <strong>Rank {{ comp.rank }}</strong>{% endif %}
                   {% if comp.wlt %}
                     {% if comp.rank %}with a record of{% else %}had a record of{% endif %}
-                    <strong>{{comp.wlt.win}}-{{comp.wlt.loss}}-{{comp.wlt.tie}}</strong>
+                    <strong>{{comp.wlt.wins}}-{{comp.wlt.losses}}-{{comp.wlt.ties}}</strong>
                   {% else %}
                     {% if comp.qual_avg or comp.elim_avg %}
                       {% if comp.rank %}with{% else %}had{% endif %}
@@ -130,14 +130,14 @@
                   {% if comp.rank or comp.wlt %}and{% endif %} won the following awards:
                   <ul>
                   {% for award in comp.awards %}
-                  {% for team_number, awardees in award.recipient_dict.items() %}
-                  {% if team_number|string == team.number|string %}
-                    {% for awardee in awardees %}
-                    <li>{{ award.name_str }}{% if awardee %} ({{ awardee }}){% endif %}</li>
+		  {#{% for team_number, awardees in award.recipient_dict.items() %}#}
+		  {#{% if team_number|string == team.number|string %}#}
+		  {#{% for awardee in awardees %}#}
+                    <li>{{ award.name }}{% if award.recipient_name %} ({{ award.recipient_name }}){% endif %}</li>
                     {% endfor %}
-                  {% endif %}
-                  {% endfor %}
-                  {% endfor %}
+		    {#{% endif %}#}
+		  {#{% endfor %}#}
+		  {#{% endfor %}#}
                   </ul>
                   {% endif %}
                 </p>
@@ -182,9 +182,9 @@
               </div>
               <div class="col-sm-8" style="margin-top: 1em">
                 {% if comp.matches.num %}
-                  {{mtm.full_match_table(comp.matches, cur_team_key=team.key.id())}}
+                  {{mtm.full_match_table(comp.matches, cur_team_key=team.key)}}
                 {% else %}
-                  {% if comp.event.past %}
+                  {% if comp.event.past or True %}
                     <p class="muted">No matches played.</p>
                   {% else %}
                     <p class="muted">No matches yet. Check back after {{ comp.event.start_date|strftime("%B %d, %Y") }}.</p>

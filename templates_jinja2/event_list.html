@@ -21,12 +21,12 @@
 	<div class="btn-group-vertical">
         <div class="btn-group">
           <a class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" href="#">
-            {{selected_year}}
+            {{selected_year|fseason}}
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu tba-dropdown-menu-limited">
             {% for year in valid_years %}
-              <li><a href="/events/{{year}}{% if state_prov %}?state_prov={{state_prov}}{% endif %}">{{year}}</a></li>
+              <li><a href="/events/{{year|season}}{% if state_prov %}?state_prov={{state_prov}}{% endif %}">{{year|fseason}}</a></li>
             {% endfor %}
           </ul>
         </div>
@@ -57,10 +57,10 @@
         </select> -->
 
 
-        {% if week_events %}
+        {% if month_events %}
         <div class="tba-sidebar">
           <ul class="nav tba-sidenav">
-          {% for label, events in week_events.items() %}
+          {% for label, events in month_events.items() %}
             <li><a class="smooth-scroll" href="#{{label|slugify}}">{{label}}</a></li>
           {% endfor %}
           </ul>
@@ -69,11 +69,11 @@
       </div>
     </div>
     <div class="col-xs-12 col-sm-9 col-lg-10">
-      <h1 class="hidden-xs end_header">{% if explicit_year %}{{selected_year}} {% endif %}<em>FIRST</em> Robotics Competition Events{% if state_prov %} in {{state_prov}}{% endif %}{% if events|length > 0 %} <small>{{ events|length }} Events</small>{% endif %}</h1>
+      <h1 class="hidden-xs end_header">{% if explicit_year %}{{selected_year|fseason}} {% endif %}<em>FIRST</em> Tech Challenge Events{% if state_prov %} in {{state_prov}}{% endif %}{% if events|length > 0 %} <small>{{ events|length }} Events</small>{% endif %}</h1>
 
       <a class="btn btn-default pull-right" href="/nearby?search_type=events"><span class="glyphicon glyphicon-search"></span> Search Nearby</a>
 
-      {% for label, events in week_events.items() %}
+      {% for label, events in month_events.items() %}
         <h2 id="{{label|slugify}}">{{ label }} <small>{{events|length}} Events</small></h2>
         {% include "event_partials/event_table.html" %}
       {% endfor %}

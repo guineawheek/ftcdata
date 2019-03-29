@@ -5,8 +5,8 @@ from sanic.exceptions import abort
 from jinja2 import Environment, FileSystemLoader, ModuleLoader, select_autoescape
 from template_engine import jinja2_engine
 from db.orm import orm
-from models import Team, Event, Ranking
-from helpers import MatchHelper, BracketHelper
+from models import Team, Event, Ranking, Award, AwardType, EventParticipant
+from helpers import MatchHelper, BracketHelper, AwardHelper, EventHelper
 import uvloop
 import runtime
 import re
@@ -72,13 +72,18 @@ async def teams_year(request, number, season):
         abort(404)
     years = [r["year"] for r in await orm.pool.fetch("SELECT year FROM teams WHERE number=$1 ORDER BY year", number)]
 
+    season_wlt = await MatchHelper.get_wlt(team.key)
+    participation = await EventHelper.get_team_events(team.key, year)
+
     return html(env.get_template("team_details.html").render({
         "year": year,
         "years": years,
         "team": team,
         "format_year": format_year,
         "year_to_season": year_to_season,
-        "region_name": team.region
+        "region_name": team.region,
+        "season_wlt": season_wlt,
+        "participation": participation
     }))
 
 @app.route("/team/<number:int>/history")
@@ -126,6 +131,8 @@ async def event_details(request, event_key):
     event_divisions = None
     if parent_event:
         event_divisions = [await Event.select_one(properties={'key': k}) for k in parent_event.division_keys]
+    elif event.division_keys:
+        event_divisions = [await Event.select_one(properties={'key': k}) for k in event.division_keys]
 
     teams = await Team.at_event(event)
     num_teams = len(teams)
@@ -133,6 +140,7 @@ async def event_details(request, event_key):
     matches_rendered = await MatchHelper.get_render_matches_event(event)
     bracket_table = BracketHelper.get_bracket(matches_rendered)
     event.alliance_selections = BracketHelper.get_alliances_from_bracket(bracket_table)
+    awards = await Award.select(properties={"event_key": event.key}, extra_sql=" ORDER BY award_type, award_place")
     return html(env.get_template("event_details.html").render({
         "format_year": format_year,
         "season": year_to_season(event.year),
@@ -144,8 +152,32 @@ async def event_details(request, event_key):
         "teams_a": teams[:num_teams//2],
         "teams_b": teams[num_teams//2:],
         "num_teams": num_teams,
+        "awards": awards,
+        "AwardType": AwardType,
         "oprs": sorted([(r.team_key, r.opr) for r in event.rankings], key=lambda z: -z[1])[:15]
     }))
+
+@app.route("/events/<season:int>")
+async def events_list(request, season):
+    VALID_YEARS = list(range(2018, 2007, -1))
+    year = season_to_year(season)
+    events = await Event.select(properties={"year": year}, extra_sql=" ORDER BY start_date, key")
+    month_events = EventHelper.get_month_events(events) 
+    return html(env.get_template("event_list.html").render({
+        "events": events,
+        "explicit_year": season,
+        "selected_year": year,
+        "valid_years": VALID_YEARS,
+        "month_events": month_events,
+        "districts": None,
+        "state_prov": None,
+        "valid_state_provs": {},
+    }))
+
+@app.route("/events")
+async def events_list_default(request):
+    return await events_list(request, 1819)
+
     
 if __name__ == "__main__":
     app.run(host="localhost", port=8000, debug=True)

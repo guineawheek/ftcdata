@@ -1,5 +1,5 @@
 from models import *
-from helpers import RegionHelper, OPRHelper
+from helpers import RegionHelper, OPRHelper, AwardHelper
 from db.orm import orm
 import aiohttp
 import uvloop
@@ -71,6 +71,7 @@ class TheYellowAlliance:
         # The keys are the tya division ids while the values are actual Event objects.
         events, event_key_map = await cls.load_events(tya_events)
         events_obj = list(events.values())
+        
         awards_obj = await cls.load_awards(events, event_key_map, data[3]['data'])
         matches_obj = await cls.load_matches(events, data[6]['data'])
         rankings_obj = await cls.load_rankings(events, data[9]['data'])
@@ -83,6 +84,10 @@ class TheYellowAlliance:
         await asyncio.gather(*[Ranking.update_ranks(k) for k in event_keys])
         print("Calculating OPRs....")
         await asyncio.gather(*[OPRHelper.update_oprs(k) for k in event_keys])
+        print("Generating winning/finalist awards...")
+        await asyncio.gather(*[AwardHelper.generate_winners_finalists(e, fail_silent=True) for e in events_obj])
+        print("doing eventparticipant stuff...")
+        await EventParticipant.generate(2013)
 
     @classmethod
     async def load_events(cls, tya_events):
@@ -114,6 +119,8 @@ class TheYellowAlliance:
                         e.division_keys = [basename + "1", basename + "2"]
                         e.playoff_type = PlayoffType.BO3_FINALS
                         event_key_map[edata['id']] = e.key
+                        # for sorting purposes; forces finals divisions to be later
+                        e.start_date += datetime.timedelta(microseconds=1)
                     else:
                         e.parent_event_key = basename + "0"
                         e.name += f" {ediv['name']} Division"
@@ -160,6 +167,7 @@ class TheYellowAlliance:
                       recipient_name=None)
             if DEBUG:
                 print(a)
+            a.name += " Winner" if a.award_place == 1 else " Finalist"
             awards.append(a)
         return awards
     
@@ -190,7 +198,7 @@ class TheYellowAlliance:
             m.gen_keys()
             if match['video']:
                 m.videos = [match['video']]
-            ms_red = MatchScore(key=m.red, 
+            ms_red = MatchScore(key=m.red_key, 
                                 alliance_color="red",
                                 event_key=m.event_key,
                                 match_key=m.key,
@@ -199,7 +207,7 @@ class TheYellowAlliance:
                                 dqed=[],
                                 total=int(match['total_red']),
                                 penalty=int(match['total_red']) - int(match['scored_red']))
-            ms_blue = MatchScore(key=m.blue, 
+            ms_blue = MatchScore(key=m.blue_key, 
                                 alliance_color="blue",
                                 event_key=m.event_key,
                                 match_key=m.key,

@@ -9,14 +9,14 @@ class Match(orm.Model):
     comp_level: text # quals/elims basically
     match_number: integer
     set_number: integer
-    red: text
-    blue: text
+    red_key: text
+    blue_key: text
     winner: text
     videos: Column("text[]")
     def gen_keys(self):
         self.key = f"{self.event_key}_{self.comp_level}{self.set_number if self.set_number else ''}m{self.match_number}"
-        self.red = self.key + "_red"
-        self.blue = self.key + "_blue"
+        self.red_key = self.key + "_red"
+        self.blue_key = self.key + "_blue"
 
 class MatchScore(orm.Model):
     __tablename__ = "match_scores"
