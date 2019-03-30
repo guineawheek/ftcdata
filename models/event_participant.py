@@ -30,7 +30,7 @@ class EventParticipant(orm.Model):
                     elif not event.division_keys:
                         logging.warn(f"[EventParticipant] {award.team_key} got an award at {event.key} without competing lol")
             for match_score, event in await orm.join([MatchScore, Event], ['m', 'e'], 
-                                               ["m.event_key=e.key AND array_length(e.division_keys, 1) > 0"],
+                                               ["m.event_key=e.key AND array_length(e.division_keys, 1) > 0 AND year=$1"], params=[year],
                                                use_dict=False):
                 for team in match_score.teams:
                     ep_map[(team, event.key)].has_matches=True

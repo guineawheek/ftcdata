@@ -97,6 +97,7 @@ build/
 
 # database misc
 tya_restore.json
+data
 
 scoring-system
 

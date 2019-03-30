@@ -339,7 +339,7 @@
                 <td>
                 {% if award.recipient_name %}
                   {{ award.recipient_name }}
-                  {% if award.team_key %}(<a href="/team/{{award.team_key|strip_ftc}}/{{event.season}}">{{award.team_key|strip_ftc}}</a>){% endif %}
+                  {% if award.team_key != 'ftc0' %}(<a href="/team/{{award.team_key|strip_ftc}}/{{event.season}}">{{award.team_key|strip_ftc}}</a>){% endif %}
                 {% else %}
                   {% if award.team_key %}
                   <a href="/team/{{award.team_key|strip_ftc}}/{{event.season}}">{{award.team_key|strip_ftc}}</a>

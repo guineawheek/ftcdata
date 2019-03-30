@@ -26,9 +26,10 @@ class AwardType:
     JUDGES = 10
     PROMOTE = 11
     COMPASS = 12
-    DEANS_LIST_W = 13
-    DEANS_LIST_F = 14
-    DEANS_LIST_SF = 15
+    VOL_OF_YEAR = 13
+    DEANS_LIST_W = 14
+    DEANS_LIST_F = 15
+    DEANS_LIST_SF = 16
     CUSTOM = 9999
 
     base_names = {
@@ -44,9 +45,23 @@ class AwardType:
             JUDGES: "Judge's Award",
             PROMOTE: "Promote Award",
             COMPASS: "Compass Award",
+            VOL_OF_YEAR: "Volunteer of The Year",
             DEANS_LIST_W: "Dean's List Winner",
             DEANS_LIST_F: "Dean's List Finalist",
             DEANS_LIST_SF: "Dean's List Semifinalist",
+    }
+    to_type = {
+            "inspire": INSPIRE,
+            "think": THINK,
+            "connect": CONNECT,
+            "innovate": INNOVATE,
+            "design": DESIGN,
+            "motivate": MOTIVATE,
+            "control": CONTROL,
+            "judge's": JUDGES,
+            "promote": PROMOTE,
+            "compass": COMPASS,
+            "volunteer": VOL_OF_YEAR,
     }
     @classmethod
     def get_names(cls, const, given="", year=2018):
