@@ -113,14 +113,18 @@ class MatchHelper:
                                **join_kwargs))
     
     @classmethod
-    async def get_wlt(cls, team_key, event_key=None):
+    async def get_wlt(cls, team_key, event_key=None, year=None):
         qs = """SELECT count(*) FROM match_scores AS m1 INNER JOIN match_scores AS m2 ON 
                 (m1.match_key=m2.match_key AND m1.key != m2.key 
                 AND m1.total{eq}m2.total AND $1=ANY(m1.teams) {addn})"""
-        args = [team_key] + ([event_key] if event_key else [])
+        args = [team_key]
         addn = ""
         if event_key:
-            addn = "AND m1.event_key=$2"
+            addn = "AND m1.event_key=$2 "
+            args.append(event_key)
+        if year:
+            addn += "AND m1.event_key ~ $" + ("3" if event_key else "2")
+            args.append(f"^{year % 100:02}{(year + 1) % 100:02}")
         ret = {}
         async with orm.pool.acquire() as conn:
             ret['wins'] = (await conn.fetchrow(qs.format(eq='>', addn=addn), *args))['count']

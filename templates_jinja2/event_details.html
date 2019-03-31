@@ -77,10 +77,12 @@
           {% else %}
             <a href="//maps.google.com/maps?q={{ event.city_state_country|urlencode }}" target="_blank">{{event.city_state_country}}</a>
           {% endif %}
-        {% elif event.location or event.venue_address_safe %}
+        {% elif event.location or event.venue %}
           <br><span class="glyphicon glyphicon-map-marker"></span>
-          {% if event.venue_address_safe %}
-            <a href="http://maps.google.com/maps?q={{ event.venue_address_safe|urlencode }}" target="_blank">{{ event.venue_or_venue_from_address }}</a>{% if event.location %} in {{event.location}}{% endif %}
+          {% if event.venue and event.address %}
+            <a href="http://maps.google.com/maps?q={{ event.venue|urlencode }}%2C{{ event.address|urlencode }}" target="_blank">{{ event.venue }}</a>{% if event.location %} in {{event.location}}{% endif %}
+          {% elif event.venue %}
+            <a href="http://maps.google.com/maps?q={{ event.venue|urlencode }}%2C{{ event.location|urlencode }}" target="_blank">{{ event.venue }}</a>{% if event.location %} in {{event.location}}{% endif %}
           {% else %}
             <a href="http://maps.google.com/maps?q={{ event.location|urlencode }}" target="_blank">{{event.location}}</a>
           {% endif %}

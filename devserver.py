@@ -72,7 +72,7 @@ async def teams_year(request, number, season):
         abort(404)
     years = [r["year"] for r in await orm.pool.fetch("SELECT year FROM teams WHERE number=$1 ORDER BY year", number)]
 
-    season_wlt = await MatchHelper.get_wlt(team.key)
+    season_wlt = await MatchHelper.get_wlt(team.key, year=year)
     participation = await EventHelper.get_team_events(team.key, year)
 
     return html(env.get_template("team_details.html").render({
@@ -83,15 +83,34 @@ async def teams_year(request, number, season):
         "year_to_season": year_to_season,
         "region_name": team.region,
         "season_wlt": season_wlt,
-        "participation": participation
+        "participation": participation,
+        "max_year": 2018,
+        "last_competed": years[-1]
     }))
 
 @app.route("/team/<number:int>/history")
 async def teams_history(request, number):
     year = await orm.pool.fetchval("SELECT max(year) FROM teams WHERE number=$1", number)
-    team = await Team.select_one(number=number, year=year)
+    team = await Team.most_recent(number)
     if not team:
         abort(404)
+    team_events = await EventParticipant.select(properties={"team_key": team.key})
+    event_awards = []
+    for ep in team_events:
+        if not (ep.has_awards or ep.has_matches):
+            continue
+        event = await Event.select_one(properties={"key": ep.event_key})
+        if not ep.has_awards:
+            event_awards.append((event, None))
+        else:
+            event_awards.append((event, await AwardHelper.sorted_awards(
+                await Award.select(properties={"event_key": ep.event_key, "team_key": team.key}))))
+    return html(env.get_template("team_history.html").render({
+        "team": team,
+        "event_awards": sorted(event_awards, key=lambda x: x[0].start_date),
+        "max_year": 2018,
+        "last_competed": team.year
+    }))
 
 @app.route("/teams")
 async def teams_list_default(request):
@@ -159,7 +178,7 @@ async def event_details(request, event_key):
 
 @app.route("/events/<season:int>")
 async def events_list(request, season):
-    VALID_YEARS = list(range(2018, 2007, -1))
+    VALID_YEARS = list(range(2018, 2006, -1))
     year = season_to_year(season)
     events = await Event.select(properties={"year": year}, extra_sql=" ORDER BY start_date, key")
     month_events = EventHelper.get_month_events(events) 
@@ -197,5 +216,5 @@ async def match_details(request, match_key):
     
     
 if __name__ == "__main__":
-    app.run(host="localhost", port=8000, debug=True)
+    app.run(host="localhost", port=8000, debug=True, access_log=True)
 

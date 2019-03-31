@@ -1,122 +1,28 @@
 # need beautifulsoup
 from bs4 import BeautifulSoup
-import aiohttp
 import asyncio
-import asyncpg
 import uvloop
 import datetime
-import pprint
 import logging
-import re
+import pprint
 from models import *
-from helpers import OPRHelper, AwardHelper
+from helpers import OPRHelper, AwardHelper, ResultsPageHelper
 from db.orm import orm
 
 
 class OldChamps:
 
     @classmethod
-    def get_http(cls):
-        if not cls.http:
-            cls.http = aiohttp.ClientSession(headers={"User-Agent": "FTCData Project FTCPenn Scraper"})
-        return cls.http
-
-    @classmethod
-    def mk_match(cls, event_key, mname, result, red_a, blue_a):
-        res_map = {"R": "red", "B": "blue", "T": "tie"}
-        match_code = mname.split('-')
-        comp_level = match_code[0].lower() 
-        mnum = int(match_code[-1])
-        set_number = int(match_code[1]) if len(match_code) == 3 else None
-        match = Match(event_key=event_key, comp_level=comp_level, match_number=mnum, set_number=set_number)
-        scores, winner = result.split() 
-        red_score, blue_score = scores.split('-')
-        match.winner = res_map[winner]
-        match.gen_keys() 
-
-        red = MatchScore(key=match.red_key, alliance_color="red", event_key=event_key, match_key=match.key, dqed=[], total=int(red_score), teams=[f'ftc{s.strip("*")}' for s in red_a])
-        red.surrogates = [f'ftc{s.strip("*")}' for s in red_a if s.endswith('*')]
-
-        blue = MatchScore(key=match.blue_key, alliance_color="blue", event_key=event_key, match_key=match.key, dqed=[], total=int(blue_score), teams=[f'ftc{s.strip("*")}' for s in blue_a])
-        blue.surrogates = [f'ftc{s.strip("*")}' for s in blue_a if s.endswith('*')]
-
-        return (match, red, blue)
-
-    @classmethod
-    def load_matches(cls, table, event_key):
-        red_a, blue_a = None, None
-        mname, result = "", ""
-        matches = []
-        for tr in table.find_all("tr"):
-            td = [td.get_text() for td in tr.find_all("td")]
-            if len(td) == 4:
-                if red_a:
-                    matches.append(cls.mk_match(event_key, mname, result, red_a, blue_a))
-                mname = td[0]
-                result = td[1]
-                red_a, blue_a = [td[2]], [td[3]]
-            elif len(td) == 2:
-                red_a.append(td[0])
-                blue_a.append(td[1])
-        matches.append(cls.mk_match(event_key, mname, result, red_a, blue_a))
-        return matches
-
-    @classmethod
-    def load_rankings(cls, table, matches):
-        event_key = matches[0][0].event_key
-        high_scores, wlt = cls.load_rank_data(matches) 
-        ret = []
-        first = True
-        for tr in table.find_all("tr"):
-            if first:
-                first = False
-                continue
-            td = [td.get_text() for td in tr.find_all("td")]
-            tkey = "ftc" + td[1]
-            twlt = wlt[tkey]
-            r = Ranking(event_key=event_key, team_key=tkey, qp_rp=int(td[3]), rp_tbp=int(td[4]), high_score=high_scores.get(tkey, 0), wins=twlt[0], losses=twlt[1], ties=twlt[2], dqed=0, played=int(td[5]), rank=int(td[0]))
-            ret.append(r)
-        return ret
-
-    @classmethod
-    def load_rank_data(cls, matches):
-        teams = set()
-        for m, red, blue in matches:
-            teams.update(red.teams)
-            teams.update(blue.teams)
-
-        high_scores = {t: 0 for t in teams}
-        wlt = {t: [0, 0, 0] for t in teams}
-        def update_wlt(wlt, idx, teams):
-            for team in teams:
-                wlt[team][idx] += 1
-            
-        for m, red, blue in matches:
-            if m.comp_level != 'q':
-                continue
-            for team in red.teams:
-                if high_scores[team] < red.total:
-                    high_scores[team] = red.total
-            for team in blue.teams:
-                if high_scores[team] < blue.total:
-                    high_scores[team] = blue.total
-            if m.winner == 'red':
-                ridx, bidx = 0, 1
-            elif m.winner == 'blue':
-                ridx, bidx = 1, 0
-            else:
-                ridx, bidx = 1, 1
-
-            update_wlt(wlt, ridx, red.teams)
-            update_wlt(wlt, bidx, blue.teams)
-        return high_scores, wlt
-
-    @classmethod
-    def mk_champs(cls, year, start_date, end_date): 
-        start_date = datetime.datetime.strptime(start_date, "%Y-%M-%d")
-        end_date = datetime.datetime.strptime(end_date, "%Y-%M-%d")
+    def mk_champs(cls, year, start_date, end_date, switch=False):
+        """generates World Championship events given a start and end date, and division order, and year. Assumes 1champs
+        """
+        seasons = ["Quad Quandary", "Face Off", "Hot Shot", "Get Over It", "Bowled Over", "Ring It Up", "Block Party",
+                   "Cascade Effect", "RES-Q", "Velocity Vortex", "Relic Recovery", "Rover Ruckus"]
+        season_name = seasons[year-2007]
+        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+        end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
         season = f"{year % 100:02}{(year + 1) % 100:02}"
-        fyear = f"{year}-{(year+1)%1000:02d}"
+        # fyear = f"{year}-{(year+1)%1000:02d}"
         if year == 2009:
             city, state_prov, country = "Atlanta", "Georgia", "USA"
             venue = "Georgia Dome"
@@ -130,29 +36,37 @@ class OldChamps:
             venue = "Union Station"
             address = "1820 Market Street, St. Louis, MO 63103"
         shared = {
-           "year": year,
-           "city": city,
-           "state_prov": state_prov,
-           "country": country,
-           "start_date": start_date,
-           "end_date": end_date,
-           "event_type": EventType.WORLD_CHAMPIONSHIP,
-       }
+            "year": year,
+            "city": city,
+            "state_prov": state_prov,
+            "country": country,
+            "end_date": end_date,
+            "event_type": EventType.WORLD_CHAMPIONSHIP,
+            "venue": venue,
+            "address": address
+        }
+        if switch:
+            f, e = (2, 1)
+        else:
+            f, e = (1, 2)
 
         finals = Event(key=f"{season}cmp0",
-                       name="FIRST Tech Challenge World Championship - Finals",
+                       name=f"FTC {season_name} World Championship - Finals",
                        playoff_type=PlayoffType.BO3_FINALS, 
                        division_keys=[f"{season}cmp1", f"{season}cmp2"],
+                       start_date=end_date,
                        **shared)
-        franklin = Event(key=f"{season}cmp1", 
-                       name="FIRST Tech Challenge World Championship - Franklin Division",
+        franklin = Event(key=f"{season}cmp{f}", 
+                       name=f"FTC {season_name} World Championship - Franklin Division",
                        playoff_type=PlayoffType.STANDARD, 
                        parent_event_key=f"{season}cmp0", 
+                       start_date=start_date,
                        **shared)
-        edison = Event(key=f"{season}cmp2", 
-                       name="FIRST Tech Challenge World Championship - Edison Division",
+        edison = Event(key=f"{season}cmp{e}", 
+                       name=f"FTC {season_name} World Championship - Edison Division",
                        playoff_type=PlayoffType.STANDARD,
                        parent_event_key=f"{season}cmp0", 
+                       start_date=start_date,
                        **shared)
         return (franklin, edison, finals)
 
@@ -170,9 +84,9 @@ class OldChamps:
                 place = i
                 if atype == AwardType.JUDGES:
                     team, sub_name = team_data.split(':')
-                    award_name = f"Judge's ({sub_name}) Award"
+                    award_name = f"Judge's \"{sub_name}\" Award"
                     place = 1
-                elif atype == AwardType.VOL_OF_YEAR:
+                elif atype == AwardType.VOL_OF_YEAR or atype == AwardType.COMPASS:
                     team, recipient = team_data.split(':')
                     award_name = AwardType.get_names(atype, year=year)
                 else:
@@ -183,38 +97,6 @@ class OldChamps:
                 award.name += " Winner" if award.award_place == 1 else " Finalist"
                 ret.append(award)
         return ret
-
-    @classmethod
-    def load_awards_2009(cls, awards_data, event_key):
-        #TODO: volunteer of year, compass award
-        a = ""
-        c = 1
-        judges = False
-        awards = []
-        for line in awards_data.split('\n'):
-            bits = line.split()
-            if not len(bits):
-                continue
-            if bits[0] not in ("Winner:", "Finalist:"):
-                a = line
-                c = 1
-                if bits[0] == "Judge's":
-                    judges = True
-            else:
-                team = "ftc" + bits[2]
-                award_type = AwardType.to_type.get(a.lower(), "oops!")
-                award = Award(name=AwardType.get_names(award_type, year=2009) if not judges else f"Judge's ({' '.join(bits[3:-1])}) Award",
-                          award_type=award_type,
-                          award_place=c if not judges else 1,
-                          event_key=event_key,
-                          team_key=team,
-                          recipient_name=None)
-                award.name += " Winner" if award.award_place == 1 else " Finalist"
-                awards.append(award)
-                c += 1
-        # he won volunteer of the year, so i hardcoded him in
-        awards.append(Award(name=AwardType.get_names(AwardType.VOL_OF_YEAR, year=2009), award_type=AwardType.VOL_OF_YEAR, award_place=1, event_key=event_key, team_key='ftc0', recipient_name="Vince Frascella"))
-        return awards
     
     @classmethod
     async def upsert_all(cls, args):
@@ -237,14 +119,13 @@ class OldChamps:
 
         soup = BeautifulSoup(data, 'lxml')
 
-        tables = list(soup.find_all("table"))#[tbody.find_parent("table") for tbody in soup.find_all("tbody")]
-        finals = cls.load_matches(tables[0], "0910cmp0")
-        franklin = cls.load_matches(tables[1], "0910cmp1")
-        edison = cls.load_matches(tables[2], "0910cmp2")
-        franklin_rank = cls.load_rankings(tables[3], franklin)
-        edison_rank = cls.load_rankings(tables[4], edison)
+        tables = list(soup.find_all("table"))
+        finals = ResultsPageHelper.load_matches(tables[0], "0910cmp0")
+        franklin = ResultsPageHelper.load_matches(tables[1], "0910cmp1")
+        edison = ResultsPageHelper.load_matches(tables[2], "0910cmp2")
+        franklin_rank = ResultsPageHelper.load_rankings(tables[3], franklin, has_hs=False)
+        edison_rank = ResultsPageHelper.load_rankings(tables[4], edison, has_hs=False)
         events = cls.mk_champs(year, "2010-04-14", "2010-04-17")
-        #awards = cls.load_awards_2009(awards_data, events[-1].key)
         awards = cls.load_awards_file(awards_data, year, events[-1].key)
 
         await cls.finalize([finals, franklin, edison, franklin_rank, edison_rank, events, awards], events, year) 
@@ -254,10 +135,100 @@ class OldChamps:
         year = 2010
         with open("data/old_champs/2010-2011/2010-2011-ftc-world-championship-get-over-it!-results.html") as f:
             data = f.read()
-        with open("data/old_champs/2010-2011/2010-2011-ftc-world-championship-award-winners.html") as f:
+        with open("data/old_champs/2010-2011/awards") as f:
             awards_data = f.read()
 
+        soup = BeautifulSoup(data, 'lxml')
 
+        tables = list(soup.find_all("table"))
+        finals = ResultsPageHelper.load_matches(tables[0], "1011cmp0")
+        edison = ResultsPageHelper.load_matches(tables[1], "1011cmp1")
+        franklin = ResultsPageHelper.load_matches(tables[2], "1011cmp2")
+        edison_rank = ResultsPageHelper.load_rankings(tables[3], edison)
+        franklin_rank = ResultsPageHelper.load_rankings(tables[4], franklin)
+        events = cls.mk_champs(year, "2011-04-27", "2011-04-30", switch=True)
+        awards = cls.load_awards_file(awards_data, year, events[-1].key)
+
+        await cls.finalize([finals, franklin, edison, franklin_rank, edison_rank, events, awards], events, year) 
+
+    @classmethod
+    async def load_2011(cls):
+        year = 2011
+        with open("data/old_champs/2011-2012/2011-2012FTCCMPResults") as f:
+            data = f.read()
+        with open("data/old_champs/2011-2012/awards") as f:
+            awards_data = f.read()
+
+        soup = BeautifulSoup(data, 'lxml')
+
+        tables = list(soup.find_all("table"))
+        finals = ResultsPageHelper.load_matches(tables[3], "1112cmp0")
+
+        franklin = ResultsPageHelper.load_matches(tables[15], "1112cmp1")
+        edison = ResultsPageHelper.load_matches(tables[14], "1112cmp2")
+
+        franklin_rank = ResultsPageHelper.load_rankings(tables[13], franklin)
+        edison_rank = ResultsPageHelper.load_rankings(tables[12], edison)
+        events = cls.mk_champs(year, "2012-04-25", "2012-04-28", switch=False)
+        awards = cls.load_awards_file(awards_data, year, events[-1].key)
+
+        await cls.finalize([finals, franklin, edison, franklin_rank, edison_rank, events, awards], events, year) 
+
+    @classmethod
+    async def load_2012(cls):
+        year = 2012
+        with open("data/old_champs/2012-2013/Match_Results_World Championship_Edison.html") as f:
+            edison = ResultsPageHelper.load_matches(BeautifulSoup(f.read(), 'lxml').find("table"), "1213cmp1")
+        with open("data/old_champs/2012-2013/Match_Results_World Championship_Franklin.html") as f:
+            franklin = ResultsPageHelper.load_matches(BeautifulSoup(f.read(), 'lxml').find("table"), "1213cmp2")
+        with open("data/old_champs/2012-2013/finals.html") as f:
+            finals = ResultsPageHelper.load_matches(BeautifulSoup(f.read(), 'lxml').find("table"), "1213cmp0")
+        with open("data/old_champs/2012-2013/Rankings_World Championship_Edison.html") as f:
+            edison_rank = ResultsPageHelper.load_rankings(BeautifulSoup(f.read(), 'lxml').find("table"), edison)
+        with open("data/old_champs/2012-2013/Rankings_World Championship_Franklin.html") as f:
+            franklin_rank = ResultsPageHelper.load_rankings(BeautifulSoup(f.read(), 'lxml').find("table"), franklin)
+        with open("data/old_champs/2012-2013/awards") as f:
+            awards = cls.load_awards_file(f.read(), year, '1213cmp0')
+        events = cls.mk_champs(year, "2013-04-24", "2013-04-27", switch=True)
+
+        await cls.finalize([finals, franklin, edison, franklin_rank, edison_rank, events, awards], events, year)
+
+    @classmethod
+    async def load_2013(cls):
+        year = 2013
+        # this is mostly to overwrite tya's names, and to includes awards data (which tya doesn't)
+        events = cls.mk_champs(year, "2014-04-24", "2014-04-26", switch=True)
+        with open("data/old_champs/2013-2014/awards") as f:
+            awards = cls.load_awards_file(f.read(), year, '1314cmp0')
+
+        await cls.finalize([events, awards], events, 2013)
+    @classmethod
+    async def load_2014(cls):
+        year = 2014
+        # edison
+        with open("data/old_champs/2014-2015/MatchResultsDetails_World_Championship_Edison_T.html") as f:
+            edison = ResultsPageHelper.load_match_details(BeautifulSoup(f.read(), 'lxml').find("table"), "1415cmp2")
+        with open("data/old_champs/2014-2015/MatchResultsDetails_World_Championship_Edison_Elim.html") as f:
+            edison.extend(ResultsPageHelper.load_match_details(BeautifulSoup(f.read(), 'lxml').find("table"), "1415cmp2"))
+        # franklin
+        with open("data/old_champs/2014-2015/MatchResultsDetails_World_Championship_Franklin_T.html") as f:
+            franklin = ResultsPageHelper.load_match_details(BeautifulSoup(f.read(), 'lxml').find("table"), "1415cmp1")
+        with open("data/old_champs/2014-2015/MatchResultsDetails_World_Championship_Franklin_Elim.html") as f:
+            franklin.extend(ResultsPageHelper.load_match_details(BeautifulSoup(f.read(), 'lxml').find("table"), "1415cmp1"))
+        # finals
+        with open("data/old_champs/2014-2015/MatchResultsDetails_World_Championship_Finals.html") as f:
+            finals = ResultsPageHelper.load_match_details(BeautifulSoup(f.read(), 'lxml').find("table"), "1415cmp0")
+        # rankings
+        with open("data/old_champs/2014-2015/Rankings_World_Championship_Edison.html") as f:
+            edison_rank = ResultsPageHelper.load_rankings(BeautifulSoup(f.read(), 'lxml').find("table"), edison)
+        with open("data/old_champs/2014-2015/Rankings_World_Championship_Franklin.html") as f:
+            franklin_rank = ResultsPageHelper.load_rankings(BeautifulSoup(f.read(), 'lxml').find("table"), franklin)
+
+        with open("data/old_champs/2014-2015/awards") as f:
+            awards = cls.load_awards_file(f.read(), year, '1415cmp0')
+        events = cls.mk_champs(year, "2015-04-22", "2015-04-25", switch=False)
+
+        await cls.finalize([finals, franklin, edison, franklin_rank, edison_rank, events, awards], events, year)
     @classmethod
     async def finalize(cls, objects, events, year):
         await cls.upsert_all(objects)
@@ -274,9 +245,11 @@ class OldChamps:
 
     @classmethod
     async def load(cls):
-        MAX_YEAR = 2010
+        MAX_YEAR = 2015
         for i in range(2009, MAX_YEAR):
-            await getattr(cls, f'load_{i}')()
+            if hasattr(cls, f'load_{i}'):
+                await getattr(cls, f'load_{i}')()
+            print("...", i)
 
 
 async def main():
@@ -284,7 +257,7 @@ async def main():
     await orm.connect(host="/run/postgresql/.s.PGSQL.5432", database="ftcdata", max_size=50)
     await orm.Model.create_all_tables()
     print("Loading old championship data...")
-    await OldChamps.load()
+    await OldChamps.load_2013()
 
     await orm.close()
 

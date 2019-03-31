@@ -20,16 +20,21 @@ class EventParticipant(orm.Model):
             events = await Event.select(properties={"year": year}, conn=conn)
             for event in events:
                 for ranking in await Ranking.select(properties={"event_key": event.key}, conn=conn):
-                    ep_map[(ranking.team_key, event.key)] = cls(event_key=event.key, team_key=ranking.team_key, year=year, has_matches=True, has_awards=False)
+                    ep_map[(ranking.team_key, event.key)] = cls(event_key=event.key, team_key=ranking.team_key,
+                                                                year=year, has_matches=True, has_awards=False)
                     # teams are _technically_ in the awards/finals division
                     if event.parent_event_key and (ranking.team_key, event.parent_event_key) not in ep_map:
-                        ep_map[(ranking.team_key, event.parent_event_key)] = cls(event_key=event.parent_event_key, team_key=ranking.team_key, year=year, has_matches=False, has_awards=False)
+                        cls.cls = cls(event_key=event.parent_event_key, team_key=ranking.team_key, year=year,
+                                      has_matches=False, has_awards=False)
+                        ep_map[(ranking.team_key, event.parent_event_key)] = cls.cls
+            for event in events:
                 for award in await Award.select(properties={"event_key": event.key}, conn=conn):
                     if (award.team_key, event.key) in ep_map:
                         ep_map[(award.team_key, event.key)].has_awards = True
                     elif not event.division_keys:
-                        logging.warn(f"[EventParticipant] {award.team_key} got an award at {event.key} without competing lol")
-            for match_score, event in await orm.join([MatchScore, Event], ['m', 'e'], 
+                        logging.warning(f"[EventParticipant] {award.team_key} got an award at {event.key} without competing lol")
+
+            for match_score, event in await orm.join([MatchScore, Event], ['m', 'e'],
                                                ["m.event_key=e.key AND array_length(e.division_keys, 1) > 0 AND year=$1"], params=[year],
                                                use_dict=False):
                 for team in match_score.teams:

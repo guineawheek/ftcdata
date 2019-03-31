@@ -32,6 +32,7 @@ class Event(orm.Model):
     country: text
     postalcode: text
     address: text
+    venue: text
     website: text
     lat: double_precision
     lon: double_precision

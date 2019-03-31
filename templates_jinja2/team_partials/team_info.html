@@ -25,8 +25,8 @@
         <br>
       {% endif %}
       {% if team.name %}<span class="glyphicon glyphicon-info-sign"></span> <em>aka {{ team.org }}</em><br>{% endif %}
-      {% if team.rookie_year %}<span class="glyphicon glyphicon-calendar"></span> Rookie Year: {{ format_year(team.rookie_year) }}<br>{% endif %}
-      {% if last_competed and last_competed < max_year %}<span class="glyphicon glyphicon-time"></span> Last competed in {{ last_competed }}<br>{% endif %}
+      {% if team.rookie_year %}<span class="glyphicon glyphicon-calendar"></span> Rookie Year: {{ team.rookie_year|fseason }}<br>{% endif %}
+      {% if last_competed and last_competed < max_year %}<span class="glyphicon glyphicon-time"></span> Last competed in {{ last_competed|fseason }}<br>{% endif %}
       {% if team.website %}<span class="glyphicon glyphicon-globe"></span> <a href="{{team.website}}" target="_blank">{{ team.website }}</a><br>{% endif %}
       {% if team.home_cmp %}<span class="glyphicon glyphicon-flag"></span> Home Championship: {{team.home_cmp}} <br>{% endif %}
 

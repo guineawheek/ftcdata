@@ -6,6 +6,7 @@ import uvloop
 import asyncio
 import datetime
 import re
+import json
 
 __all__ = ["TheYellowAlliance"]
 DEBUG = False
@@ -54,11 +55,9 @@ class TheYellowAlliance:
             raise RuntimeError(f"unknown type {edata['type']}")
 
     @classmethod
-    async def load(cls, year):
-        DATA_URL = "https://ocf.berkeley.edu/~liuderek/ftc/tya_restore.json"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(DATA_URL) as response:
-                data = await response.json()
+    async def load(cls):
+        with open("data/tya_restore.json") as f:
+            data = json.load(f)
         # first step, create all the event objects out of divisions
 
         # create a mapping between the tya ids and the event data
@@ -167,6 +166,7 @@ class TheYellowAlliance:
                       recipient_name=None)
             if DEBUG:
                 print(a)
+            print(a)
             a.name += " Winner" if a.award_place == 1 else " Finalist"
             awards.append(a)
         return awards
@@ -248,12 +248,12 @@ class TheYellowAlliance:
             
 async def main():
     global DEBUG
-    DEBUG = True
+    DEBUG = False
     print("Initializing database connection...")
     await orm.connect(host="/run/postgresql/.s.PGSQL.5432", database="ftcdata", max_size=50)
     await orm.Model.create_all_tables()
     print("Loading TYA archive...")
-    await TheYellowAlliance.load(2013) 
+    await TheYellowAlliance.load()
     await orm.close()
 
 if __name__ == "__main__":

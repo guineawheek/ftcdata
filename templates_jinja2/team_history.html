@@ -46,20 +46,23 @@
           <tbody>
             {% for event, awards in event_awards|reverse %}
             <tr>
-              <td><a href="/team/{{team.number}}/{{event.year}}">{{event.year}}</a></td>
-              <td><a href="/event/{{event.key_name}}">{{event.name}}</a></td>
+              <td><a href="/team/{{team.number}}/{{event.year|season}}">{{event.year}}</a></td>
+              <td><a href="/event/{{event.key}}">{{event.name}}</a></td>
               <td>
               {% if awards %}
               {% for award in awards %}
+                {{ award.name }}{% if award.recipient_name %} ({{award.recipient_name}}){% endif %}<br>
+
+              {% endfor %}
+              {% endif %}
+                {#
                 {% for team_number, awardees in award.recipient_dict.items() %}
                 {% if team_number|int == team.number %}
                 {% for awardee in awardees %}
                   {{ award.name_str }}{% if awardee %} ({{ awardee }}){% endif %}<br>
                 {% endfor %}
                 {% endif %}
-                {% endfor %}
-              {% endfor %}
-              {% endif %}
+                {% endfor %} #}
               </td>
             </tr>
             {% endfor %}
@@ -73,6 +76,7 @@
           {# for 4/1 #}
           {{bbm.blue_banner({'year': current_year, 'normalized_name': 'Participation Award'}, {'normalized_name': 'Season'}, hidden=True)}}
 
+          {# we don't really do the banners thing in ftc oops
           {% for event, awards in event_awards|reverse %}
             {% if event.is_season_event and awards %}
               {% for award in awards %}
@@ -85,7 +89,7 @@
                 {% endif %}
               {% endfor %}
             {% endif %}
-          {% endfor %}
+          {% endfor %} #}
         </div>
       </div>
     </div>

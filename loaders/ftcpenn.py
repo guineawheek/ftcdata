@@ -74,8 +74,9 @@ class FTCPennScraper:
         for tr in table.find_all("tr"):
             row = [td for td in tr.find_all("td")]
             event_type = row[1].get_text().lower()
-            if event_type.find("tournament") >= 0 || event_type.find("championship") >= 0:
+            if event_type.find("tournament") >= 0 or event_type.find("championship") >= 0:
                 if "qualifying" in event_type:
+                    pass
                     
                 print(row[1], row[2], row[3], row[4])
 

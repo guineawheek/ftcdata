@@ -91,13 +91,10 @@ test_keys.json
 .vagrant/
 dev-datastore/
 
+data/
 # weird stuff #
 venv/
 build/
-
-# database misc
-tya_restore.json
-data
 
 scoring-system
 

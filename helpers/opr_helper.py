@@ -25,9 +25,9 @@ class OPRHelper:
             opr_scores = np.array([m.total for m in match_scores])
             dpr_scores = np.array([m.total for m in dpr_scores])
             ccwm_scores = opr_scores - dpr_scores
-            opr = np.linalg.lstsq(match_matrix, opr_scores)[0]
-            dpr = np.linalg.lstsq(match_matrix, dpr_scores)[0]
-            ccwm = np.linalg.lstsq(match_matrix, ccwm_scores)[0]
+            opr = np.linalg.lstsq(match_matrix, opr_scores, rcond=None)[0]
+            dpr = np.linalg.lstsq(match_matrix, dpr_scores, rcond=None)[0]
+            ccwm = np.linalg.lstsq(match_matrix, ccwm_scores, rcond=None)[0]
             for team_key, i in team_index.items():
                 rank = await Ranking.select_one(conn=conn, properties={'event_key': event_key, 'team_key': team_key})
                 rank.opr = opr[i]

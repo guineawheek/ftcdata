@@ -2,7 +2,7 @@
   <tbody>
     {# A lot of match data only has auton/tele/endgame stats. Or less. This should cover all the bases. #}
     <!-- Auto Bonus -->
-    {% if red.auto_bonus is not none %}
+    {% if red.auto_bonus is not none and match.year < 2013%}
     <tr>
       <td class="red" colspan="2">{% if red.auto %} {{red.auto}} {% else %} 0 {% endif %}</td>
       <td>Autonomous</td>
@@ -48,15 +48,6 @@
       <td class="red" colspan="2">{% if red.penalty %}+{{red.penalty}} {% else %}+0 {% endif %}</td>
       <td>Penalties</td>
       <td class="blue" colspan="2">{% if blue.penalty %}+{{blue.penalty}} {% else %}+0 {% endif %}</td>
-    </tr>
-    {% endif %}
-
-    <!-- Endgame Total -->
-    {% if red.endgame is not none %}
-    <tr class="key">
-      <td class="red" colspan="2">{% if red.endgame %} {{red.endgame}} {% else %} 0 {% endif %}</td>
-      <th>Total Endgame</th>
-      <td class="blue" colspan="2">{% if blue.endgame %}{{blue.endgame}} {% else %} 0 {% endif %}</td>
     </tr>
     {% endif %}
 
