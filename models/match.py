@@ -17,6 +17,12 @@ class Match(orm.Model):
         self.key = f"{self.event_key}_{self.comp_level}{self.set_number if self.set_number else ''}m{self.match_number}"
         self.red_key = self.key + "_red"
         self.blue_key = self.key + "_blue"
+    def __repr__(self):
+        if self.set_number:
+            lsm = f"{self.comp_level}-{self.match_number}-{self.set_number}"
+        else:
+            lsm = f"{self.comp_level}-{self.match_number}"
+        return f"{self.key} {lsm} {self.winner}"
 
 class MatchScore(orm.Model):
     __tablename__ = "match_scores"
@@ -36,3 +42,5 @@ class MatchScore(orm.Model):
     penalty: integer
     breakdown: Column("json")
 
+    def __repr__(self):
+        return f"{self.alliance_color} {self.total} [{', '.join(self.teams)}]"

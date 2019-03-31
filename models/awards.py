@@ -33,36 +33,49 @@ class AwardType:
     CUSTOM = 9999
 
     base_names = {
-            INSPIRE: "Inspire Award",
-            WINNING_ALLIANCE: "Winner",
-            FINALIST_ALLIANCE: "Finalist",
-            THINK: "Think Award",
-            CONNECT: "Connect Award",
-            INNOVATE: "Innovate Award", 
-            DESIGN: "Design Award",
-            MOTIVATE: "Motivate Award",
-            CONTROL: "Control Award",
-            JUDGES: "Judge's Award",
-            PROMOTE: "Promote Award",
-            COMPASS: "Compass Award",
-            VOL_OF_YEAR: "Volunteer of The Year",
-            DEANS_LIST_W: "Dean's List Winner",
-            DEANS_LIST_F: "Dean's List Finalist",
-            DEANS_LIST_SF: "Dean's List Semifinalist",
+        INSPIRE: "Inspire Award",
+        WINNING_ALLIANCE: "Winner",
+        FINALIST_ALLIANCE: "Finalist",
+        THINK: "Think Award",
+        CONNECT: "Connect Award",
+        INNOVATE: "Innovate Award",
+        DESIGN: "Design Award",
+        MOTIVATE: "Motivate Award",
+        CONTROL: "Control Award",
+        JUDGES: "Judge's Award",
+        PROMOTE: "Promote Award",
+        COMPASS: "Compass Award",
+        VOL_OF_YEAR: "Volunteer of The Year",
+        DEANS_LIST_W: "Dean's List Winner",
+        DEANS_LIST_F: "Dean's List Finalist",
+        DEANS_LIST_SF: "Dean's List Semifinalist",
     }
     to_type = {
-            "inspire": INSPIRE,
-            "think": THINK,
-            "connect": CONNECT,
-            "innovate": INNOVATE,
-            "design": DESIGN,
-            "motivate": MOTIVATE,
-            "control": CONTROL,
-            "judge's": JUDGES,
-            "promote": PROMOTE,
-            "compass": COMPASS,
-            "volunteer": VOL_OF_YEAR,
+        "inspire": INSPIRE,
+        "think": THINK,
+        "connect": CONNECT,
+        "innovate": INNOVATE,
+        "rockwell collins innovate": INNOVATE,
+        "collins aerospace innovate": INNOVATE,
+        "design": DESIGN,
+        "ptc design": DESIGN,
+        "motivate": MOTIVATE,
+        "control": CONTROL,
+        "judge's": JUDGES,
+        "judges'": JUDGES,
+        "promote": PROMOTE,
+        "compass": COMPASS,
+        "volunteer": VOL_OF_YEAR,
     }
+
+    @classmethod
+    def get_type(cls, name):
+        name = name.lower()
+        sname = name.split()
+        if sname[-1] == 'award':
+            name = ' '.join(sname[:-1])
+        return cls.to_type.get(name.lower(), cls.CUSTOM)
+
     @classmethod
     def get_names(cls, const, given="", year=2018):
         base = cls.base_names.get(const, given)
