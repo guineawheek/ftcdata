@@ -91,7 +91,6 @@ test_keys.json
 .vagrant/
 dev-datastore/
 
-data/
 # weird stuff #
 venv/
 build/

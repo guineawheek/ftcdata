@@ -1,0 +1,44 @@
+https://www.youtube.com/watch?v=NY--aH1bgIc
+red:
+auton: 0
+
+low rings: 1
+mid rings: 7
+high rings: 6
+lines: 0
+
+blue:
+auton: 50
+
+low rings: 2
+mid rings: 7
+high rings: 7
+lines: 2
+
+weighted rings: 1 (20% bonus)
+teleop: 245 * 1.2 = 294
+red: 165
+blue wins with ~344 pts
+
+https://www.youtube.com/watch?v=Q0_xBd5V1mQ
+red:
+auton: 50
+
+low rings: 5
+mid rings: 5
+high rings: 5
+lines: 0
+teleop: 150
+
+blue:
+auton: 50
+
+low rings: 2
+mid rings: 4
+high rings: 5 + 1 + 2 = 8
+lines: 0
+teleop: 170
+
+red: 200
+blue: 220
+blue wins

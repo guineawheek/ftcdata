@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js ie6 ie" xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 ie" xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 ie" xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js ie9 ie" xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr"> <![endif]-->
+<!--[if gt IE 9]><!--> <html class="no-js" xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr" prefix="content: http://purl.org/rss/1.0/modules/content/ dc: http://purl.org/dc/terms/ foaf: http://xmlns.com/foaf/0.1/ og: http://ogp.me/ns# rdfs: http://www.w3.org/2000/01/rdf-schema# sioc: http://rdfs.org/sioc/ns# sioct: http://rdfs.org/sioc/types# skos: http://www.w3.org/2004/02/skos/core# xsd: http://www.w3.org/2001/XMLSchema#"> <!--<![endif]-->
+
+<head><script src="//archive.org/includes/analytics.js?v=cf34f82" type="text/javascript"></script>
+<script type="text/javascript">window.addEventListener('DOMContentLoaded',function(){var v=archive_analytics.values;v.service='wb';v.server_name='wwwb-app56.us.archive.org';v.server_ms=239;archive_analytics.send_pageview({});});</script><script type="text/javascript" src="/static/js/ait-client-rewrite.js?v=1553621510" charset="utf-8"></script>
+<script type="text/javascript">
+WB_wombat_Init("http://web.archive.org/web", "20150905180051", "www.usfirst.org");
+</script>
+<script type="text/javascript" src="/static/js/wbhack.js?v=1553621510" charset="utf-8"></script>
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<link rel="stylesheet" type="text/css" href="/static/css/banner-styles.css?v=1553621509" />
+<link rel="stylesheet" type="text/css" href="/static/css/iconochive.css?v=1553621509" />
+<!-- End Wayback Rewrite JS Include -->
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="alternate" type="application/rss+xml" title="FRC RSS Feed" href="http://web.archive.org/web/20150905180051/http://www.usfirst.org/rss-frc.aspx"/>
+<link rel="alternate" type="application/rss+xml" title="Jr.FLL RSS Feed" href="http://web.archive.org/web/20150905180051/http://www.usfirst.org/rss-jrfll.aspx"/>
+<link rel="alternate" type="application/rss+xml" title="FLL RSS Feed" href="http://web.archive.org/web/20150905180051/http://www.usfirst.org/rss-fll.aspx"/>
+<link rel="alternate" type="application/rss+xml" title="FTC RSS Feed" href="http://web.archive.org/web/20150905180051/http://www.usfirst.org/rss-ftc.aspx"/>
+<link rel="shortcut icon" href="http://web.archive.org/web/20150905180051im_/http://www.usfirst.org/sites/all/themes/first_core/ftc/favicon.ico" type="image/vnd.microsoft.icon"/>
+<meta name="description" content="FIRST designs accessible, innovative programs that build not only science and technology skills and interests, but also self-confidence, leadership, and life skills."/>
+<meta name="Generator" content="Drupal 7 (http://drupal.org)"/>
+<link rel="canonical" href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/2013-ftc-cmp-awards"/>
+<link rel="shortlink" href="/web/20150905180051/http://www.usfirst.org/node/2858"/>
+<meta name="keywords" content="FIRST, Dean Kamen, Science, technology, math, engineering, young people, Interest and participation in science and technology, education opportunities, career opportunities, Gracious professionalism, Underserved initiative, FIRST evaluation, FIRST Brandei"/>
+  <title>2012-2013 FTC World Championship Awards List | USFIRST.org</title>
+  <style type="text/css" media="all">
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/modules/system/system.base.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/modules/system/system.menus.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/modules/system/system.messages.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/modules/system/system.theme.css?nty9a3");
+</style>
+<style type="text/css" media="all">
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/libraries/mediaelement/build/mediaelementplayer.min.css?nty9a3");
+</style>
+<style type="text/css" media="all">
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/modules/book/book.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/modules/calendar/css/calendar_multiday.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/modules/comment/comment.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/modules/date/date_api/date.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/modules/date/date_popup/themes/datepicker.1.7.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/modules/date/date_repeat_field/date_repeat_field.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/modules/field/theme/field.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/modules/mollom/mollom.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/modules/node/node.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/modules/poll/poll.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/modules/search/search.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/modules/user/user.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/modules/views/css/views.css?nty9a3");
+</style>
+<style type="text/css" media="all">
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/modules/ctools/css/ctools.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/modules/gilidpanel/css/nanoscroller.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/modules/gilidpanel/css/font-awesome.min.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/modules/panels/css/panels.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/modules/gilidpanel/css/gilid.panel.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/modules/regions/modules/regions_right_slideout/regions_right_slideout.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/modules/addthis/addthis.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/libraries/superfish/css/superfish.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/libraries/superfish/css/superfish-vertical.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/libraries/superfish/style/first.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/libraries/superfish/style/white.css?nty9a3");
+</style>
+<style type="text/css" media="all">
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/themes/fusion/fusion_core/css/fusion-style.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/themes/fusion/fusion_core/css/fusion-typography.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/themes/fusion/fusion_core/skins/core/fusion-core-skins.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/themes/first_core/css/first-core-style.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/themes/first_core/css/jquery.countdown.css?nty9a3");
+</style>
+<style type="text/css" media="all">
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/themes/fusion/fusion_core/css/grid16-960.css?nty9a3");
+@import url("http://web.archive.org/web/20150905180051cs_/http://www.usfirst.org/sites/all/themes/first_core/ftc/css/local.css?nty9a3");
+</style>
+    <script type="text/javascript" src="http://web.archive.org/web/20150905180051js_/http://www.usfirst.org/sites/default/files/js/js_UWQINlriydSoeSiGQxToOUdv493zEa7dpsXC1OtYlZU.js"></script>
+<script type="text/javascript" src="http://web.archive.org/web/20150905180051js_/http://www.usfirst.org/sites/all/libraries/mediaelement/build/mediaelement-and-player.min.js?v=2.1.6"></script>
+<script type="text/javascript" src="http://web.archive.org/web/20150905180051js_/http://www.usfirst.org/sites/default/files/js/js_wqMQFE1ledeHFl-q3BbZo8Kh8rbAETAR21SfzAtRcM0.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+
+	    addthis_pub = 'bcox';
+	    addthis_logo = 'http://web.archive.org/web/20150905180051/http://www.addthis.com/images/yourlogo.png';
+	    addthis_logo_background = 'EFEFFF';
+	    addthis_logo_color = '666699';
+	    addthis_brand = '';
+	    addthis_options = 'favorites, email, digg, delicious, myspace, facebook, google, live, more';
+	    addthis_disable_flash = 'true';
+	
+//--><!]]>
+</script>
+<script type="text/javascript" src="http://web.archive.org/web/20150905180051js_/http://www.usfirst.org/sites/default/files/js/js_rv_BKYv7yieH0IgHddhWHDC-bWGan8yiJbusyOpr0mw.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var _gaq = _gaq || [];_gaq.push(["_setAccount", "UA-9189324-1"]);_gaq.push(["_setDomainName", ".usfirst.org"]);_gaq.push(["_trackPageview"]);(function() {var ga = document.createElement("script");ga.type = "text/javascript";ga.async = true;ga.src = ("https:" == document.location.protocol ? "http://web.archive.org/web/20150905180051/https://ssl/" : "http://web.archive.org/web/20150905180051/http://www/") + ".google-analytics.com/ga.js";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(ga, s);})();
+//--><!]]>
+</script>
+<script type="text/javascript" src="http://web.archive.org/web/20150905180051js_/http://www.usfirst.org/sites/default/files/js/js_pgfOQXJ-YKu0--Q8ywi6Ec2Jgc24M8h5ESpTYuRYl24.js"></script>
+<script type="text/javascript" src="http://web.archive.org/web/20150905180051js_/http://www.usfirst.org/sites/default/files/js/js_aNQipLzU3OpO9lhhHRnx9eAnA0_oGs52KQPVlqMfWto.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, {"basePath":"\/","pathPrefix":"","ajaxPageState":{"theme":"ftc","theme_token":"OpXttnH_sHCBiuB-xrrL0cZWGzui4I2He2J7-1fZzzE","js":{"misc\/jquery.js":1,"misc\/jquery.once.js":1,"misc\/drupal.js":1,"sites\/all\/libraries\/mediaelement\/build\/mediaelement-and-player.min.js":1,"sites\/all\/modules\/gilidpanel\/js\/jquery.easing.1.3.js":1,"sites\/all\/modules\/gilidpanel\/js\/jquery.nanoscroller.min.js":1,"sites\/all\/modules\/gilidpanel\/js\/jquery.gilid.js":1,"sites\/all\/modules\/mediaelement\/mediaelement.js":1,"sites\/all\/modules\/gilidpanel\/js\/gilidpanel.js":1,"sites\/all\/modules\/regions\/modules\/regions_right_slideout\/regions_right_slideout.js":1,"0":1,"sites\/all\/modules\/google_analytics\/googleanalytics.js":1,"1":1,"sites\/all\/libraries\/superfish\/sftouchscreen.js":1,"sites\/all\/libraries\/superfish\/jquery.hoverIntent.minified.js":1,"sites\/all\/libraries\/superfish\/superfish.js":1,"sites\/all\/libraries\/superfish\/supposition.js":1,"sites\/all\/modules\/superfish\/superfish.js":1,"sites\/all\/themes\/fusion\/fusion_core\/js\/script.js":1,"sites\/all\/themes\/fusion\/fusion_core\/skins\/core\/js\/script.js":1,"sites\/all\/themes\/first_core\/js\/jquery.countdown.min.js":1,"sites\/all\/themes\/first_core\/js\/first_core.js":1},"css":{"modules\/system\/system.base.css":1,"modules\/system\/system.menus.css":1,"modules\/system\/system.messages.css":1,"modules\/system\/system.theme.css":1,"sites\/all\/libraries\/mediaelement\/build\/mediaelementplayer.min.css":1,"modules\/book\/book.css":1,"sites\/all\/modules\/calendar\/css\/calendar_multiday.css":1,"modules\/comment\/comment.css":1,"sites\/all\/modules\/date\/date_api\/date.css":1,"sites\/all\/modules\/date\/date_popup\/themes\/datepicker.1.7.css":1,"sites\/all\/modules\/date\/date_repeat_field\/date_repeat_field.css":1,"modules\/field\/theme\/field.css":1,"sites\/all\/modules\/mollom\/mollom.css":1,"modules\/node\/node.css":1,"modules\/poll\/poll.css":1,"modules\/search\/search.css":1,"modules\/user\/user.css":1,"sites\/all\/modules\/views\/css\/views.css":1,"sites\/all\/modules\/ctools\/css\/ctools.css":1,"sites\/all\/modules\/gilidpanel\/css\/nanoscroller.css":1,"sites\/all\/modules\/gilidpanel\/css\/font-awesome.min.css":1,"sites\/all\/modules\/panels\/css\/panels.css":1,"sites\/all\/modules\/gilidpanel\/css\/gilid.panel.css":1,"sites\/all\/modules\/regions\/modules\/regions_right_slideout\/regions_right_slideout.css":1,"sites\/all\/modules\/addthis\/addthis.css":1,"sites\/all\/libraries\/superfish\/css\/superfish.css":1,"sites\/all\/libraries\/superfish\/css\/superfish-vertical.css":1,"sites\/all\/libraries\/superfish\/style\/first.css":1,"sites\/all\/libraries\/superfish\/style\/white.css":1,"sites\/all\/themes\/fusion\/fusion_core\/css\/fusion-style.css":1,"sites\/all\/themes\/fusion\/fusion_core\/css\/fusion-typography.css":1,"sites\/all\/themes\/fusion\/fusion_core\/skins\/core\/fusion-core-skins.css":1,"sites\/all\/themes\/first_core\/css\/first-core-style.css":1,"sites\/all\/themes\/first_core\/css\/jquery.countdown.css":1,"sites\/all\/themes\/fusion\/fusion_core\/css\/grid16-960.css":1,"sites\/all\/themes\/first_core\/css\/local.css":1,"sites\/all\/themes\/first_core\/ftc\/css\/local.css":1}},"mediaelementAll":true,"googleanalytics":{"trackOutbound":1,"trackMailto":1,"trackDownload":1,"trackDownloadExtensions":"7z|aac|arc|arj|asf|asx|avi|bin|csv|doc|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls|xml|z|zip","trackDomainMode":"1"},"urlIsAjaxTrusted":{"\/roboticsprograms\/ftc\/2013-FTC-CMP-Awards":true},"superfish":[{"id":"1","sf":{"animation":{"opacity":"show"},"speed":"\u0027fast\u0027","autoArrows":true,"dropShadows":false,"disableHI":false},"plugins":{"supposition":true,"bgiframe":false}},{"id":"12","sf":{"animation":{"opacity":"show"},"speed":"\u0027fast\u0027","autoArrows":true,"dropShadows":true,"disableHI":false},"plugins":{"touchscreen":{"mode":"always_active"},"supposition":true,"bgiframe":false}}]});
+//--><!]]>
+</script>
+</head>
+<body id="pid-roboticsprograms-ftc-2013-ftc-cmp-awards" class="html not-front not-logged-in one-sidebar sidebar-first page-node page-node- page-node-2858 node-type-page font-size-13 grid-type-960 grid-width-16 sidebars-split">
+  <div id="skip-link">
+    <a href="#main-content-area">Skip to main content area</a>
+  </div>
+    
+
+
+<div id="page" class="page">
+  <div id="page-inner" class="page-inner">
+  <div id="wrapper">
+     <div id="breadcrumb-wrapper">
+     <div id="breadcrumbs" class="breadcrumbs block">
+<div id="breadcrumbs-inner" class="breadcrumbs-inner gutter">
+<h2 class="element-invisible">You are here</h2><div class="breadcrumb"><a href="/web/20150905180051/http://www.usfirst.org/">Home</a> » <a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms">Robotics Programs</a> » <a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc">FIRST Tech Challenge</a> » <a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/2013-ftc-cmp-awards" class="active">2012-2013 FTC World Championship Awards List</a></div></div><!-- /breadcrumbs-inner -->
+</div><!-- /breadcrumbs -->
+</div>
+  
+    
+    
+    <!-- header-group region: width = grid_width -->
+    
+    <div id="header-group-wrapper" class="header-group-wrapper full-width clearfix">
+      <div id="header-group" class="header-group region grid16-16">
+        <div id="header-group-inner" class="header-group-inner inner clearfix">
+                    <div id="header-site-info" class="header-site-info">
+            <div id="header-site-info-inner" class="header-site-info-inner gutter">
+                            <div id="logo"> <a href="/web/20150905180051/http://www.usfirst.org/" title="Home"><img src="http://web.archive.org/web/20150905180051im_/http://www.usfirst.org/sites/all/themes/first_core/ftc/logo.png" alt="Home"/></a> </div>
+                                        </div>
+            <!-- /header-site-info-inner --> 
+            
+          </div>
+          <!-- /header-site-info -->
+          
+                    <div id="block-menu-menu-secondary-navigation" class="block block-menu grid16-12 fusion-right-content fusion-right first  odd">
+  <div class="gutter inner clearfix">
+            
+    <div class="content clearfix">
+      <ul class="menu"><li class="first leaf"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/jr.fll">Jr.FLL</a></li>
+<li class="leaf"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/fll">FLL</a></li>
+<li class="leaf"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc">FTC</a></li>
+<li class="leaf"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/frc">FRC</a></li>
+<li class="leaf"><a href="/web/20150905180051/http://www.usfirst.org/community/volunteers">VOLUNTEER</a></li>
+<li class="leaf"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/careers">CAREERS</a></li>
+<li class="leaf"><a href="/web/20150905180051/http://www.usfirst.org/contactform">CONTACT US</a></li>
+<li class="last leaf"><a href="/web/20150905180051/http://www.usfirst.org/sitemap%20" title="Site Map">SITE MAP</a></li>
+</ul>    </div>
+  </div><!-- /block-inner -->
+</div><!-- /block -->
+<div id="block-search-form" class="block block-search grid16-5 to First Core   even">
+  <div class="gutter inner clearfix">
+            
+    <div class="content clearfix">
+      <form action="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/2013-FTC-CMP-Awards" method="post" id="search-block-form" accept-charset="UTF-8"><div><div class="container-inline">
+      <h2 class="element-invisible">Search form</h2>
+    <div class="form-item form-type-textfield form-item-search-block-form">
+  <label class="element-invisible" for="edit-search-block-form--2">Search </label>
+ <input title="Enter the terms you wish to search for." type="text" id="edit-search-block-form--2" name="search_block_form" value="" size="15" maxlength="128" class="form-text"/>
+</div>
+<div class="form-actions form-wrapper" id="edit-actions"><input type="submit" id="edit-submit" name="op" value="Search" class="form-submit"/></div><input type="hidden" name="form_build_id" value="form-pKhXYEBt9z_6Gh23dWAQeeKe63Az1kyZh99nxXARgcs"/>
+<input type="hidden" name="form_id" value="search_block_form"/>
+</div>
+</div></form>    </div>
+  </div><!-- /block-inner -->
+</div><!-- /block -->
+<div id="block-superfish-1" class="block block-superfish grid16-11 fusion-right  last odd">
+  <div class="gutter inner clearfix">
+            
+    <div class="content clearfix">
+      <ul id="superfish-1" class="menu sf-menu sf-main-menu sf-horizontal sf-style-first sf-total-items-3 sf-parent-items-3 sf-single-items-0"><li id="menu-583-1" class="first odd sf-item-1 sf-depth-1 sf-total-children-15 sf-parent-children-0 sf-single-children-15 menuparent"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/vision" title="About us" class="sf-depth-1 menuparent">About Us</a><ul><li id="menu-1010-1" class="first odd sf-item-1 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/vision" title="Vision &amp; Mission" class="sf-depth-2">Vision &amp; Mission</a></li><li id="menu-1011-1" class="middle even sf-item-2 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/gracious-professionalism" title="Gracious Professionalism" class="sf-depth-2">Gracious Professionalism</a></li><li id="menu-1012-1" class="middle odd sf-item-3 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/impact" title="Impact" class="sf-depth-2">Impact</a></li><li id="menu-1013-1" class="middle even sf-item-4 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/first-at-a-glance" title="FIRST At A Glance" class="sf-depth-2">FIRST At A Glance</a></li><li id="menu-1014-1" class="middle odd sf-item-5 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/first-history" title="FIRST History" class="sf-depth-2">FIRST History</a></li><li id="menu-739-1" class="middle even sf-item-6 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/Leadership" class="sf-depth-2">Leadership</a></li><li id="menu-3081-1" class="middle odd sf-item-7 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/youth-protection-program" class="sf-depth-2">Youth Protection Program</a></li><li id="menu-1015-1" class="middle even sf-item-8 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/annual-report-and-financials" title="Annual Report and Financials" class="sf-depth-2">Annual Report &amp; Financials</a></li><li id="menu-1376-1" class="middle odd sf-item-9 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/marketing-tools/brand" class="sf-depth-2">Brand Standards &amp; Trademarks/IP</a></li><li id="menu-1016-1" class="middle even sf-item-10 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/sponsors" title="FIRST Sponsors" class="sf-depth-2">FIRST Sponsors</a></li><li id="menu-1020-1" class="middle odd sf-item-11 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/alliances" title="Alliances" class="sf-depth-2">Alliances</a></li><li id="menu-738-1" class="middle even sf-item-12 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/scholarships" class="sf-depth-2">Scholarships</a></li><li id="menu-1031-1" class="middle odd sf-item-13 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/press-room" title="Press Room &amp; News" class="sf-depth-2">Press Room &amp; News</a></li><li id="menu-1910-1" class="middle even sf-item-14 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/careers" class="sf-depth-2">Careers</a></li><li id="menu-1033-1" class="last odd sf-item-15 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/involved/donate" title="Donate" class="sf-depth-2">Donate</a></li></ul></li><li id="menu-582-1" class="middle even sf-item-2 sf-depth-1 sf-total-children-9 sf-parent-children-0 sf-single-children-9 menuparent"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms" title="Description of programs" class="sf-depth-1 menuparent">Programs</a><ul><li id="menu-741-1" class="first odd sf-item-1 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms" class="sf-depth-2">FIRST Progression of Programs</a></li><li id="menu-1906-1" class="middle even sf-item-2 sf-depth-2 sf-no-children"><a href="http://web.archive.org/web/20150905180051/http://www.usfirst.org/roboticsprograms/jr.fll" class="sf-depth-2">Junior FIRST LEGO League Grades K-3</a></li><li id="menu-712-1" class="middle odd sf-item-3 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/fll" title="FIRST LEGO League Grades 4 - 8 (ages 9 - 14)" class="sf-depth-2">FIRST LEGO League Grades 4-8</a></li><li id="menu-713-1" class="middle even sf-item-4 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc" title="FIRST Tech Challenge Grades 7 - 12 (ages 12 - 18)" class="sf-depth-2">FIRST Tech Challenge Grades 7-12</a></li><li id="menu-1335-1" class="middle odd sf-item-5 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/frc" class="sf-depth-2">FIRST Robotics Competition Grades 9-12</a></li><li id="menu-1038-1" class="middle even sf-item-6 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/first-championship" title="Annual Championship" class="sf-depth-2">Annual Championship</a></li><li id="menu-717-1" class="middle odd sf-item-7 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/firstplace" title="FIRST Place (all ages)" class="sf-depth-2">FIRST Place (all ages)</a></li><li id="menu-2596-1" class="middle even sf-item-8 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/team-fundraising" class="sf-depth-2">Fundraising</a></li><li id="menu-3751-1" class="last odd sf-item-9 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/share-your-first-story" class="sf-depth-2">FIRST Stories</a></li></ul></li><li id="menu-584-1" class="last odd sf-item-3 sf-depth-1 sf-total-children-6 sf-parent-children-0 sf-single-children-6 menuparent"><a href="/web/20150905180051/http://www.usfirst.org/community/first-community-alumni" title="Alumni &amp; Internships" class="sf-depth-1 menuparent">Community</a><ul><li id="menu-1040-1" class="first odd sf-item-1 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/community/first-community-alumni" title="Alumni &amp; Internships" class="sf-depth-2">FIRST Alumni &amp; Internships</a></li><li id="menu-1043-1" class="middle even sf-item-2 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/community/volunteers" title="Volunteers" class="sf-depth-2">Volunteer</a></li><li id="menu-1044-1" class="middle odd sf-item-3 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/community/first-newsletter" title="FIRST Newsletter" class="sf-depth-2">FIRST Newsletter</a></li><li id="menu-1045-1" class="middle even sf-item-4 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/community/social-media-and-first" title="Social Media and FIRST" class="sf-depth-2">Social Media and FIRST</a></li><li id="menu-1046-1" class="middle odd sf-item-5 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/whatsgoingon" title="What Events And Teams Are In My Area?" class="sf-depth-2">What Events and Teams Are In My Area?</a></li><li id="menu-1047-1" class="last even sf-item-6 sf-depth-2 sf-no-children"><a href="http://web.archive.org/web/20150905180051/https://usfirstmarketplace.com/" title="FIRST Store" target="_blank" class="sf-depth-2">FIRST Store</a></li></ul></li></ul>    </div>
+  </div><!-- /block-inner -->
+</div><!-- /block -->
+  </div>
+        <!-- /header-group-inner --> 
+        
+      </div>
+      <!-- /header-group --> 
+      
+    </div>
+    <!-- /header-group-wrapper --> 
+    
+     
+    
+    <!-- main region: width = grid_width -->
+    
+    <div id="main-wrapper" class="main-wrapper full-width clearfix">
+      <div id="main" class="main region grid16-16">
+        <div id="main-inner" class="main-inner inner clearfix"> 
+<!-- sidebar-first region -->
+  <div id="sidebar-first" class="region region-sidebar-first sidebar-first nested grid16-3 sidebar">
+    <div id="sidebar-first-inner" class="sidebar-first-inner inner">
+      <div id="block-superfish-12" class="block block-superfish first  odd">
+  <div class="gutter inner clearfix">
+            
+    <div class="content clearfix">
+      <ul id="superfish-12" class="menu sf-menu sf-menu-ftc sf-vertical sf-style-white sf-total-items-15 sf-parent-items-2 sf-single-items-13"><li id="menu-1379-12" class="first odd sf-item-1 sf-depth-1 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc" class="sf-depth-1">FTC Home</a></li><li id="menu-1378-12" class="middle even sf-item-2 sf-depth-1 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/get-involved" class="sf-depth-1">About FTC</a></li><li id="menu-753-12" class="middle odd sf-item-3 sf-depth-1 sf-total-children-5 sf-parent-children-0 sf-single-children-5 menuparent"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/registration" class="sf-depth-1 menuparent">Register </a><ul><li id="menu-2593-12" class="first odd sf-item-1 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/start-a-team" class="sf-depth-2">Starting a Team</a></li><li id="menu-3146-12" class="middle even sf-item-2 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/registration" class="sf-depth-2">Register your Team</a></li><li id="menu-2590-12" class="middle odd sf-item-3 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/budget" class="sf-depth-2">What does it cost?</a></li><li id="menu-3478-12" class="middle even sf-item-4 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/grow" class="sf-depth-2">Team Grants</a></li><li id="menu-2667-12" class="last odd sf-item-5 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/itsallFIRSTtome" class="sf-depth-2">It&#039;s all FIRST to Me: Transitioning from FLL to FTC</a></li></ul></li><li id="menu-950-12" class="middle even sf-item-4 sf-depth-1 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/game" class="sf-depth-1">The FTC Game</a></li><li id="menu-2591-12" class="middle odd sf-item-5 sf-depth-1 sf-total-children-3 sf-parent-children-0 sf-single-children-3 menuparent"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/events" class="sf-depth-1 menuparent">Events</a><ul><li id="menu-3486-12" class="first odd sf-item-1 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/events" class="sf-depth-2">Events</a></li><li id="menu-2668-12" class="middle even sf-item-2 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/super-regionals" class="sf-depth-2">Super-Regional Championships</a></li><li id="menu-2669-12" class="last odd sf-item-3 sf-depth-2 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/FTCWorldChampionship" class="sf-depth-2">World Championship</a></li></ul></li><li id="menu-1139-12" class="middle even sf-item-6 sf-depth-1 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/team-resources" title="Team Resources" class="sf-depth-1">Team Resources</a></li><li id="menu-3484-12" class="middle odd sf-item-7 sf-depth-1 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/parent-resources" class="sf-depth-1">Parent Resources</a></li><li id="menu-2452-12" class="middle even sf-item-8 sf-depth-1 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/mentors" class="sf-depth-1">Mentor Resources</a></li><li id="menu-3485-12" class="middle odd sf-item-9 sf-depth-1 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/volunteer-resources" class="sf-depth-1">Volunteer Resources</a></li><li id="menu-833-12" class="middle even sf-item-10 sf-depth-1 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/scholarships_home" class="sf-depth-1">Scholarships</a></li><li id="menu-1245-12" class="middle odd sf-item-11 sf-depth-1 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/regional-contacts" class="sf-depth-1">Regional Contacts</a></li><li id="menu-842-12" class="middle even sf-item-12 sf-depth-1 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/community/first-community-alumni" class="sf-depth-1">FIRST Alumni &amp; Internships</a></li><li id="menu-1381-12" class="middle odd sf-item-13 sf-depth-1 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/presstools" class="sf-depth-1">Press Tools</a></li><li id="menu-3481-12" class="middle even sf-item-14 sf-depth-1 sf-no-children"><a href="http://web.archive.org/web/20150905180051/https://my.usfirst.org/ftc/tims/site.lasso" target="_blank" class="sf-depth-1">Team Information Management System</a></li><li id="menu-3482-12" class="last odd sf-item-15 sf-depth-1 sf-no-children"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/youth-protection-program" class="sf-depth-1">Youth Protection Program</a></li></ul>    </div>
+  </div><!-- /block-inner -->
+</div><!-- /block -->
+<div id="block-block-58" class="block block-block  last even">
+  <div class="gutter inner clearfix">
+            
+    <div class="content clearfix">
+      <div><a href="http://web.archive.org/web/20150905180051/http://www.facebook.com/home.php#%21/pages/FIRST-Tech-Challenge/121345624557708" target="_blank" title="FTC on Facebook!" style="text-align: left;"><img src="/web/20150905180051im_/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/FTC_Images/FacebookIcon.jpg" alt="FTC on Facebook!" title="FTC on Facebook" style="border: 0px;" height="20" border="0" width="20">&nbsp;</a><a href="http://web.archive.org/web/20150905180051/http://twitter.com/FTCTeams" target="_blank" title="FTC on Twitter" style="text-align: left;"><img src="/web/20150905180051im_/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/FTC_Images/Twitter.png" alt="Twitter" title="Twitter" style="border: 0px;" height="20" border="0" width="21"></a>&nbsp;<a href="http://web.archive.org/web/20150905180051/http://firsttechchallenge.blogspot.com/" target="_blank" title="The Official FTC Blog" style="text-align: left;"><img src="/web/20150905180051im_/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/FTC_Images/Blogger.png" alt="Ken's Blog" title="Ken's FTC Blog" style="border: 0px;" height="20" border="0" width="20"></a><span class="Apple-style-span" style="text-align: left;">&nbsp;</span><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/emailblastarchive.aspx" title="FTC Emails &amp; updates" style="text-align: left;"><img src="/web/20150905180051im_/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/FTC_Images/RSS.png" alt="RSS" title="FTC Emails and Updates RSS" style="border: 0px;" height="20" border="0" width="20"></a><span class="Apple-style-span" style="text-align: left;">&nbsp;</span><a href="http://web.archive.org/web/20150905180051/http://www.youtube.com/firsttechchallenge" target="_blank" title="FTC YouTube Channel" style="text-align: left;"><img src="/web/20150905180051im_/http://www.usfirst.org/sites/default/files/youtube.png" alt="YouTube.com" title="FTC YouTube channel" height="20" border="0" width="20"></a> <a href="http://web.archive.org/web/20150905180051/https://plus.google.com/100910548536794889930" rel="publisher"><img src="/web/20150905180051im_/http://www.usfirst.org/sites/default/files/g%2B128.png" height="20" border="0" width="20"></a></div>
+<div><img src="/web/20150905180051im_/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/FTC_Images/RockwellCollinsLogo.jpeg" alt="Rockwell Collins Logo" title="Rockwell Collins Logo" style="border: 0px;" height="63" border="0" width="142"></div>
+<div><span style="font-size: x-small;">Official Program Sponsor<br><br></span></div>
+<div><img src="/web/20150905180051im_/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/FTC_Images/PTC.png" alt="ptc" title="ptc" style="border: 0px;" height="46" border="0" width="135"></div>
+<div><span style="font-size: x-small;">Official IoT, CAD and Collaboration Software Sponsor<br><br></span></div>
+<div><img src="/web/20150905180051im_/http://www.usfirst.org/sites/default/files/uploadedImages/About_Us/Sponsors/Sponsor_Listing/QualcommLogo.jpg" alt="qualcomm" title="qualcomm" height="35" border="0" width="145"></div>
+<div><span style="font-size: x-small;">Official Control System Sponsor</span></div>    </div>
+  </div><!-- /block-inner -->
+</div><!-- /block -->
+    </div><!-- /sidebar-first-inner -->
+  </div><!-- /sidebar-first -->
+ 
+          
+          <!-- main group: width = grid_width - sidebar_first_width -->
+          
+          <div id="main-group" class="main-group region nested grid16-13">
+            <div id="main-group-inner" class="main-group-inner inner">               <div id="main-content" class="main-content region nested">
+                <div id="main-content-inner" class="main-content-inner inner"> 
+                  
+                  <!-- content group: width = grid_width - sidebar_first_width - sidebar_second_width -->
+                  
+                  <div id="content-group" class="content-group region nested grid16-13">
+                    <div id="content-group-inner" class="content-group-inner inner">
+					                      <div id="content-region" class="content-region region nested">
+                        <div id="content-region-inner" class="content-region-inner inner">
+                        	<div id="content-upper"> </div>
+                        <a name="main-content-area" id="main-content-area"></a>                                                       <h1 id="thepagetitle" class="title gutter">2012-2013 FTC World Championship Awards List</h1> 
+                                                                                                                                  
+<!-- content region -->
+  <div id="content" class="region region-content content nested grid16-13">
+    <div id="content-inner" class="content-inner inner">
+      <div id="block-system-main" class="block block-system first last odd">
+  <div class="gutter inner clearfix">
+            
+    <div class="content clearfix">
+      <div id="node-2858" class="node node-page odd full-node clearfix" about="/roboticsprograms/ftc/2013-ftc-cmp-awards" typeof="foaf:Document">
+  
+      <span property="dc:title" content="2012-2013 FTC World Championship Awards List" class="rdf-meta element-hidden"></span><span property="sioc:num_replies" content="0" datatype="xsd:integer" class="rdf-meta element-hidden"></span>
+  
+      <div id="node-top" class="node-top region nested">
+          </div>
+    
+  <div class="content">
+    <div class="field field-name-body field-type-text-with-summary field-label-hidden"><div class="field-items"><div class="field-item even" property="content:encoded"><p>This year's FTC game,&nbsp;<a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/game" target="_blank" title="Ring It Up!">Ring It Up!</a>, is played on a 12’x12’ diamond shaped field. Two alliances comprised of two teams each, compete in matches&nbsp;consisting of a 30 second autonomous period followed by a two minute driver controlled period.</p>
+<p>The object of the game is to score more points than your opponent’s alliance by placing plastic rings onto pegs on the center rack. Teams are also challenged to detect special&nbsp;weighted rings to earn a multiplier bonus. &nbsp;During the final 30 seconds of the match, a team's robot is allowed to lift their alliance partner's robot for additional points.</p>
+<p>Teams in FTC must also present before a panel of judges made up of industry experts. &nbsp;These judges evaluate each team and then choose a winner and five finalists for each FTC Award. &nbsp;</p>
+<h2>Awards</h2>
+<table align="left" border="1">
+<tbody>
+<tr>
+<td valign="top"><strong>Award</strong></td>
+<td valign="top"><strong>Winner</strong></td>
+<td valign="top"><strong>Finalists</strong></td>
+</tr>
+<tr>
+<td valign="top"><strong>Inspire Award</strong></td>
+<td valign="top">Team 3550, Beta, West Des Moines, IA</td>
+<td valign="top">
+<ul>
+<li>Team 4220, The Landroids, Livingston, NJ;</li>
+<li>Team 3717, CyberKnights, Seatle, WA;</li>
+<li>Team 4082, RoboSpartans, New Hartford, NY;</li>
+<li>Team 3509, Phoenxtrix, Folsom, CA;</li>
+<li>Team 4140, Fish in the Boat, Lakeville, MN</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>Think Award</strong></td>
+<td valign="top">Team 4076, RoBUGS, McDonough, GA</td>
+<td valign="top">
+<ul>
+<li>Team 2753, Overdrive, Bridgewater, NJ;</li>
+<li>Team 3539, Say Watt?, Edison, NJ;</li>
+<li>Team 3550, Beta, West Des Moines, IA;</li>
+<li>Team 4082, RoboSpartans, New Hartford, NY;</li>
+<li>Team 4220, The Landroids, Livingston, NJ</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>Rockwell Collins Innovate Award</strong></td>
+<td valign="top">Team 3717, CyberKnights, Seatle, WA</td>
+<td valign="top">
+<ul>
+<li>Team 3539, Say Watt?, Edison, NJ;</li>
+<li>Team 3590, Ingenium, Pelham, NH;</li>
+<li>Team 4140, Fish in the Boat, Lakeville, MN;</li>
+<li>Team 4220, The Landroids, Livingston, NJ;</li>
+<li>Team 5110, Mechanical Monkeys Reloaded, Pukekohe, New Zealand</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>Motivate Award</strong></td>
+<td valign="top">Team 5132, AHERT Ravens, Albuquerque, NM</td>
+<td valign="top">
+<ul>
+<li>Team 4347, NanoGurus, Morris Plains, NJ;</li>
+<li>Team 3113, Some Disassembly Required, Ellicott City, MD;</li>
+<li>Team 4140, Fish in the Boat, Lakeville, MN;</li>
+<li>Team 3485, Da Peeps, Flint, MI;</li>
+<li>Team 3486, Techno Warriors Advanced, Brandon, MS</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>PTC Design Award</strong></td>
+<td valign="top">Team 4140, Fish in the Boat, Lakeville, MN</td>
+<td valign="top">
+<ul>
+<li>Team 4220, The Landroids, Livingston, NJ;</li>
+<li>Team 3539, Say Watt?, Edison, NJ;</li>
+<li>Team 4855, Batteries in Black, Portland, OR;</li>
+<li>Team 3717, CyberKnights, Seattle, WA;</li>
+<li>Team 4211, The Bombers, St. Louis, MO&nbsp;</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>Connect Award</strong></td>
+<td valign="top">Team 3509, PHOENXTRIX, Folsom, CA</td>
+<td valign="top">
+<ul>
+<li>Team 4220, The Landroids, Livingston, NJ;</li>
+<li>Team 3113, Some Dissasembly Required, Ellicott City, MD;</li>
+<li>Team 3550, Beta, West Des Moines, IA;</li>
+<li>Team 4082, RoboSpartans, New Hartford, NY;</li>
+<li>Team 3785, Beastie Bots, Highland Park, IL</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>Promote Award</strong></td>
+<td valign="top">Team 2753, Overdrive, Bridgewater, NJ</td>
+<td valign="top">
+<ul>
+<li>Team 4251, Cougar Robotics, Columbus, OH</li>
+<li>Team 5200, That's A Good Question, Barrington, IL</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>Compass Award (outstanding coach/mentor)</strong></td>
+<td valign="top">Vince Liao, Team 4250, The Lightsabers, Oklahoma City, OK</td>
+<td valign="top">
+<ul>
+<li>John Cilladi, Team 4399, The Autobots, Downingtown, PA</li>
+<li>Kari Barrera, Team 5132, AHERT Ravens, Albuquerque, NM</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong></strong><strong><em>FIRST</em> Responders Award</strong></td>
+<td valign="top">Team 3539, Say Watt?, Edison, NJ</td>
+<td valign="top"></td>
+</tr>
+<tr>
+<td valign="top"><strong><em></em></strong><strong>March to the&nbsp;<em>FIRST</em> Beat Award</strong></td>
+<td valign="top">Team 3981, Gold Griffins, Kingston, Jamaica</td>
+<td valign="top"></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2>Competion Results</h2>
+<table border="1">
+<tbody>
+<tr>
+<td colspan="4" style="text-align: center;"><strong>Edison Division Finals</strong></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Captain of the Alliance</strong></td>
+<td><strong>First Team Picked</strong></td>
+<td><strong>Second Team Picked</strong></td>
+</tr>
+<tr>
+<td>Winning Alliance</td>
+<td>Team 3717, CyberKnights, Seattle, WA</td>
+<td>Team 3846, Maelstrom, Tampa, FL</td>
+<td>Team 4855, Batteries in Black, Portland, OR</td>
+</tr>
+<tr>
+<td>Finalist Alliance</td>
+<td>Team 4220, The Landroids, Livingston, NJ</td>
+<td>Team 4102, CHS Cougar Robotics, Maplewood, NJ</td>
+<td>Team 3485, Da Peeps, Flint, MI</td>
+</tr>
+<tr>
+<td colspan="4" style="text-align: center;"><strong>Franklin Division Finals</strong></td>
+</tr>
+<tr>
+<td>Winning Alliance</td>
+<td>Team 4251, Cougar Robotics, Columbus, OH</td>
+<td>Team 4140, Fish in the Boat, Lakeville, MN</td>
+<td>Team 5096, Monkey Madness, Hampton Cove, AL&nbsp;</td>
+</tr>
+<tr>
+<td>Finalist Alliance</td>
+<td>Team 4530, Infinite Resistance, Cincinnati, OH</td>
+<td>Team 4546, SnakeByte, Austin, TX</td>
+<td>Team 3531, Short Circuits, Portland, OR</td>
+</tr>
+<tr>
+<td colspan="4" style="text-align: center;"><strong>DaVinci (Finals)</strong></td>
+</tr>
+<tr>
+<td>Winning Alliance</td>
+<td>Team 4251, Cougar Robotics, Columbus, OH</td>
+<td>Team 4140, Fish in the Boat, Lakeville, MN</td>
+<td>Team 5096, Monkey Madness, Hampton Cove, AL&nbsp;</td>
+</tr>
+<tr>
+<td>Finalist Alliance</td>
+<td>Team 3717, CyberKnights, Seattle, WA</td>
+<td>Team 3846, Maelstrom, Tampa, FL</td>
+<td>Team 4855, Batteries in Black, Portland, OR</td>
+</tr>
+</tbody>
+</table>
+<p><strong>2012-2013 FTC World Championship team and match information:</strong></p>
+<table border="0">
+<tbody>
+<tr>
+<td style="width: 350px;" colspan="2">
+<div style="border-width: 10px 1px 1px; border-style: solid; border-color: #e6b222; padding: 10px; text-align: left; color: #000000; vertical-align: top; background-color: #f2f2f2;">
+<table border="0">
+<tbody>
+<tr>
+<td style="background-color: #ffffff;"><strong>Edison Division</strong></td>
+<td style="background-color: #ffffff;" colspan="2"><strong>Franklin Division</strong></td>
+</tr>
+<tr>
+<td bgcolor="#e6e6e6"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Championship/Matches_World%20Championship_Edison.html" target="_blank" title="Match List">Match List</a></td>
+<td colspan="2" bgcolor="#e6e6e6"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Championship/Matches_World%20Championship_Franklin.html" target="_blank" title="Match List">Match List</a></td>
+</tr>
+<tr>
+<td style="background-color: #ffffff;"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Championship/Match_Results_World%20Championship_Edison.html" target="_blank" title="Match Results">Match Results&nbsp;</a></td>
+<td style="background-color: #ffffff;" colspan="2"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Championship/Match_Results_World%20Championship_Franklin.html" target="_blank" title="Match Results Franklin">Match Results</a></td>
+</tr>
+<tr>
+<td bgcolor="#e6e6e6"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Championship/Rankings_World%20Championship_Edison.html" target="_blank" title="Rankings">Team Rankings&nbsp;</a></td>
+<td colspan="2" bgcolor="#e6e6e6"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Championship/Rankings_World%20Championship_Franklin.html" target="_blank" title="Team Rankings">Team Rankings&nbsp;</a></td>
+</tr>
+<tr>
+<td style="background-color: #ffffff;"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Championship/ElimLadder_World%20Championship_Edison.html" target="_blank" title="Edison Elimination Ladder">Finals Elimination Ladder</a></td>
+<td style="background-color: #ffffff;" colspan="2"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Championship/ElimLadder_World%20Championship_Franklin.html" target="_blank" title="Franklin Elimination Ladder">Finals Elimination Ladder</a></td>
+</tr>
+<tr style="background-color: #e6e6e6;">
+<td style="background-color: #e6e6e6;"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Championship/Awards_Edison.html" target="_blank" title="Finalist Alliances">Edison Finalist Alliances</a></td>
+<td style="background-color: #e6e6e6;" colspan="2"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Championship/Awards_Franklin.html" target="_blank" title="Franklin Finalist Allainces">Franklin Finalist Alliances</a></td>
+</tr>
+<tr style="background-color: #e6e6e6;">
+<td style="background-color: #ffffff; text-align: center;" colspan="3"><strong>Davinci Winning Alliance: 4251, 4140, 5096 (Franklin)</strong><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Championship/Awards_Franklin.html" target="_blank" title="Franklin Finalist Allainces"></a></td>
+</tr>
+<tr style="background-color: #e6e6e6;">
+<td style="background-color: #e6e6e6; text-align: center;" colspan="3"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Championship/ftc_world_awards.pdf" target="_blank" title="World Championship Award Winners and Finalists">Award Winners and Finalists (PDF)</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</td>
+</tr>
+<tr>
+<td style="width: 350px;" colspan="2">
+<p></p>
+<div style="border-width: 10px 1px 1px; border-style: solid; border-color: #e6b222; padding: 10px; text-align: left; color: #000000; vertical-align: top; background-color: #f2f2f2;">
+<table style="border: 0px solid #000000; width: 100%; background-color: #e6e6e6;" border="0" cellpadding="4" cellspacing="0">
+<tbody>
+<tr>
+<td style="width: 200px;"><strong>Team Info</strong></td>
+<td style="width: 200px;"><strong>General Info</strong></td>
+<td style="width: 200px;"><strong>Site Info</strong></td>
+</tr>
+<tr style="background-color: #ffffff;">
+<td valign="top">
+<p><strong>Ring It Up! FTC World Championship Roster</strong>&nbsp; (updated 4/18/2013)</p>
+<p>Sort: <a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/World_Championship_Roster.pdf" target="_blank" title="Roster by team number">Team Number</a> | &nbsp;<a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/World_Championship_Roster-by-location.pdf" target="_blank" title="Roster by location">Country</a></p>
+</td>
+<td valign="top"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/FTC_Documents/2013_CMP_Spectator_Schedule.pdf" target="_blank" title="Spectator Schedule">Championship Spectator Schedule (PDF)</a></td>
+<td valign="top"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FIRST_Championship/Hotel_Map.pdf" target="_blank" title="St. Louis Hotel Map">St. Louis Hotel Map</a></td>
+</tr>
+<tr>
+<td valign="top"><strong>Division Lists</strong> (4/16/2013): <br><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Edison.pdf" target="_blank" title="Edison Division List">Edison</a> | <a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Franklin.pdf" target="_blank" title="Franklin Division List">Franklin</a></td>
+<td valign="top"><a href="http://web.archive.org/web/20150905180051/https://www.firstchampionshiphousing.com/Championship/FinaleParty.aspx" target="_blank" title="Finale and Lodging info"><em>FIRST</em>&nbsp;CMP Lodging and Finale Party Info</a></td>
+<td valign="top"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/FTC_Documents/St_Louis_General_Information.pdf" target="_blank" title="General information on St. Louis">General information on St. Louis</a></td>
+</tr>
+<tr style="background-color: #ffffff;">
+<td valign="top">
+<p><strong>Team History Report for World&nbsp;</strong></p>
+<p><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/FTC_Documents/2012-2013_Team_History_Report-WC-Teams.pdf" target="_blank" title="PDF Team History">(PDF)</a> <a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/FTC_Documents/2012-2013_Team-History-Spreadsheet_WC-Teams.xls" target="_blank" title="Excel Team History Report">(EXCEL)<br><br></a><strong>PIT MAP</strong>&nbsp; 4/19/2013<br><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/Game_Info/2012/Pit-map.pdf" target="_blank" title="Pit Map ">(PDF)</a></p>
+</td>
+<td valign="top"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/firstplace/first-robotics-conference" target="_blank" title="FIRST Robotics Conferences"><em>FIRST</em> Robotics Conferences</a></td>
+<td valign="top"><a href="http://web.archive.org/web/20150905180051/http://explorestlouis.com/" target="_blank" title="Explore St. Louis">Explore St. Louis</a></td>
+</tr>
+<tr>
+<td valign="top"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/FTC_Documents/FIRST-CMP13-FTC-Team%20Schedule.pdf" target="_blank" title="Team Schedule">Championship Team Schedule (PDF)</a><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/ftc/worldvideosubmissions" target="_blank" title="Promote/Compass Submission Guidelines"><br></a></td>
+<td valign="top"><a href="/web/20150905180051/http://www.usfirst.org/roboticsprograms/championship-offer" target="_blank" title="Ticket Offer">St. Louis Cardinals Ticket Offer</a></td>
+<td valign="top">&nbsp;</td>
+</tr>
+<tr style="background-color: #ffffff;">
+<td valign="top"><a href="http://web.archive.org/web/20150905180051/http://www.amctr-preorders.com/" target="_blank" title="Box Lunch Pre-order form">Team box lunch pre-order form</a></td>
+<td valign="top"><a href="/web/20150905180051/http://www.usfirst.org/aboutus/scholarship-row-at-the-first-championship" target="_blank" title="Scholarship Row">Scholarship Row</a></td>
+<td valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td valign="top"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FTC/FTC_Documents/Robot_Airport_Letter.pdf" target="_blank" title="Robot Airport Letter">Robot airport letter for TSA</a></td>
+<td valign="top"><a href="http://web.archive.org/web/20150905180051/https://my.usfirst.org/FIRSTPortal/Login/VIMS_Login.aspx" target="_blank" title="Register to Volunteer">Register to Volunteer</a>&nbsp;</td>
+<td valign="top">&nbsp;</td>
+</tr>
+<tr style="background-color: #ffffff;">
+<td valign="top"><a href="/web/20150905180051/http://www.usfirst.org/uploadedFiles/Robotics_Programs/2012-2013_Consent_and_Release_Form.pdf" target="_blank" title="Consent and Release Form">Consent and Release Form (PDF)</a></td>
+<td valign="top">&nbsp;</td>
+<td valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td valign="top"><a href="/web/20150905180051/http://www.usfirst.org/sites/default/files/uploadedFiles/Robotics_Programs/FIRST_Championship/Team_Profile_for_FIRST_Media_Release.pdf" target="_blank" title="Team Media Profile">Team Profile for&nbsp;<em>FIRST</em>&nbsp;Media Release</a></td>
+<td valign="top">&nbsp;</td>
+<td valign="top">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</td>
+</tr>
+</tbody>
+</table></div></div></div>  </div>
+
+  
+  
+      <div id="node-bottom" class="node-bottom region nested">
+          </div>
+    
+</div>
+    </div>
+  </div><!-- /block-inner -->
+</div><!-- /block -->
+    </div><!-- /content-inner -->
+  </div><!-- /content -->
+                                                  </div>
+                        <!-- /content-region-inner --> 
+                        
+                      </div>
+                      <!-- /content-region --> 
+                      
+                    </div>
+                    <!-- /content-group-inner --> 
+                    
+                  </div>
+                  <!-- /content-group --> 
+                  
+                   </div>
+                <!-- /main-content-inner --> 
+                
+              </div>
+              <!-- /main-content --> 
+              
+               </div>
+            <!-- /main-group-inner --> 
+            
+          </div>
+          <!-- /main-group --> 
+          
+        </div>
+        <!-- /main-inner --> 
+        
+      </div>
+      <!-- /main --> 
+      
+    </div>
+    <!-- /main-wrapper --> 
+    
+     
+<!-- footer region -->
+<div id="footer-wrapper" class="footer-wrapper full-width clearfix">
+  <div id="footer" class="region region-footer footer  grid16-16">
+    <div id="footer-inner" class="footer-inner inner">
+      <div id="block-addthis-addthis" class="block block-addthis grid16-1 fusion-right-content fusion-right first  odd">
+  <div class="gutter inner clearfix">
+            
+    <div class="content clearfix">
+      
+      <a href="http://web.archive.org/web/20150905180051/http://www.addthis.com/bookmark.php" onmouseover="return addthis_open(this, '', '[URL]', '[TITLE]')" onmouseout="addthis_close()" onclick="return addthis_sendto()"><img src="http://web.archive.org/web/20150905180051im_/http://s7.addthis.com/static/btn/sm-plus.gif" width="16" height="16" alt=""/></a>
+      <script type="text/javascript" src="http://web.archive.org/web/20150905180051js_/http://s7.addthis.com/js/152/addthis_widget.js"></script>
+          </div>
+  </div><!-- /block-inner -->
+</div><!-- /block -->
+<div id="block-block-2" class="block block-block grid16-15  last even">
+  <div class="gutter inner clearfix">
+            
+    <div class="content clearfix">
+      <div class="fltleft">
+<p><a href="/web/20150905180051/http://www.usfirst.org/rssCS.aspx" target="_blank"><img id="ctl00_TheFooter_Img1" src="/web/20150905180051im_/http://www.usfirst.org/sites/default/files/rssicon.gif" alt="FIRST RSS Feed" title="FIRST RSS Feed" border="0"></a> <a href="http://web.archive.org/web/20150905180051/http://www.youtube.com/user/FIRSTWorldTube" target="_blank"><img id="ctl00_TheFooter_Img2" src="/web/20150905180051im_/http://www.usfirst.org/sites/default/files/youtubeicon.gif" alt="Check out our You Tube Channel" title="Check out our You Tube Channel" border="0"></a> <a href="http://web.archive.org/web/20150905180051/http://twitter.com/firstweets" target="_blank"><img id="ctl00_TheFooter_Img3" src="/web/20150905180051im_/http://www.usfirst.org/sites/default/files/twitter.png" alt="Tweet to us at Twitter!" title="Tweet to us at Twitter!" border="0" height="18"></a> <a href="http://web.archive.org/web/20150905180051/http://www.facebook.com/pages/First-Robotics-For-Inspiration-and-Recognition-of-Science-and-Technology/184063051616518" target="_blank"><img id="ctl00_TheFooter_Img67" src="/web/20150905180051im_/http://www.usfirst.org/sites/default/files/facebook-icon.png" alt="Connect with us on Facebook" title="Connect with us on Facebook" border="0" height="18"></a>&nbsp;<a href="http://web.archive.org/web/20150905180051/http://instagram.com/first_official_" target="_blank" class="ig-b- ig-b-24"><img src="//web.archive.org/web/20150905180051im_/http://badges.instagram.com/static/images/ig-badge-24.png" alt="Instagram" border="0" height="18"></a></p>
+</div>
+<div class="fltright">
+<ul>
+<li><a href="/web/20150905180051/http://www.usfirst.org/contactform.aspx">contact us</a></li>
+<li><a href="/web/20150905180051/http://www.usfirst.org/aboutus/privacy-policy">privacy policy</a></li>
+<li><a href="/web/20150905180051/http://www.usfirst.org/aboutus/legal-notices">legal notices</a></li>
+<li><a href="http://web.archive.org/web/20150905180051/https://usfirstmarketplace.com/" target="_blank" title="FIRST Store">FIRST store</a></li>
+<li><a href="/web/20150905180051/http://www.usfirst.org/involved/donate">donate now</a></li>
+<li><a href="http://web.archive.org/web/20150905180051/https://my.usfirst.org/subscribermail/profile.htm" target="_blank">subscribe now</a></li>
+<li><a href="/web/20150905180051/http://www.usfirst.org/search">search</a></li>
+</ul>
+</div>    </div>
+  </div><!-- /block-inner -->
+</div><!-- /block -->
+    </div><!-- /footer-inner -->
+  </div><!-- /footer -->
+</div><!-- /footer-wrapper -->
+ 
+    
+    </div> <!-- wrapper -->
+    </div>
+    
+  <!-- /page-inner --> 
+  
+</div>
+<!-- /page --> 
+
+  
+<!-- page-bottom region -->
+  <div id="page-bottom" class="region region-page-bottom page-bottom">
+    <div id="page-bottom-inner" class="page-bottom-inner inner">
+          </div><!-- /page-bottom-inner -->
+  </div><!-- /page-bottom -->
+</body>
+</html>
+<!--
+     FILE ARCHIVED ON 18:00:51 Sep 05, 2015 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 05:54:40 Mar 28, 2019.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  LoadShardBlock: 85.144 (3)
+  esindex: 0.005
+  captures_list: 105.718
+  CDXLines.iter: 13.037 (3)
+  PetaboxLoader3.datanode: 108.494 (4)
+  exclusion.robots: 0.138
+  exclusion.robots.policy: 0.128
+  RedisCDXSource: 4.351
+  PetaboxLoader3.resolve: 70.811
+  load_resource: 123.458
+-->
