@@ -1,6 +1,7 @@
 import logging
+import asyncio
 from models import Event, EventType, Ranking, Award, EventParticipant
-from helpers import MatchHelper, AwardHelper
+from helpers import MatchHelper, AwardHelper, OPRHelper
 from db.orm import orm
 
 class EventHelper:
@@ -52,3 +53,22 @@ class EventHelper:
                                            extra_sql=" ORDER BY award_type, award_place")
         ret['matches'] = await MatchHelper.get_render_matches_event(event, team_key)
         return ret
+
+    @classmethod
+    async def insert_event(cls, event, matches, rankings, awards, synch_upsert=False):
+        m0 = [m[0] for m in matches] + [m[1] for m in matches] + [m[2] for m in matches]
+        async def upsert_batch(it):
+            async with orm.pool.acquire() as conn:
+                for i in it:
+                    await i.upsert(conn=conn)
+        await event.upsert()
+        if not synch_upsert:
+            await asyncio.gather(upsert_batch(m0), upsert_batch(awards), upsert_batch(rankings))
+        else:
+            [await upsert_batch(z) for z in [m0, awards, rankings]]
+        logging.info(f"Calculating OPRs....")
+        await OPRHelper.update_oprs(event.key)
+        logging.info(f"Generating winning/finalist awards...")
+        await AwardHelper.generate_winners_finalists(event)
+        logging.info(f"Generating EventParticipants...")
+        await EventParticipant.generate(events=[event])

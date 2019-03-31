@@ -7,8 +7,9 @@ import time
 import pprint
 import re
 import datetime
+import unicodedata
 from models import Event, EventType, Award, AwardType, PlayoffType
-from helpers import ResultsPageHelper, year_to_season
+from helpers import ResultsPageHelper, EventHelper, year_to_season
 from urllib.parse import urlparse
 from db.orm import orm
 
@@ -25,6 +26,7 @@ class FTCPennScraper:
         "Eastern": "ea",
         "East": "e",
         "West": "w",
+        "South": "s",
         "Central": "c",
         "Southeastern": "se",
         "Southwestern": "se",
@@ -42,12 +44,13 @@ class FTCPennScraper:
 
     @classmethod
     async def get(cls, url):
+        cls.get_http()
         now = time.time()
         if now - cls.timer < cls.MIN_TIMEOUT:
             await asyncio.sleep(now - cls.timer)
         now = time.time()
         async with cls.http.get(url) as response:
-            return await response.text()
+            return unicodedata.normalize("NFKD", await response.text())
 
 
     @classmethod
@@ -57,8 +60,6 @@ class FTCPennScraper:
 
     @classmethod
     async def scrape_event(cls, url, event):
-
-        cls.get_http()
         main_data = await cls.get(url)
         rankings_data = await cls.get(url + "/team-rankings")
         match_details_data = await cls.get(url + "/match-results-details")
@@ -76,21 +77,21 @@ class FTCPennScraper:
                 text = cls.AWARD_FILTER.sub("", s.get_text())
 
                 winners = cls.TEAM_AWARD.findall(text)
-                award_type = AwardType.to_type(title)
+                award_type = AwardType.get_type(title)
                 for i, t in enumerate(winners, 1):
                     a = Award(name=title, award_type=award_type, event_key=event.key, team_key='ftc' + t, award_place=i)
                     awards.append(a)
-        pprint.pprint(awards)
+        #pprint.pprint(awards)
 
         match_details_soup = BeautifulSoup(match_details_data, 'lxml')
         match_details_table = match_details_soup.find("th").find_parent("table")
         matches = ResultsPageHelper.load_match_details(match_details_table, event.key)
-        pprint.pprint(matches)
+        #pprint.pprint(matches)
 
         rankings_soup = BeautifulSoup(rankings_data, 'lxml')
         ranking_table = rankings_soup.find("th").find_parent("table")
         rankings = ResultsPageHelper.load_rankings(ranking_table, matches)
-        pprint.pprint(rankings)
+        #pprint.pprint(rankings)
 
         return awards, rankings, matches
 
@@ -102,7 +103,7 @@ class FTCPennScraper:
         website = row[3].find("a")['href']
         if year == 2012:
             address = None
-            city = row[4].find("a").get_text().split(",")[-2]
+            city = row[4].get_text().split(",")[-2]
         else:
             city = row[4].get_text().split()[-2][:-1]
             address = row[4].get_text()
@@ -124,6 +125,8 @@ class FTCPennScraper:
         for keyword in name.split():
             if keyword in cls.CODE_MAP:
                 event_key += cls.CODE_MAP[keyword]
+        if event_type == EventType.REGIONAL_CMP:
+            event_key += "cmp"
         e = Event(key=event_key,
                   year=year,
                   name=name,
@@ -143,10 +146,8 @@ class FTCPennScraper:
 
     @classmethod
     async def load_year(cls, year):
-        cls.get_http()
         url = f"http://www.ftcpenn.org/ftc-events/{year}-{year+1}-season"
-        async with cls.http.get(url) as response:
-            main_data = await response.text()
+        main_data = await cls.get(url)
 
         page = BeautifulSoup(main_data, 'lxml')
         table = page.find("table", border="1", bordercolor="#888", cellspacing="0")
@@ -154,17 +155,18 @@ class FTCPennScraper:
             row = [td for td in tr.find_all("td")]
             event_type = row[1].get_text().lower()
             if event_type.find("tournament") >= 0 or event_type.find("championship") >= 0:
-                if event_type.find("league"):
+                print(event_type)
+                if event_type.find("league") >= 0:
                     etype = EventType.LEAGUE_CMP
-                elif event.find("championship"):
+                elif event_type.find("championship") >= 0:
                     etype = EventType.REGIONAL_CMP
                 else:
                     etype = EventType.QUALIFIER
                 event, link = cls.mk_event(row, year, etype)
-                awards, rankings, matches = cls.scrape_event(link, event)
+                print(event)
+                awards, rankings, matches = await cls.scrape_event(link, event)
+                await EventHelper.insert_event(event, matches, rankings, awards)
 
-
-                #print(*[row[x].get_text() for x in range(1, 5)])
 
 
 async def main():
@@ -172,7 +174,7 @@ async def main():
     await orm.connect(host="/run/postgresql/.s.PGSQL.5432", database="ftcdata", max_size=50)
     await orm.Model.create_all_tables()
 
-    await FTCPennScraper.scrape_event("http://www.ftcpenn.org/ftc-events/2012-2013-season/south-eastern-pennsylvania-regional-qualifying-tournament")
+    await FTCPennScraper.load_year(2012)
     await FTCPennScraper.close_http()
     await orm.close()
 

@@ -12,12 +12,20 @@ class EventParticipant(orm.Model):
     year: integer
     has_matches: boolean
     has_awards: boolean
-    
+
     @classmethod
-    async def generate(cls, year):
+    async def generate(cls, year=None, events=None):
+        if events == None and year is not None:
+            events = await Event.select(properties={"year": year})
+        elif events == None and year == None:
+            raise ValueError("year= needs to be specified without events!")
+        await cls._generate(events, year=year)
+    @classmethod
+    async def _generate(cls, events, year=None):
+        if not year:
+            year = events[0].year
         ep_map = {}
         async with orm.pool.acquire() as conn:
-            events = await Event.select(properties={"year": year}, conn=conn)
             for event in events:
                 for ranking in await Ranking.select(properties={"event_key": event.key}, conn=conn):
                     ep_map[(ranking.team_key, event.key)] = cls(event_key=event.key, team_key=ranking.team_key,
