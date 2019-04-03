@@ -36,6 +36,7 @@ def get_jinja_env(force_filesystemloader=False):
     env.filters['match_short'] = jinja2_filters.match_short
     env.filters['season'] = jinja2_filters.season
     env.filters['fseason'] = jinja2_filters.fseason
+    env.filters['fix_http'] = jinja2_filters.fix_http
     return env
 
 
@@ -43,7 +44,9 @@ JINJA_ENV = get_jinja_env()  # Set up instance cache
 
 
 def render(template, template_values):
-    from stackdriver.profiler import TraceContext
+    return
+    #from stackdriver.profiler import TraceContext
+    TraceContext = lambda x: x
     with TraceContext() as root:
         with root.span("jinja2_engine.render({})".format(template)) as spn:
             template = JINJA_ENV.get_template(template)

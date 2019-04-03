@@ -1,6 +1,7 @@
 import logging
+import asyncio
 from urllib.parse import urlparse
-from models import Event, Ranking, Match, MatchScore
+from models import Event, Match, MatchScore, Ranking
 from helpers import YouTubeVideoHelper
 from db.orm import orm
 
@@ -131,3 +132,71 @@ class MatchHelper:
             ret['losses'] = (await conn.fetchrow(qs.format(eq='<', addn=addn), *args))['count']
             ret['ties'] = (await conn.fetchrow(qs.format(eq='=', addn=addn), *args))['count']
         return ret
+
+    @classmethod
+    async def generate_surrogates(cls, event_key):
+        match_data = await cls.get_match_data(where="m.event_key=$1 AND m.comp_level='q'",
+                                              addn_sql="ORDER BY m.match_number",
+                                              params=[event_key], use_dict=False)
+        if not match_data:
+            return
+        schedule = {}
+        for match, red, blue in match_data:
+            for ms in (red, blue):
+                for team in ms.teams:
+                    if team not in schedule:
+                        schedule[team] = [ms]
+                    else:
+                        schedule[team].append(ms)
+        played = sorted([len(s) for s in schedule.values()])
+        med_played = played[len(played) // 2]
+        for team, matches in schedule.items():
+            if len(matches) - med_played == 0:
+                continue
+            else:
+                m = matches[2]
+                if team not in m.surrogates:
+                    m.surrogates.append(team)
+                await m.update()
+
+    @classmethod
+    async def generate_rankings(cls, event_key):
+        match_data = await cls.get_match_data(where="m.event_key=$1", params=[event_key], use_dict=False)
+        rankings = {}
+        for match, red, blue in match_data:
+            for team in red.teams + blue.teams:
+                if team not in rankings:
+                    rankings[team] = Ranking(event_key=event_key, team_key=team, qp_rp=0, rp_tbp=0,
+                                             high_score=0, wins=0, losses=0, ties=0, played=0, dqed=0)
+            if match.winner == 'tie':
+                for team in red.teams + blue.teams:
+                    if team in red.surrogates or team in blue.surrogates:
+                        continue
+                    rankings[team].played += 1
+                    rankings[team].ties += 1
+                    rankings[team].qp_rp += 1
+                    rankings[team].rp_tbp += red.total
+                    continue
+            elif match.winner == 'red':
+                winner = red
+                loser = blue
+            elif match.winner == 'blue':
+                winner = blue
+                loser = red
+            else:
+                raise ValueError(f"{match.winner} is invalid value for match.winner!")
+            for team in winner.teams:
+                if team in winner.surrogates:
+                    continue
+                rankings[team].played += 1
+                rankings[team].wins += 1
+                rankings[team].qp_rp += 2
+                rankings[team].rp_tbp += loser.total
+            for team in loser.teams:
+                if team in loser.surrogates:
+                    continue
+                rankings[team].played += 1
+                rankings[team].losses += 1
+                rankings[team].rp_tbp += loser.total
+        await asyncio.gather(*[r.upsert() for r in rankings.values()])
+        await Ranking.update_ranks(event_key)

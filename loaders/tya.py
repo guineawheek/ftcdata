@@ -1,5 +1,5 @@
 from models import *
-from helpers import RegionHelper, OPRHelper, AwardHelper
+from helpers import RegionHelper, OPRHelper, AwardHelper, MatchHelper
 from db.orm import orm
 import aiohttp
 import uvloop
@@ -81,6 +81,8 @@ class TheYellowAlliance:
 
         print("Updating rank column....")
         await asyncio.gather(*[Ranking.update_ranks(k) for k in event_keys])
+        print("Generating surrogates....")
+        await asyncio.gather(*[MatchHelper.generate_surrogates(k) for k in event_keys])
         print("Calculating OPRs....")
         await asyncio.gather(*[OPRHelper.update_oprs(k) for k in event_keys])
         print("Generating winning/finalist awards...")

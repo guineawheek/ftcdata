@@ -1,5 +1,5 @@
 import logging
-from models import Award, AwardType
+from models import Award, AwardType, EventType
 from helpers import MatchHelper
 from db.orm import orm
 
@@ -12,6 +12,8 @@ class AwardHelper:
                          params=(event.key,)))
         #print(finals)
         if len(finals) == 0:
+            if event.event_type == EventType.MEET:
+                return
             logging.warning(f"[award_helper.py]: {event.key} doesn't have finals matches wtf")
             if not fail_silent:
                 raise Exception(f"query failed on {event.key} oops")

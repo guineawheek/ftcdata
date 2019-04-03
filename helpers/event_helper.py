@@ -55,9 +55,20 @@ class EventHelper:
         return ret
 
     @classmethod
-    async def insert_event(cls, event, matches, rankings, awards, synch_upsert=False):
+    async def insert_event(cls, event, matches, rankings, awards, divisions=None, synch_upsert=False):
+        if divisions is None:
+            divisions = []
+        if not matches:
+            logging.warning(f"{event.key} has no matches!")
+            await event.upsert()
+            if awards:
+                [await a.upsert() for a in awards]
+            await EventParticipant.generate(events=[event] + divisions)
+            return
         m0 = [m[0] for m in matches] + [m[1] for m in matches] + [m[2] for m in matches]
         async def upsert_batch(it):
+            if not it:
+                return
             async with orm.pool.acquire() as conn:
                 for i in it:
                     await i.upsert(conn=conn)
@@ -66,9 +77,15 @@ class EventHelper:
             await asyncio.gather(upsert_batch(m0), upsert_batch(awards), upsert_batch(rankings))
         else:
             [await upsert_batch(z) for z in [m0, awards, rankings]]
+
+        if not rankings and not event.division_keys:
+            logging.warning(f"{event.key} has no rankings, so we're generating them!")
+            await MatchHelper.generate_surrogates(event.key)
+            await MatchHelper.generate_rankings(event.key)
+
         logging.info(f"Calculating OPRs....")
         await OPRHelper.update_oprs(event.key)
         logging.info(f"Generating winning/finalist awards...")
         await AwardHelper.generate_winners_finalists(event)
         logging.info(f"Generating EventParticipants...")
-        await EventParticipant.generate(events=[event])
+        await EventParticipant.generate(events=divisions + [event])

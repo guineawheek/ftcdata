@@ -1,4 +1,5 @@
 from helpers import NominatimHelper
+import pycountry
 
 def dist(lat1, lon1, lat2, lon2): return ((lat2-lat1)**2 + (lon2-lon2)**2) ** 0.5 
 class RegionHelper:
@@ -16,7 +17,7 @@ class RegionHelper:
     # Michigan High School championship. 
     # You may be gone, but you will never be forgotten.
     # o7
-    MI_HS_TEAMS = [
+    MI_HS_TEAMS = {
         37,
         38,
         39,
@@ -29,9 +30,9 @@ class RegionHelper:
         11314,
         12062,
         12086,
-    ]
+    }
 
-    NYHV_COUNTIES = [i + " County" for i in (
+    NYHV_COUNTIES = {i + " County" for i in (
         "Clinton",
         "Essex",
         "Warren",
@@ -53,7 +54,7 @@ class RegionHelper:
         "Putnam", 
         "Westchester",
         "Rockland"
-    )]
+    )}
 
     NYC_COUNTIES = [i + " County" for i in (
         "Bronx",
@@ -64,7 +65,7 @@ class RegionHelper:
     )]
 
     # ntx
-    TX_NTX = [i + " County" for i in (
+    TX_NTX = {i + " County" for i in (
         "Wichita", 
         "Clay", 
         "Montague", 
@@ -129,10 +130,10 @@ class RegionHelper:
         "Mills", 
         "Lampasas", 
         "San Saba", 
-    )]
+    )}
 
     # Southeast
-    TX_SE = [i + " County" for i in (
+    TX_SE = {i + " County" for i in (
         "Shelby", 
         "Nacogdoches", 
         "San Augustine", 
@@ -172,10 +173,10 @@ class RegionHelper:
         "Jackson", 
         "Victoria", 
         "Calhoun", 
-    )]
+    )}
 
     # Alamo, the hardest region xd
-    TX_AL = [i + " County" for i in (
+    TX_AL = {i + " County" for i in (
         "Crockett", 
         "Schleicher", 
         "Menard", 
@@ -236,11 +237,11 @@ class RegionHelper:
         "Hidalgo", 
         "Willacy", 
         "Cameron", 
-    )]
+    )}
 
     # Original supers layouts, edge cases are handled by get_supers.
     # Don't query this directly.
-    EAST_SUPERS = [
+    EAST_SUPERS = {
             "Maine",
             "New Hampshire",
             "Vermont",
@@ -254,8 +255,8 @@ class RegionHelper:
             "District of Columbia",
             "Delaware",
             "Virginia"
-    ]
-    NORTH_SUPERS = [
+    }
+    NORTH_SUPERS = {
             "West Virginia",
             "Ohio",
             "Michigan",
@@ -269,8 +270,8 @@ class RegionHelper:
             "South Dakota",
             "Nebraska",
             "Kansas"
-    ]
-    WEST_SUPERS = [
+    }
+    WEST_SUPERS = {
             "Montana",
             "Wyoming",
             "Colorado",
@@ -284,8 +285,8 @@ class RegionHelper:
             "California",
             "Alaska"
             # Hawaii omitted because they are like international 
-    ]
-    SOUTH_SUPERS = [
+    }
+    SOUTH_SUPERS = {
             "North Carolina",
             "South Carolina",
             "Georgia",
@@ -298,23 +299,54 @@ class RegionHelper:
             "Louisiana",
             "Oklahoma",
             "Texas"
-    ]
+    }
 
+    REGIONS = {
+        "California NorCal": "canc",
+        "California Los Angeles": "cala",
+        "California San Diego": "casd",
+        "New York Excelsior": "nyex",
+        "New York Hudson Valley": "nyhv",
+        "New York City": "nyc",
+        "New York Long Island": "nyli",
+        "Texas Alamo": "txal",
+        "Texas Southeast": "txse",
+        "Texas Panhandle": "txph",
+        "Texas NTX": "txntx",
+        "Arizona/New Mexico": "az",
+        "Michigan Highschool": "mihs"
+    }
+
+    US_STATES = set(z.name for z in pycountry.subdivisions.get(country_code='US'))
 
     @classmethod
     def region_abbrev(cls, region_name):
-        pass 
+        # handle sub-region subtleties
+        if region_name in cls.REGIONS:
+            return cls.REGIONS[region_name]
+        if region_name.startswith("Canada"):
+            if region_name == "Canada":
+                return "can"
+            else:
+                province = region_name[7:]
+                try:
+                    return "can" + pycountry.subdivisions.lookup(province).code[-2:].lower()
+                except Exception:
+                    return "can"
+        if region_name in cls.US_STATES:
+            return pycountry.subdivisions.lookup(region_name).code[-2:].lower()
+        return pycountry.countries.lookup(region_name).alpha_3.lower()
 
     @classmethod
     async def get_region(cls, team):
-        if team.country not in ("USA", "Canada"):
+        if team.country not in ("USA", "Canada") or (team.country == "Canada" and team.year < 2016):
             return team.country
+        elif team.country == "Canada" and team.year >= 2016:
+            return "Canada " + team.state_prov
         
         # handle all the niches of regional bs in first lol
         # canada is pretty simple, we can usually assume that teams
         # have their own regional ig?
-        if team.country == "Canada":
-            return team.state_prov
 
         if team.state_prov in cls.COMBINED_STATES:
             return cls.COMBINED_STATES[team.state_prov]

@@ -15,10 +15,10 @@ class EventParticipant(orm.Model):
 
     @classmethod
     async def generate(cls, year=None, events=None):
-        if events == None and year is not None:
+        if events is None and year is not None:
             events = await Event.select(properties={"year": year})
-        elif events == None and year == None:
-            raise ValueError("year= needs to be specified without events!")
+        elif events is None and year is None:
+            raise ValueError("one of events or year must be specified!")
         await cls._generate(events, year=year)
     @classmethod
     async def _generate(cls, events, year=None):
@@ -42,9 +42,24 @@ class EventParticipant(orm.Model):
                     elif not event.division_keys:
                         logging.warning(f"[EventParticipant] {award.team_key} got an award at {event.key} without competing lol")
 
-            for match_score, event in await orm.join([MatchScore, Event], ['m', 'e'],
-                                               ["m.event_key=e.key AND array_length(e.division_keys, 1) > 0 AND year=$1"], params=[year],
-                                               use_dict=False):
-                for team in match_score.teams:
-                    ep_map[(team, event.key)].has_matches=True
+            for event in events:
+                # better way to do this???? questionmark?????
+                if not event.division_keys:
+                    continue
+                for match_score in await MatchScore.select(props={"event_key": event.key}):
+                    """
+                    for match_score, _ in await orm.join([MatchScore, Event], ['m', 'e'],
+                                                       ["m.event_key=e.key AND "
+                                                        "m.event_key=$1 AND "
+                                                        "array_length(e.division_keys, 1) > 0 AND "
+                                                        "year=$2"], params=[event.key, year],
+                                                       use_dict=False):
+                   """
+                    try:
+                        for team in match_score.teams:
+                            ep_map[(team, event.key)].has_matches=True
+                    except KeyError:
+                        import pprint
+                        pprint.pprint(ep_map)
+                        raise
         await asyncio.gather(*[ep.upsert() for ep in ep_map.values()])

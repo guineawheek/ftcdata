@@ -17,6 +17,7 @@ class Event(orm.Model):
     advancement_slots: integer
     advances_to: text
     host_team_key: text
+    league_key: text
 
     event_code: text
     event_type: integer # means like championship or wahtever
@@ -55,6 +56,8 @@ class Event(orm.Model):
         ret = ""
         if self.event_type in [EventType.REGIONAL_CMP, EventType.SUPER_REGIONAL, EventType.WORLD_CHAMPIONSHIP, EventType.FOC]:
             ret += EventType.event_names[self.event_type] + " "
+        else:
+            ret += "Event "
         if self.parent_event_key:
             ret += "Division "
         return ret
@@ -78,6 +81,18 @@ class Event(orm.Model):
         self.rankings = await Ranking.fetch("SELECT * from rankings WHERE event_key=$1 ORDER BY rank", self.key)
         self.rankings_table = [labels] + \
                 [(r.rank, r.team_key, r.qp_rp, r.rp_tbp, r.high_score, f"{r.wins}-{r.losses}-{r.ties}", 0, r.played, round(r.qp_rp / r.played, 2)) for r in self.rankings if r.played]
+    @classmethod
+    async def purge(cls, event_key):
+        lines = """
+        DELETE FROM awards WHERE event_key=$1;
+        DELETE FROM rankings WHERE event_key=$1;
+        DELETE FROM event_participants WHERE event_key=$1;
+        DELETE FROM matches WHERE event_key=$1;
+        DELETE FROM match_scores WHERE event_key=$1;
+        DELETE FROM events WHERE key=$1;
+        """
+        for a in lines.strip().split("\n"):
+            await orm.pool.fetch(a, event_key)
 
 class EventType:
     QUALIFIER = 1

@@ -21,9 +21,9 @@ class Ranking(orm.Model):
     
     @classmethod
     async def update_ranks(cls, event_key, conn=None):
-        qs = """UPDATE rankings SET rank=sq.rank FROM 
+        qs = f"""UPDATE {cls.table_name()} SET rank=sq.rank FROM 
             (SELECT team_key, ROW_NUMBER() OVER 
                 (ORDER BY qp_rp DESC, rp_tbp DESC, high_score DESC) AS rank 
-                    FROM rankings WHERE event_key=$1) 
-        AS sq WHERE event_key=$1 AND rankings.team_key=sq.team_key;"""
+                    FROM {cls.table_name()} WHERE event_key=$1) 
+        AS sq WHERE event_key=$1 AND {cls.table_name()}.team_key=sq.team_key;"""
         return await cls.fetchrow(qs, event_key, conn=conn)

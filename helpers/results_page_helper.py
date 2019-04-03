@@ -65,15 +65,19 @@ class ResultsPageHelper:
     @classmethod
     def load_rankings(cls, table, matches, has_hs=True):
         """has_hs=False is necessary for rly old data"""
-        event_key = matches[0][0].event_key
+        try:
+            event_key = matches[0][0].event_key
+        except IndexError:
+            logging.warning("can't load rankings on zero length match table!")
+            return
         high_scores, wlt = cls._load_rank_data(matches) 
         ret = []
-        first = True
+        #first = True
         for tr in table.find_all("tr"):
-            if first:
-                first = False
+            td_tags = list(tr.find_all("td"))
+            if not td_tags:
                 continue
-            td = [td.get_text() for td in tr.find_all("td")]
+            td = [td.get_text() for td in td_tags]
             tkey = "ftc" + td[1]
             twlt = wlt[tkey]
             if not has_hs:

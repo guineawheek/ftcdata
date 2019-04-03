@@ -5,7 +5,7 @@ from sanic.exceptions import abort
 from jinja2 import Environment, FileSystemLoader, ModuleLoader, select_autoescape
 from template_engine import jinja2_engine
 from db.orm import orm
-from models import Team, Event, Ranking, Award, AwardType, EventParticipant
+from models import Team, Event, Ranking, Award, AwardType, EventParticipant, EventType
 from helpers import MatchHelper, BracketHelper, AwardHelper, EventHelper
 import uvloop
 import runtime
@@ -158,7 +158,7 @@ async def event_details(request, event_key):
     await event.prep_render()
     matches_rendered = await MatchHelper.get_render_matches_event(event)
     bracket_table = BracketHelper.get_bracket(matches_rendered)
-    event.alliance_selections = BracketHelper.get_alliances_from_bracket(bracket_table)
+    event.alliance_selections = BracketHelper.get_alliances_from_bracket(bracket_table) if event.event_type != EventType.MEET else None
     awards = await Award.select(properties={"event_key": event.key}, extra_sql=" ORDER BY award_type, award_place")
     return html(env.get_template("event_details.html").render({
         "format_year": format_year,

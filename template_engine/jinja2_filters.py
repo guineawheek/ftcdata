@@ -108,3 +108,7 @@ def season(year):
 
 def fseason(year):
     return f"{year}-{(year+1)%1000:02d}"
+
+def fix_http(url):
+    if not url.startswith("http://") or url.startswith("https://"):
+        return "http://" + url

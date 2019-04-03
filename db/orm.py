@@ -107,7 +107,8 @@ class ORM:
                 await self.fetch(*args, conn=conn)
 
             @classmethod
-            async def select(cls, conn=None, properties=None, extra_sql=""):
+            async def select(cls, conn=None, properties=None, extra_sql="", props=None):
+                properties = properties or props
                 if properties is None:
                     return await cls.fetch(f"SELECT * FROM {cls.__schemaname__}.{cls.__tablename__}")
                 else:

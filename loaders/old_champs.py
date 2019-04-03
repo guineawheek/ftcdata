@@ -13,7 +13,7 @@ from db.orm import orm
 class OldChamps:
 
     @classmethod
-    def mk_champs(cls, year, start_date, end_date, switch=False):
+    def mk_champs(cls, year, start_date, end_date):
         """generates World Championship events given a start and end date, and division order, and year. Assumes 1champs
         """
         seasons = ["Quad Quandary", "Face Off", "Hot Shot", "Get Over It", "Bowled Over", "Ring It Up", "Block Party",
@@ -45,10 +45,6 @@ class OldChamps:
             "venue": venue,
             "address": address
         }
-        if switch:
-            f, e = (2, 1)
-        else:
-            f, e = (1, 2)
 
         finals = Event(key=f"{season}cmp0",
                        name=f"FTC {season_name} World Championship - Finals",
@@ -56,13 +52,13 @@ class OldChamps:
                        division_keys=[f"{season}cmp1", f"{season}cmp2"],
                        start_date=end_date,
                        **shared)
-        franklin = Event(key=f"{season}cmp{f}", 
+        franklin = Event(key=f"{season}cmp{2}",
                        name=f"FTC {season_name} World Championship - Franklin Division",
                        playoff_type=PlayoffType.STANDARD, 
                        parent_event_key=f"{season}cmp0", 
                        start_date=start_date,
                        **shared)
-        edison = Event(key=f"{season}cmp{e}", 
+        edison = Event(key=f"{season}cmp{1}",
                        name=f"FTC {season_name} World Championship - Edison Division",
                        playoff_type=PlayoffType.STANDARD,
                        parent_event_key=f"{season}cmp0", 
@@ -146,7 +142,7 @@ class OldChamps:
         franklin = ResultsPageHelper.load_matches(tables[2], "1011cmp2")
         edison_rank = ResultsPageHelper.load_rankings(tables[3], edison)
         franklin_rank = ResultsPageHelper.load_rankings(tables[4], franklin)
-        events = cls.mk_champs(year, "2011-04-27", "2011-04-30", switch=True)
+        events = cls.mk_champs(year, "2011-04-27", "2011-04-30")
         awards = cls.load_awards_file(awards_data, year, events[-1].key)
 
         await cls.finalize([finals, franklin, edison, franklin_rank, edison_rank, events, awards], events, year) 
@@ -169,7 +165,7 @@ class OldChamps:
 
         franklin_rank = ResultsPageHelper.load_rankings(tables[13], franklin)
         edison_rank = ResultsPageHelper.load_rankings(tables[12], edison)
-        events = cls.mk_champs(year, "2012-04-25", "2012-04-28", switch=False)
+        events = cls.mk_champs(year, "2012-04-25", "2012-04-28")
         awards = cls.load_awards_file(awards_data, year, events[-1].key)
 
         await cls.finalize([finals, franklin, edison, franklin_rank, edison_rank, events, awards], events, year) 
@@ -189,7 +185,7 @@ class OldChamps:
             franklin_rank = ResultsPageHelper.load_rankings(BeautifulSoup(f.read(), 'lxml').find("table"), franklin)
         with open("data/old_champs/2012-2013/awards") as f:
             awards = cls.load_awards_file(f.read(), year, '1213cmp0')
-        events = cls.mk_champs(year, "2013-04-24", "2013-04-27", switch=True)
+        events = cls.mk_champs(year, "2013-04-24", "2013-04-27")
 
         await cls.finalize([finals, franklin, edison, franklin_rank, edison_rank, events, awards], events, year)
 
@@ -197,7 +193,7 @@ class OldChamps:
     async def load_2013(cls):
         year = 2013
         # this is mostly to overwrite tya's names, and to includes awards data (which tya doesn't)
-        events = cls.mk_champs(year, "2014-04-24", "2014-04-26", switch=True)
+        events = cls.mk_champs(year, "2014-04-24", "2014-04-26")
         with open("data/old_champs/2013-2014/awards") as f:
             awards = cls.load_awards_file(f.read(), year, '1314cmp0')
 
@@ -226,7 +222,7 @@ class OldChamps:
 
         with open("data/old_champs/2014-2015/awards") as f:
             awards = cls.load_awards_file(f.read(), year, '1415cmp0')
-        events = cls.mk_champs(year, "2015-04-22", "2015-04-25", switch=False)
+        events = cls.mk_champs(year, "2015-04-22", "2015-04-25")
 
         await cls.finalize([finals, franklin, edison, franklin_rank, edison_rank, events, awards], events, year)
     @classmethod
@@ -257,7 +253,7 @@ async def main():
     await orm.connect(host="/run/postgresql/.s.PGSQL.5432", database="ftcdata", max_size=50)
     await orm.Model.create_all_tables()
     print("Loading old championship data...")
-    await OldChamps.load_2013()
+    await OldChamps.load()
 
     await orm.close()
 
