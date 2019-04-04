@@ -1,5 +1,5 @@
 from sanic import Sanic
-from sanic.response import json, html
+from sanic.response import json, html, redirect
 from sanic.exceptions import abort
 
 from jinja2 import Environment, FileSystemLoader, ModuleLoader, select_autoescape
@@ -213,7 +213,32 @@ async def match_details(request, match_key):
         "blue": blue,
         "match_breakdown_template": match_breakdown_template
     }))
-    
+
+@app.route("/search")
+async def search(request):
+    q = request.args.get('q', '4251')
+    try:
+        tname = int(q)
+        return redirect(f"/team/{tname}")
+    except ValueError:
+        return redirect(f"/event/" + q)
+
+@app.route("/manifest.json")
+async def manifest(request):
+    return json({})
+
+@app.route("/")
+async def index(request):
+    team_count = await orm.pool.fetchval("SELECT count(*) FROM team_meta")
+    event_count = await orm.pool.fetchval("SELECT count(*) FROM events")
+    match_count = await orm.pool.fetchval("SELECT count(*) FROM matches")
+    award_count = await orm.pool.fetchval("SELECT count(*) FROM awards")
+    return html(env.get_template("index.html").render({
+        "event_count": event_count,
+        "team_count": team_count,
+        "match_count": match_count,
+        "award_count": award_count
+    }))
     
 if __name__ == "__main__":
     app.run(host="localhost", port=8000, debug=True, access_log=True)

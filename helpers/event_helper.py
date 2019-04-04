@@ -55,7 +55,7 @@ class EventHelper:
         return ret
 
     @classmethod
-    async def insert_event(cls, event, matches, rankings, awards, divisions=None, synch_upsert=False):
+    async def insert_event(cls, event, matches, rankings, awards=None, divisions=None, synch_upsert=False, tolerate_missing_finals=False):
         if divisions is None:
             divisions = []
         if not matches:
@@ -86,6 +86,6 @@ class EventHelper:
         logging.info(f"Calculating OPRs....")
         await OPRHelper.update_oprs(event.key)
         logging.info(f"Generating winning/finalist awards...")
-        await AwardHelper.generate_winners_finalists(event)
+        await AwardHelper.generate_winners_finalists(event, fail_silent=tolerate_missing_finals)
         logging.info(f"Generating EventParticipants...")
         await EventParticipant.generate(events=divisions + [event])

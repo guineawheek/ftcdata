@@ -163,10 +163,19 @@ class FTCPennScraper:
                     event_key += cls.CODE_MAP[keyword]
         if event_type == EventType.REGIONAL_CMP:
             event_key += "cmp"
+            if 2013 <= year <= 2017:
+                advances_to = f"{season}esr0"
+            else:
+                advances_to = f"{season}cmp0"
+        else:
+            advances_to = f"{season}pacmp" + ("0" if season > 2017 else "")
+
         e = Event(key=event_key,
                   year=year,
                   name=name.strip(),
                   city=city.strip(),
+                  region="Pennsylvania",
+                  advances_to=advances_to,
                   state_prov="Pennsylvania",
                   country="USA",
                   start_date=date,
@@ -203,6 +212,8 @@ class FTCPennScraper:
                               start_date=dates[i-1],
                               end_date=dates[i-1],
                               event_type=EventType.MEET,
+                              region="Pennsylvania",
+                              advances_to="1415paphlcmp",
                               venue="Temple University College of Engineering Building",
                               address="1947 N 12th St. Philadelphia, PA",
                               website="https://www.temple.edu",

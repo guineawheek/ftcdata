@@ -338,6 +338,12 @@ class RegionHelper:
         return pycountry.countries.lookup(region_name).alpha_3.lower()
 
     @classmethod
+    def region_unabbrev(cls, region_abbrev):
+        regions_ = {v: k for k, v in cls.REGIONS.items()}
+        if region_abbrev in regions_:
+            return regions_[region_abbrev]
+
+    @classmethod
     async def get_region(cls, team):
         if team.country not in ("USA", "Canada") or (team.country == "Canada" and team.year < 2016):
             return team.country
@@ -435,3 +441,4 @@ class RegionHelper:
             return "South"
 
         return None
+

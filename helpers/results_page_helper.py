@@ -1,5 +1,6 @@
 import logging
 from models import Event, Ranking, Award, Match, MatchScore
+from bs4 import BeautifulSoup
 from db.orm import orm
 
 class ResultsPageHelper:
@@ -60,7 +61,6 @@ class ResultsPageHelper:
             red.penalty, blue.penalty = int(td[9]), int(td[15])
             matches.append((match, red, blue))
         return matches
-
 
     @classmethod
     def load_rankings(cls, table, matches, has_hs=True):

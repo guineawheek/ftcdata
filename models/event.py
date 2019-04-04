@@ -64,7 +64,7 @@ class Event(orm.Model):
     
     @property
     def location(self):
-        return f"{self.city}, {self.state_prov}, {self.country}"
+        return ", ".join(c for c in (self.city, self.state_prov, self.country) if c)
 
     @property
     def city_state_country(self):

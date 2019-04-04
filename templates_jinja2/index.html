@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}FTCData Main Page{% endblock %}
+
+{% block meta_description %}index page{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>Welcome to FTCData Pre-Alpha Edition!</h2>
+      <h4>(Yet Another FTC Event Results Website)</h4>
+      <p>Currently serving <b>{{team_count}}</b> teams, <b>{{event_count}}</b> events, <b>{{match_count}}</b> matches,
+        and <b>{{award_count}}</b> awards from <b>Hot Shot!</b> through <b>Rover Ruckus</b>,
+        aiming to compile as comprehensive of an archive of the <i>FIRST</i> Tech Challenge's
+        competition history as one can possibly manage in one place, for the preservation of this program's heritage.</p>
+      <p>As this website is in <b>pre-alpha</b>, parts of this website may be broken, completely nonfunctional, or change
+      on a moment's whim. </p>
+
+      <h3>Frequently Mentioned Things:</h3>
+      <div class="col-xs-12">
+        <h3>Why though? Aren't there already websites like this?</h3>
+        <p>The current state of FTC match and event data is hilariously fragmented across many different sources of varying
+        quality and likelihood of staying up, from blog posts on an affiliate partner's website that might get wiped clean
+        in 2 years, to shiny, organized affairs such as <a href="http://ftcpenn.org">FTCPenn's</a> or
+        <a href="https://moftcscores.net"> the Missouri FTC Scores website</a>, or, if one is lucky, uploaded to either
+          <a href="https://theorangealliance.org">The Orange Alliance</a> through FIRST or <a href="https://ftcscores.com">FTCScores</a>
+          through their proprietary (eww!) live uploader.
+        (However, neither cover data pre-dating Velocity Vortex.)</p>
+        <p>Out of these, The Orange Alliance is certainly one of the stronger solutions. However, due to their contract
+          with <i>FIRST</i> in order to be able to provide data gathered from affiliate partners who actually bother
+          submitting data to them (like they should!) in the first place, they cannot display match/awards data from other
+          sources. Plus, I personally believe their UI flows leave something to be desired...and competition is good.
+        </p>
+        <p>
+          While FTCScores certainly sports a prettier UI, it's entire stack is proprietary software, closing the potential
+          community of contributors to those currently working on their project. Plus, if they die at any time, there
+          will be nobody around to revive them.
+        </p>
+        <p>
+          Given that it's main purpose is primarily serving data live straight from events anyway, rather than being a general
+          purpose match results website like TOA, archival of past events is not really a priority for them.
+        </p>
+        <p>For obvious reasons, regional affiliate partners typically only display data from their own regions on their
+        websites. Sometimes, the cheekier ones think this is a good substitute for submitting their events to FIRST.
+        (it's not, you often lose a lot of detail.) That said, FIRST historically didn't even take meet data, so there
+        might be something to be said for that one. </p>
+        <p>Archiving event histories is pretty important. One's own team history is something one might want to know about.
+        One may want to know, for example, if one's was Very Good 5 years ago, but now seems to struggle to make it
+        to states. Being downstream of all these sources on our own platform allows us to not only present and preserve
+          all their data without having to deal with the political reasons for why any one of them might not be able to
+          archive FTC's history. Our aim for this project is to be the spiritual successor to <a href="http://ftcroot.herokuapp.com/">
+        FTCRoot</a> and <a href="https://github.com/cheer4ftc/ftc-data">cheer4ftc's ftc-data repository</a> - with the aim
+          of recording every single bit of match and awards data we can get our hands on.</p>
+        <p>Plus, we have an opportunity to build a faster, more intuitive UI building upon an already
+          established platform...speaking of which....
+        </p>
+      </div>
+      <div class="col-xs-12">
+        <h3>This looks exactly like a certain Alliance Of Blue Color's website.</h3>
+        <p>That's because many of TBA's HTML templates were used (and heavily modified) in this project to build the UI
+        you see right now. TBA's code and HTML templates are <a href="https://github.com/the-blue-alliance/the-blue-alliance/blob/master/LICENSE.md">
+        open source under the MIT License</a> just like FTCData, and since it's UI is already pretty good (compared to
+        what I might write from scratch), I figured I might as well use them. I hope you agree on my assessment of TBA's
+        UI, but understand if you don't.</p>
+        <p>The backend, like TBA, is written in Python, however, most of these pages you see are likely pregenerated static
+        files that are served through nginx. Structurally, while some general layout and design cues were borrowed
+        from TBA (and a few select helper files) the codebase is otherwise very different.</p>
+        <p>If you see any references to TBA or FRC on this website, that's a bug. If you are reading this, I should've
+          attempted to strip out all of them already. Please report it if you do see them.</p>
+      </div>
+      <div class="col-xs-12">
+        <h3>Is there an API?</h3>
+        <p>As this software is <i>very much</i> in a pre-alpha state, much of the main functionality of the website
+        isn't even finished, much less an API. However, I can offer the next best thing: regular Postgres backups of the
+        entire data set in pg_dump format. </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
