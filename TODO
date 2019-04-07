@@ -1,7 +1,7 @@
 # Big Old TODO list
 
 Backend:
-* calculate surrogates (3rd match???)
+FIXED calculate surrogates (3rd match???)
 * calculate dqed?
 * consider more backend design changes (why do i haev to redesign so much)
 * actually prerender pages instead of the increasingly large devserver.py file
@@ -13,6 +13,7 @@ Backend:
 * event id generation (hard problem!!!!!)
 * somehow cross-correlate events in db with first's team and event search (hard problem)
 * find the real locations of those APO,AE teams
+* do league ranking calcuations and display them
 
 
 * make a model that represents teams at events rather than rev-engineering it from the rankings table
@@ -21,7 +22,7 @@ Backend:
 
 Frontend:
 FIXED events list page doesn't work
-* team history doesn't work
+FIXED team history doesn't work
 FIXED teams don't have events
 FIXED team links are still using year format instead of season format (oops!)
 
@@ -43,8 +44,9 @@ Down the road:
 * make sure you yourself don't have xss/csrf vulns
 * actually make the UI a useful UI
 * make better insights pages than top 15 oprs lol
-* old champs data
-* ftcpenn data
+DONE old champs data
+DONE ftcpenn data
 * ftc-data data
+* moftcscores data
 * ftcscores data
 * toa data

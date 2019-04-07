@@ -217,6 +217,7 @@ class FTCPennScraper:
                               venue="Temple University College of Engineering Building",
                               address="1947 N 12th St. Philadelphia, PA",
                               website="https://www.temple.edu",
+                              league_key="1314paphl",
                               playoff_type=PlayoffType.STANDARD)
                 matches = ResultsPageHelper.load_match_details(match_table, event.key)
                 rankings = ResultsPageHelper.load_rankings(rankings_table, matches)

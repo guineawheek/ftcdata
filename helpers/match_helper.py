@@ -163,6 +163,9 @@ class MatchHelper:
     async def generate_rankings(cls, event_key):
         match_data = await cls.get_match_data(where="m.event_key=$1", params=[event_key], use_dict=False)
         rankings = {}
+        red: MatchScore
+        blue: MatchScore
+        match: Match
         for match, red, blue in match_data:
             for team in red.teams + blue.teams:
                 if team not in rankings:
@@ -175,7 +178,7 @@ class MatchHelper:
                     rankings[team].played += 1
                     rankings[team].ties += 1
                     rankings[team].qp_rp += 1
-                    rankings[team].rp_tbp += red.total
+                    rankings[team].rp_tbp += min(red.total - red.penalty, blue.total - blue.penalty)
                     continue
             elif match.winner == 'red':
                 winner = red
@@ -191,7 +194,7 @@ class MatchHelper:
                 rankings[team].played += 1
                 rankings[team].wins += 1
                 rankings[team].qp_rp += 2
-                rankings[team].rp_tbp += loser.total
+                rankings[team].rp_tbp += loser.total - loser.penalty
             for team in loser.teams:
                 if team in loser.surrogates:
                     continue

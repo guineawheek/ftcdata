@@ -21,6 +21,7 @@ One can use the defualt orm instance or instantiate your own for other dbs.
 
 
 class ORM:
+    pool: asyncpg.pool.Pool
     def __init__(self):
         class Model:
             __schemaname__ = "public"
