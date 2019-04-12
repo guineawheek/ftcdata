@@ -37,6 +37,7 @@ class Event(orm.Model):
     website: text
     lat: double_precision
     lon: double_precision
+    data_sources: Column("text[]")
 
     @property
     def short_name(self):
@@ -93,6 +94,7 @@ class Event(orm.Model):
         """
         for a in lines.strip().split("\n"):
             await orm.pool.fetch(a, event_key)
+        print("purged", event_key)
 
 class EventType:
     QUALIFIER = 1

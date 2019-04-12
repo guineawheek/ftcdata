@@ -43,7 +43,8 @@ class OldChamps:
             "end_date": end_date,
             "event_type": EventType.WORLD_CHAMPIONSHIP,
             "venue": venue,
-            "address": address
+            "address": address,
+            "data_sources": ["USFIRST Website Archives"]
         }
 
         finals = Event(key=f"{season}cmp0",
@@ -194,6 +195,8 @@ class OldChamps:
         year = 2013
         # this is mostly to overwrite tya's names, and to includes awards data (which tya doesn't)
         events = cls.mk_champs(year, "2014-04-24", "2014-04-26")
+        for e in events:
+            e.data_sources.append("The Yellow Alliance")
         with open("data/old_champs/2013-2014/awards") as f:
             awards = cls.load_awards_file(f.read(), year, '1314cmp0')
 

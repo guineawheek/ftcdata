@@ -9,6 +9,7 @@ from .bracket_helper import BracketHelper
 from .award_helper import AwardHelper
 from .event_helper import EventHelper
 from .results_page_helper import ResultsPageHelper
+from .match_details_helper import MatchDetailsHelper
 def format_year(year):
     return f"{year}-{(year+1)%1000:02d}"
 

@@ -83,14 +83,18 @@ class ORM:
 
             @classmethod
             async def _fetch(cls, args, _one=False, conn=None):
-                f = 'fetchrow' if _one else 'fetch'
-                if conn is None:
-                    async with cls._orm.pool.acquire() as conn:
+                try:
+                    f = 'fetchrow' if _one else 'fetch'
+                    if conn is None:
+                        async with cls._orm.pool.acquire() as conn:
+                            async with conn.transaction():
+                                return await getattr(conn, f)(*args)
+                    else:
                         async with conn.transaction():
                             return await getattr(conn, f)(*args)
-                else:
-                    async with conn.transaction():
-                        return await getattr(conn, f)(*args)
+                except asyncpg.PostgresError:
+                    print("query", args[0], "failed!")
+                    raise
 
             @classmethod
             async def fetch(cls, *args, conn=None):
@@ -119,7 +123,8 @@ class ORM:
                     return await cls.fetch(*([qs] + list(properties.values())), conn=conn)
 
             @classmethod
-            async def select_one(cls, conn=None, properties=None):
+            async def select_one(cls, conn=None, properties=None, props=None):
+                properties = properties or props
                 fields = properties.keys()
                 qs = f"SELECT * FROM {cls.__schemaname__}.{cls.__tablename__} WHERE " + " AND ".join(f"{f}=${i}" for i, f in enumerate(fields, 1))
                 return await cls.fetchrow(*([qs] + list(properties.values())), conn=conn)

@@ -43,7 +43,7 @@ class Team(orm.Model):
     @classmethod
     async def at_event(cls, event):
         from models import EventParticipant
-        return [td['t'] for td in await orm.join([cls, EventParticipant], ['t', 'ep'], ['ep.team_key=t.key AND ep.event_key=$1 AND t.year=$2'], params=[event.key, event.year])]
+        return [td['t'] for td in await orm.join([cls, EventParticipant], ['t', 'ep'], ['ep.team_key=t.key AND ep.event_key=$1 AND t.year=$2'], params=[event.key, event.year], addn_sql=" ORDER BY t.number")]
         """
         return await Team.fetch("SELECT * FROM rankings INNER JOIN teams ON " + \
                 "(teams.key = rankings.team_key AND rankings.event_key = $1 AND teams.year = $2) ORDER BY number",

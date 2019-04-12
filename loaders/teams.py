@@ -7,19 +7,22 @@ import pprint
 import gzip
 import pickle
 from models import Team, TeamMeta
-from helpers import LocationHelper, ChampSplitHelper, RegionHelper
+from helpers import LocationHelper, ChampSplitHelper, RegionHelper, NominatimHelper
 from db.orm import orm
 
 record_counter = 0
 
 async def add_team(data):
     global record_counter
-    UPSERT = False
+    UPSERT = True
     number = data["number"]
     rookie_year = data["rookie_year"]
     async with orm.pool.acquire() as conn:
         async with conn.transaction():
             for s in data["seasons"]:
+                url = s['website']
+                if url and (not url.startswith("http://") or not url.startswith("https://")):
+                    url = "http://" + url
                 team = Team(
                         key=f"ftc{number}",
                         number=number,
@@ -34,7 +37,7 @@ async def add_team(data):
                         country=s['country'],
                         postalcode=s['postal_code'],
                         normalized_location='',
-                        website=s['website'],
+                        website=url,
                         lat=s["location"][0],
                         lon=s["location"][1]
                 )
@@ -65,6 +68,7 @@ async def main():
         async with session.get(DATA_URL) as response:
             data = pickle.loads(gzip.decompress(await response.read()))
     await asyncio.gather(*[add_team(d) for d in data.values()])
+    await NominatimHelper.http.close()
     print("done.\nUpdating team_meta...")
     await TeamMeta.update()
 

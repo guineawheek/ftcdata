@@ -114,6 +114,7 @@ class TheYellowAlliance:
                           start_date=to_datetime(edata['start_date']),
                           end_date=to_datetime(edata['end_date']),
                           event_type=event_type,
+                          data_sources=["The Yellow Alliance"],
                           playoff_type=PlayoffType.STANDARD)
                 if multi_div:
                     if i == 3:

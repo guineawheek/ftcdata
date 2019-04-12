@@ -1,11 +1,11 @@
 from sanic import Sanic
-from sanic.response import json, html, redirect
+from sanic.response import json, html, redirect, text
 from sanic.exceptions import abort
 
 from jinja2 import Environment, FileSystemLoader, ModuleLoader, select_autoescape
 from template_engine import jinja2_engine
 from db.orm import orm
-from models import Team, Event, Ranking, Award, AwardType, EventParticipant, EventType
+from models import Team, Event, Ranking, Award, AwardType, EventParticipant, EventType, TeamMeta
 from helpers import MatchHelper, BracketHelper, AwardHelper, EventHelper
 import uvloop
 import runtime
@@ -105,8 +105,10 @@ async def teams_history(request, number):
         else:
             event_awards.append((event, await AwardHelper.sorted_awards(
                 await Award.select(properties={"event_key": ep.event_key, "team_key": team.key}))))
+    years = [r["year"] for r in await orm.pool.fetch("SELECT year FROM teams WHERE number=$1 ORDER BY year", number)]
     return html(env.get_template("team_history.html").render({
         "team": team,
+        "years": years,
         "event_awards": sorted(event_awards, key=lambda x: x[0].start_date),
         "max_year": 2018,
         "last_competed": team.year
@@ -205,6 +207,10 @@ async def match_details(request, match_key):
         abort(404)
     match_breakdown_template = "match_partials/match_breakdown/match_breakdown_default.html"
     event = await Event.select_one(properties={"key": match.event_key})
+    if red.breakdown:
+        if event.year == 2016:
+            match_breakdown_template = "match_partials/match_breakdown/match_breakdown_1617.html"
+
     match_render = MatchHelper.MatchRender(match, (red, blue), event)
     return html(env.get_template("match_details.html").render({
         "event": event,
@@ -227,6 +233,20 @@ async def search(request):
 async def manifest(request):
     return json({})
 
+@app.route("/_/typeahead/<thing_all>")
+async def typeahead(request, thing_all):
+    if thing_all == "teams-all":
+        return json([f"{t.number} | {t.name}" for t in (await TeamMeta.select())])
+    else:
+        abort(404)
+    pass
+
+@app.route("/robots.txt")
+async def robotstxt(request):
+    return text("""User-agent: *
+Allow: /
+Disallow: /_""")
+
 @app.route("/")
 async def index(request):
     team_count = await orm.pool.fetchval("SELECT count(*) FROM team_meta")
@@ -239,7 +259,8 @@ async def index(request):
         "match_count": match_count,
         "award_count": award_count
     }))
-    
+
+
 if __name__ == "__main__":
     app.run(host="localhost", port=8000, debug=True, access_log=True)
 

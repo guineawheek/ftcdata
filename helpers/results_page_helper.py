@@ -6,12 +6,18 @@ from db.orm import orm
 class ResultsPageHelper:
     """Helper methods to parse the output from FTC Live Scoring Software pages"""
     res_map = {"R": "red", "B": "blue", "T": "tie"}
+
     @classmethod
-    def _mk_match(cls, event_key, mname, result, red_a, blue_a):
+    def parse_match_code(cls, mname):
         match_code = mname.split('-')
-        comp_level = match_code[0].lower() 
+        comp_level = match_code[0].lower()
         mnum = int(match_code[-1])
         set_number = int(match_code[1]) if len(match_code) == 3 else None
+        return comp_level, mnum, set_number
+
+    @classmethod
+    def _mk_match(cls, event_key, mname, result, red_a, blue_a):
+        comp_level, mnum, set_number = cls.parse_match_code(mname)
         match = Match(event_key=event_key, comp_level=comp_level, match_number=mnum, set_number=set_number)
         scores, winner = result.split() 
         red_score, blue_score = scores.split('-')
@@ -70,7 +76,7 @@ class ResultsPageHelper:
         except IndexError:
             logging.warning("can't load rankings on zero length match table!")
             return
-        high_scores, wlt = cls._load_rank_data(matches) 
+        high_scores, wlt = cls.highscores_wlt(matches)
         ret = []
         #first = True
         for tr in table.find_all("tr"):
@@ -92,7 +98,7 @@ class ResultsPageHelper:
         return ret
 
     @classmethod
-    def _load_rank_data(cls, matches):
+    def highscores_wlt(cls, matches):
         teams = set()
         for m, red, blue in matches:
             teams.update(red.teams)

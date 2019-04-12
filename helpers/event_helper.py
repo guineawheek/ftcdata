@@ -55,7 +55,19 @@ class EventHelper:
         return ret
 
     @classmethod
-    async def insert_event(cls, event, matches, rankings, awards=None, divisions=None, synch_upsert=False, tolerate_missing_finals=False):
+    async def insert_event(cls, event, matches, rankings, awards=None, divisions=None, synch_upsert=False,
+                           tolerate_missing_finals=False, data_source=None):
+
+        orig_event = await Event.select_one(properties={"key": event.key})
+        if event.data_sources is None:
+            event.data_sources = []
+        if orig_event is None or orig_event.data_sources is None:
+            if data_source not in event.data_sources:
+                event.data_sources.append(data_source)
+        else:
+            for ds in orig_event.data_sources + [data_source]:
+                if ds not in event.data_sources and ds:
+                    event.data_sources.append(ds)
         if divisions is None:
             divisions = []
         if not matches:
@@ -89,3 +101,4 @@ class EventHelper:
         await AwardHelper.generate_winners_finalists(event, fail_silent=tolerate_missing_finals)
         logging.info(f"Generating EventParticipants...")
         await EventParticipant.generate(events=divisions + [event])
+        print("loaded " + event.key)

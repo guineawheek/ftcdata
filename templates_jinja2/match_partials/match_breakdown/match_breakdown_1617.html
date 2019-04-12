@@ -1,0 +1,134 @@
+<table class="match-table">
+  <tbody>
+    {# A lot of match data only has auton/tele/endgame stats. Or less. This should cover all the bases. #}
+
+
+    <tr>
+      <td class="red" colspan="2">{{red.breakdown.auto_center_balls}}</td>
+      <td>Balls in Center Vortex</td>
+      <td class="blue" colspan="2">{{blue.breakdown.auto_center_balls}}</td>
+    </tr>
+
+    <tr>
+      <td class="red" colspan="2">{{red.breakdown.auto_corner_balls}}</td>
+      <td>Balls in Corner Vortex</td>
+      <td class="blue" colspan="2">{{blue.breakdown.auto_corner_balls}}</td>
+    </tr>
+
+    <tr class="key">
+      <td class="redScore" colspan="2">{{red.breakdown.auto_center_balls|int * 15 + red.breakdown.auto_corner_balls|int}}</td>
+      <td>Total Ball Points</td>
+      <td class="blueScore" colspan="2">{{blue.breakdown.auto_center_balls|int * 15 + blue.breakdown.auto_corner_balls|int}}</td>
+    </tr>
+
+    <tr>
+      <td class="red" colspan="2">{{red.breakdown.auto_beacons}} (+{{red.breakdown.auto_beacons|int * 10}})</td>
+      <td>Beacons Claimed</td>
+      <td class="blue" colspan="2">{{blue.breakdown.auto_beacons}} (+{{blue.breakdown.auto_beacons|int * 10}})</td>
+    </tr>
+
+    <tr>
+      <td class="red" colspan="2">{% if red.breakdown.auto_beacons %}<span class="glyphicon glyphicon-ok"></span>{% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}</td>
+      <td>Moved Cap Ball</td>
+      <td class="blue" colspan="2">{% if blue.breakdown.auto_beacons %}<span class="glyphicon glyphicon-ok"></span>{% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}</td>
+    </tr>
+
+
+    <!-- TODO: more detail! -->
+    <tr>
+      <td class="red" colspan="2">{% if red.breakdown.auto_robot1_park|int > 1 %}{{ {"1": "Partial Center", "2": "Full Center", "3": "Partial Corner", "4": "Full Corner"}[red.breakdown.auto_robot1_park] }} {% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}</td>
+      <td>Robot 1 Park</td>
+      <td class="blue" colspan="2">{% if blue.breakdown.auto_robot1_park|int > 1 %}{{ {"1": "Partial Center", "2": "Full Center", "3": "Partial Corner", "4": "Full Corner"}[blue.breakdown.auto_robot1_park] }} {% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}</td>
+    </tr>
+    <tr>
+      <td class="red" colspan="2">{% if red.breakdown.auto_robot2_park|int > 1 %}{{ {"1": "Partial Center", "2": "Full Center", "3": "Partial Corner", "4": "Full Corner"}[red.breakdown.auto_robot2_park] }} {% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}</td>
+      <td>Robot 2 Park</td>
+      <td class="blue" colspan="2">{% if blue.breakdown.auto_robot2_park|int > 1 %}{{ {"1": "Partial Center", "2": "Full Center", "3": "Partial Corner", "4": "Full Corner"}[blue.breakdown.auto_robot2_park] }} {% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}</td>
+    </tr>
+
+
+    <!-- Auto Total -->
+    {% if red.auto is not none %}
+    <tr class="key">
+	    <td class="redScore" colspan="2">{{red.auto}}</td>
+      <th>Total Auto</th>
+      <td class="blueScore" colspan="2">{{blue.auto}}</td>
+    </tr>
+    {% endif %}
+
+    <tr>
+      <td class="red" colspan="2">{{red.breakdown.teleop_center_balls}}</td>
+      <td>Balls in Center Vortex</td>
+      <td class="blue" colspan="2">{{blue.breakdown.teleop_center_balls}}</td>
+    </tr>
+
+    <tr>
+      <td class="red" colspan="2">{{red.breakdown.teleop_corner_balls}}</td>
+      <td>Balls in Corner Vortex</td>
+      <td class="blue" colspan="2">{{blue.breakdown.teleop_corner_balls}}</td>
+    </tr>
+
+    <tr class="key">
+      <td class="redScore" colspan="2">{{red.breakdown.teleop_center_balls|int * 5 + red.breakdown.teleop_corner_balls|int}}</td>
+      <td>Total Ball Points</td>
+      <td class="blueScore" colspan="2">{{blue.breakdown.teleop_center_balls|int * 5 + blue.breakdown.teleop_corner_balls|int}}</td>
+    </tr>
+
+    <tr>
+      <td class="red" colspan="2">{{red.breakdown.teleop_beacons}} (+{{red.breakdown.teleop_beacons|int * 10}})</td>
+      <td>Beacons Claimed</td>
+      <td class="blue" colspan="2">{{blue.breakdown.teleop_beacons}} (+{{blue.breakdown.teleop_beacons|int * 10}})</td>
+    </tr>
+
+    <!-- Teleop Total -->
+    {% if red.teleop is not none %}
+    <tr class="key">
+      <td class="redScore" colspan="2">{% if red.teleop %} {{red.teleop}} {% else %} 0 {% endif %}</td>
+      <th>Total Teleop</th>
+      <td class="blueScore" colspan="2">{% if blue.teleop %}{{blue.teleop}} {% else %} 0 {% endif %}</td>
+    </tr>
+    {% endif %}
+
+    <tr>
+      <td class="red" colspan="2">{% if red.breakdown.endgame_cap_level|int > 0 %} {{ {"1": "Low (+10)", "2": "High (+20)", "3": "Capped (+40)"}[red.breakdown.endgame_cap_level] }} {% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}</td>
+      <td>Cap Ball Lift</td>
+      <td class="blue" colspan="2">{% if blue.breakdown.endgame_cap_level|int > 0 %} {{ {"1": "Low (+10)", "2": "High (+20)", "3": "Capped (+40)"}[blue.breakdown.endgame_cap_level] }} {% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}</td>
+    </tr>
+
+    <!-- Endgame Total -->
+    {% if red.endgame is not none %}
+    <tr class="key">
+      <td class="redScore" colspan="2">{% if red.endgame %} {{red.endgame}} {% else %} 0 {% endif %}</td>
+      <th>Total Endgame</th>
+      <td class="blueScore" colspan="2">{% if blue.endgame %}{{blue.endgame}} {% else %} 0 {% endif %}</td>
+    </tr>
+    {% endif %}
+
+    <tr>
+      <td class="red" colspan="2">+{{red.breakdown.major_penalties|int * 40}}</td>
+      <td>Major Penalty Points</td>
+      <td class="blue" colspan="2">+{{blue.breakdown.major_penalties|int * 40}}</td>
+    </tr>
+
+    <tr>
+      <td class="red" colspan="2">+{{red.breakdown.minor_penalties|int * 10}}</td>
+      <td>Minor Penalty Points</td>
+      <td class="blue" colspan="2">+{{blue.breakdown.minor_penalties|int * 10}}</td>
+    </tr>
+
+    <!-- Total Score -->
+    {% if red.total is not none %}
+    <tr class="key">
+      <td class="redScore" colspan="2">{% if red.total %} {{red.total}} {% else %} 0 {% endif %}</td>
+      <th>Total Score</th>
+      <td class="blueScore" colspan="2">{% if blue.total %}{{blue.total}} {% else %} 0 {% endif %}</td>
+    </tr>
+    {% endif %}
+    <!-- Never do this. Villians do this. -->
+    <tr style="height:0px; max-height:0px; line-height: 0px; visibility: hidden;">
+      <td colspan="2" style="line-height: 0px;">aaaaaaaaa</td>
+      <th style="line-height: 0px;">meme</th>
+      <td colspan="2" style="line-height: 0px;">aaaaaaaaa</td>
+    </tr>
+  </tbody>
+</table>

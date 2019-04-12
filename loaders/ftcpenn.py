@@ -168,7 +168,7 @@ class FTCPennScraper:
             else:
                 advances_to = f"{season}cmp0"
         else:
-            advances_to = f"{season}pacmp" + ("0" if season > 2017 else "")
+            advances_to = f"{season}pacmp" + ("0" if year > 2017 else "")
 
         e = Event(key=event_key,
                   year=year,
@@ -221,7 +221,7 @@ class FTCPennScraper:
                               playoff_type=PlayoffType.STANDARD)
                 matches = ResultsPageHelper.load_match_details(match_table, event.key)
                 rankings = ResultsPageHelper.load_rankings(rankings_table, matches)
-                await EventHelper.insert_event(event, matches, rankings, None)
+                await EventHelper.insert_event(event, matches, rankings, None, data_source="ftcpenn.org")
 
 
     @classmethod
@@ -260,7 +260,7 @@ class FTCPennScraper:
                     continue
                 print("Processing " + event.key)
                 awards, rankings, matches = await cls.scrape_event(link, event)
-                await EventHelper.insert_event(event, matches, rankings, awards)
+                await EventHelper.insert_event(event, matches, rankings, awards, data_source="ftcpenn.org")
 
     @classmethod
     async def load(cls):
@@ -272,20 +272,21 @@ class ESRScraper(FTCPennScraper):
     # same website, right?
     @classmethod
     async def load(cls):
-        for i in range(2012, 2018):
+        for i in range(2013, 2018):
             await cls.load_year(i)
+        await cls.load_meets(2014)
 
     @classmethod
     async def load_year(cls, year):
         if year not in range(2013, 2018):
             raise ValueError("invalid year!")
         url = f"http://www.ftceast.org/tournament/tournament-results/{year}-{year+1}-Results"
-        main_data = await cls.get(url)
         if year == 2013:
             date = datetime.datetime(year=2014, month=4, day=3)
         else:
             date = datetime.datetime(year=year+1, month=3, day=2033-year)
             url = url.lower()
+        main_data = await cls.get(url)
 
         common_info = {
             "year": year,
@@ -341,20 +342,22 @@ class ESRScraper(FTCPennScraper):
         tesla_rank_table = BeautifulSoup(tesla_rank_data, 'lxml').find("th").find_parent("table")
         tesla_rank = ResultsPageHelper.load_rankings(tesla_rank_table, tesla_matches)
 
-        await EventHelper.insert_event(hopper, hopper_matches, hopper_rank, None)
-        await EventHelper.insert_event(tesla, tesla_matches, tesla_rank, None)
-        await EventHelper.insert_event(finals, finals_matches, None, awards, divisions=[hopper, tesla])
+        await EventHelper.insert_event(hopper, hopper_matches, hopper_rank, None, data_source="ftceast.org")
+        await EventHelper.insert_event(tesla, tesla_matches, tesla_rank, None, data_source="ftceast.org")
+        await EventHelper.insert_event(finals, finals_matches, None, awards, divisions=[hopper, tesla], data_source="ftceast.org")
 
 async def main():
+    #TODO: finish philly meets
     print("Initializing database connection...")
     await orm.connect(host="/run/postgresql/.s.PGSQL.5432", database="ftcdata", max_size=50)
     await orm.Model.create_all_tables()
-    await Event.purge("1415paphlm1")
-    #await FTCPennScraper.load_year(2015)
-    await FTCPennScraper.load_meets(2014)
+    #await Event.purge("1415paphlm1")
+    #await FTCPennScraper.load_year(2017)
+    #await FTCPennScraper.load_meets(2014)
     #await FTCPennScraper.load()
-    await FTCPennScraper.close_http()
-    #await ESRScraper.load_year(2017)
+    #await FTCPennScraper.close_http()
+    await ESRScraper.load()
+    await ESRScraper.close_http()
     await orm.close()
 
 if __name__ == "__main__":

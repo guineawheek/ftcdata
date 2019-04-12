@@ -179,7 +179,7 @@ class MatchHelper:
                     rankings[team].ties += 1
                     rankings[team].qp_rp += 1
                     rankings[team].rp_tbp += min(red.total - red.penalty, blue.total - blue.penalty)
-                    continue
+                continue
             elif match.winner == 'red':
                 winner = red
                 loser = blue
