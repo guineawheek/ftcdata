@@ -3,10 +3,10 @@ import functools
 class LocationHelper:
 
     _remap = {
-        "South Korea": "Korea, Republic Of",
-        "Chinese Taipei": "Taiwan",
-        "Russia": "Russian Federation",
-        "Iran": "Iran, Islamic Republic Of",
+        "south korea": "Korea, Republic Of",
+        "chinese taipei": "Taiwan",
+        "russia": "Russian Federation",
+        "iran": "Iran, Islamic Republic Of",
     }
 
     @classmethod
@@ -21,8 +21,8 @@ class LocationHelper:
             return "Armed Forces Pacific"
         
         # fix some pedantic issues
-        if country in cls._remap:
-            country = cls._remap[country]
+        if country.lower() in cls._remap:
+            country = cls._remap[country.lower()]
 
         # fix the one cayman islands case
         elif country == "Cayman Islands":
@@ -41,7 +41,7 @@ class LocationHelper:
         if len(state_prov) > 3:
             return state_prov
         if country == "USA" and state_prov == "22":
-            return state_prov
+            return "Armed Forces Europe"
         cc = pycountry.countries.lookup(country)
         if cc is None:
             # country lookup failed whoops
@@ -57,3 +57,8 @@ class LocationHelper:
     def abbrev_state_prov(cls, country, state_prov):
         pass
 
+    @classmethod
+    def abbrev_country(cls, country):
+        if country.lower() in cls._remap:
+            country = cls._remap[country.lower()]
+        return pycountry.countries.lookup(country).alpha_3.lower()

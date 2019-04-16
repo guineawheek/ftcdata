@@ -24,6 +24,12 @@ class Team(orm.Model):
 
     @property
     def city_state_country(self):
+        if self.city.lower() in ("apo", "fpo") and self.country == "USA":
+            if 'Europe' in self.state_prov:
+                ab = "AE"
+            else:
+                ab = "AP"
+            return f"{self.city.upper()} {ab} {self.postalcode}, {self.country} ({self.region})"
         return f"{self.city}, {self.state_prov}, {self.country}"
 
     @classmethod

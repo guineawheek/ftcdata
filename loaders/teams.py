@@ -42,13 +42,13 @@ async def add_team(data):
                         lon=s["location"][1]
                 )
                 team.state_prov = LocationHelper.unabbrev_state_prov_team(team)
+                team.region = await RegionHelper.get_region(team)
                 cmps = ChampSplitHelper.get_champ(team)
                 if cmps is not None:
                     if team.year > 2016:
                         team.home_cmp = cmps[2017]
                     elif team.year == 2016:
                         team.home_cmp = cmps[2016]
-                team.region = await RegionHelper.get_region(team)
                 if UPSERT:
                     await team.upsert(conn=conn)
                 else:

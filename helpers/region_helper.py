@@ -1,4 +1,5 @@
-from helpers import NominatimHelper
+from db.orm import orm
+from helpers import NominatimHelper, LocationHelper
 import pycountry
 
 def dist(lat1, lon1, lat2, lon2): return ((lat2-lat1)**2 + (lon2-lon2)**2) ** 0.5 
@@ -10,7 +11,7 @@ class RegionHelper:
             "Arizona": "Arizona/New Mexico",
             "New Mexico": "Arizona/New Mexico",
             "Kansas": "Missouri",
-            "District Of Columbia": "Maryland"
+            "District of Columbia": "Maryland"
     }
 
     # these teams did not compete in FiM; instead they competed at the separate
@@ -302,6 +303,9 @@ class RegionHelper:
     }
 
     REGIONS = {
+        "Maryland": "md",
+        "Montana": "mt",
+        "Canada Alberta": "canal",
         "California NorCal": "canc",
         "California Los Angeles": "cala",
         "California San Diego": "casd",
@@ -314,10 +318,15 @@ class RegionHelper:
         "Texas Panhandle": "txph",
         "Texas NTX": "txntx",
         "Arizona/New Mexico": "az",
-        "Michigan Highschool": "mihs"
+        "Michigan Highschool": "mihs",
+        "Armed Forces Pacific": "apoap",
+        "Armed Forces Europe": "apoae",
     }
 
     US_STATES = set(z.name for z in pycountry.subdivisions.get(country_code='US'))
+
+    region_abbrev_cache = None
+    apo_cache = {}
 
     @classmethod
     def region_abbrev(cls, region_name):
@@ -335,16 +344,38 @@ class RegionHelper:
                     return "can"
         if region_name in cls.US_STATES:
             return pycountry.subdivisions.lookup(region_name).code[-2:].lower()
-        return pycountry.countries.lookup(region_name).alpha_3.lower()
+        return LocationHelper.abbrev_country(region_name)
+    @classmethod
+    async def region_unabbrev(cls, region_name):
+        await cls.update_region_cache()
+        return cls.region_abbrev_cache.get(region_name, region_name)
 
     @classmethod
-    def region_unabbrev(cls, region_abbrev):
-        regions_ = {v: k for k, v in cls.REGIONS.items()}
-        if region_abbrev in regions_:
-            return regions_[region_abbrev]
+    async def update_region_cache(cls):
+        if not cls.region_abbrev_cache:
+            cls.region_abbrev_cache = {}
+            regions = await orm.pool.fetch("SELECT DISTINCT region FROM teams")
+            for r in regions:
+                if not r['region']:
+                    continue
+                cls.region_abbrev_cache[cls.region_abbrev(r['region'])] = r['region']
 
+    @classmethod
+    def populate_apo(cls):
+        if cls.apo_cache:
+            return
+        with open("data/apo_addr") as f:
+            data = f.read()
+        for line in data.split("\n"):
+            if not line:
+                continue
+            bits = line.split()
+            postalcode = bits[2]
+            rest = " ".join(bits[3:])
+            cls.apo_cache[postalcode] = rest
     @classmethod
     async def get_region(cls, team):
+        cls.populate_apo()
         if team.country not in ("USA", "Canada") or (team.country == "Canada" and team.year < 2016):
             return team.country
         elif team.country == "Canada" and team.year >= 2016:
@@ -408,6 +439,12 @@ class RegionHelper:
             else:
                 return "Texas Panhandle"
 
+        # edge case
+        if team.state_prov == '22':
+            return "Bulgaria"
+        if team.state_prov.startswith('Armed Forces'):
+            print(team.number, team.state_prov, team.city, team.postalcode, cls.apo_cache[team.postalcode])
+            return cls.apo_cache[team.postalcode]
         return team.state_prov
 
     @classmethod
@@ -442,3 +479,12 @@ class RegionHelper:
 
         return None
 
+    @classmethod
+    async def get_regions_for_year(cls, year):
+        regions = await orm.pool.fetch("SELECT DISTINCT region FROM events WHERE year=$1 ORDER BY region", year)
+        ret = []
+        for r in regions:
+            if not r['region']:
+                continue
+            ret.append((cls.region_abbrev(r['region']), r['region']))
+        return ret

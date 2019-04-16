@@ -8,7 +8,7 @@
       <img class="team-avatar single blue" src='{{avatar.avatar_image_source}}'/>
     {% endif %}
     Team {{team.number}}{% if team.name %} - {{team.name}}{% endif %}</h2>
-    {% if region_name %}<blockquote><em>Part of the <a href="/events/region_abbrev_TODO/{{year}}">{{region_name}} Region</a></em></blockquote>{% endif %}
+    {% if region_name %}<blockquote><em>Part of the <a href="/events/{{region_abbrev}}/{{year|season}}">{{region_name}} Region</a></em></blockquote>{% endif %}
   </div>
 </div>
 

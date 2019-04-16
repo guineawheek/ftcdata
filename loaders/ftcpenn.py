@@ -265,7 +265,7 @@ class FTCPennScraper:
     @classmethod
     async def load(cls):
         # min 2012
-        for i in range(2017, 2019):
+        for i in range(2012, 2019):
             await cls.load_year(i)
 
 class ESRScraper(FTCPennScraper):
@@ -351,13 +351,10 @@ async def main():
     print("Initializing database connection...")
     await orm.connect(host="/run/postgresql/.s.PGSQL.5432", database="ftcdata", max_size=50)
     await orm.Model.create_all_tables()
-    #await Event.purge("1415paphlm1")
-    #await FTCPennScraper.load_year(2017)
-    #await FTCPennScraper.load_meets(2014)
-    #await FTCPennScraper.load()
-    #await FTCPennScraper.close_http()
-    await ESRScraper.load()
-    await ESRScraper.close_http()
+    await FTCPennScraper.load()
+    await FTCPennScraper.close_http()
+    #await ESRScraper.load()
+    #await ESRScraper.close_http()
     await orm.close()
 
 if __name__ == "__main__":

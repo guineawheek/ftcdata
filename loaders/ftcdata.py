@@ -131,10 +131,11 @@ class FTCDataScraper:
                 rankings = ResultsPageHelper.load_rankings(BeautifulSoup(f.read(), 'lxml'), matches)
 
             await EventHelper.insert_event(event, matches, rankings, None, tolerate_missing_finals=True, data_source="cheer4ftc ftc-data repository")
-            print("loaded " + event.key)
+            #print("loaded " + event.key)
 
     @classmethod
     async def load_1617velv(cls):
+        tasks = []
         with open("data/ftc-data/events/1617velv/1617velv-event-list.csv") as f:
             csv_reader = csv.reader(f.read().split("\n"))
         for row in csv_reader:
@@ -160,20 +161,23 @@ class FTCDataScraper:
                 divno = int(ecode[-1])
                 ecode = ecode[:-2]
                 #name += " Division"
-            if region_code == "txno":
-                rcode = "txntx"
-            elif ecode == "cmphs":
-                rcode = "mihs"
-            elif region_code == "txwp":
-                rcode = "txph"
-            elif region_code == "nynyc":
-                rcode = "nyc"
-            elif ecode in ("wsr", "nsr", "ssr", "cmptx", "cmpmo"):
-                rcode = None
-            else:
-                rcode = region_code
 
-            region = RegionHelper.region_unabbrev(rcode)
+            region = None
+            rcode = {
+                "txno": "txntx",
+                "txwp": "txph",
+                "nynyc": "nyc",
+                "io": "ia",
+                "nm": "az",
+            }.get(region_code, region_code)
+            if ecode == "cmphs":
+                rcode = "mihs"
+            elif rcode in ("wsr", "nsr", "ssr", "cmptx", "cmpmo"):
+                ecode = ""
+                region = None
+
+            if ecode:
+                region = await RegionHelper.region_unabbrev(rcode)
 
             if "Canada" in name:
                 country = "Canada"
@@ -208,9 +212,11 @@ class FTCDataScraper:
             with open(base + "-Rankings.html") as f:
                 rankings = ResultsPageHelper.load_rankings(BeautifulSoup(f.read(), 'lxml'), matches)
 
-            await EventHelper.insert_event(event, matches, rankings, None, tolerate_missing_finals=True, data_source="cheer4ftc ftc-data repository")
-            print("loaded " + event.key)
-
+            tasks.append(asyncio.create_task(EventHelper.insert_event(event, matches, rankings, None,
+                                                                      tolerate_missing_finals=True,
+                                                                      data_source="cheer4ftc ftc-data repository")))
+            #print("loaded " + event.key)
+        await asyncio.gather(*tasks)
     @classmethod
     async def load(cls):
         pass
@@ -219,10 +225,12 @@ async def main():
     print("Initializing database connection...")
     await orm.connect(host="/run/postgresql/.s.PGSQL.5432", database="ftcdata", max_size=50)
     await orm.Model.create_all_tables()
+    await Event.purge_all({"year": 2016})
     #await Event.purge("1516micmp")
     #await FTCDataScraper.load_1516resq()
     #for key in (k['key'] for k in await orm.pool.fetch("SELECT key FROM events WHERE year=2016")):
     #    await Event.purge(key)
+    #print(RegionHelper.region_abbrev("Maryland"))
     await FTCDataScraper.load_1617velv()
     await orm.close()
 

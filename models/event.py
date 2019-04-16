@@ -96,6 +96,22 @@ class Event(orm.Model):
             await orm.pool.fetch(a, event_key)
         print("purged", event_key)
 
+    @classmethod
+    async def purge_all(cls, props):
+        events = await cls.select(props=props)
+        event_keys = [e.key for e in events]
+        lines = """
+        DELETE FROM awards WHERE event_key=ANY($1);
+        DELETE FROM rankings WHERE event_key=ANY($1);
+        DELETE FROM event_participants WHERE event_key=ANY($1);
+        DELETE FROM matches WHERE event_key=ANY($1);
+        DELETE FROM match_scores WHERE event_key=ANY($1);
+        DELETE FROM events WHERE key=ANY($1);
+        """
+        for a in lines.strip().split("\n"):
+            await orm.pool.fetch(a, event_keys)
+        print("purged", event_keys)
+
 class EventType:
     QUALIFIER = 1
     MEET = 2

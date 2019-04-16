@@ -159,7 +159,7 @@ class ORM:
                 return await self.fetch(*([qs] + list(properties.values())), conn=conn)
 
             @classmethod
-            async def delete_all(cls, conn=None, **properties):
+            async def delete_all(cls, properties, conn=None):
                 if not properties:
                     raise ValueError("delete_all() requires at least one keyword argument!")
                 qs = f"DELETE FROM {cls.__schemaname__}.{cls.__tablename__} WHERE " + " AND ".join(
@@ -175,16 +175,26 @@ class ORM:
             def table_name(cls):
                 return f"{cls.__schemaname__}.{cls.__tablename__}"
 
-            async def upsert(self, conn=None):
+            async def upsert(self, conn=None, retry=5):
                 """this performs an upsert by doing a select then an insert/update, this can be subject to race conditions
                 and should be avoided if possible."""
-                if not self.__primary_key__:
-                    # ig i could implement a checker?
-                    raise TypeError("upsert() requires a primary key on the table")
-                if await self.select_one(properties={k: getattr(self, k) for k in self.__primary_key__}, conn=conn):
-                    await self.update(conn=conn)
-                else:
-                    await self.insert(conn=conn)
+
+                exc = None
+                for i in range(retry):
+                    try:
+                        if not self.__primary_key__:
+                            # ig i could implement a checker?
+                            raise TypeError("upsert() requires a primary key on the table")
+                        if await self.select_one(properties={k: getattr(self, k) for k in self.__primary_key__}, conn=conn):
+                            await self.update(conn=conn)
+                        else:
+                            await self.insert(conn=conn)
+                        return
+                    except asyncpg.UniqueViolationError as e:
+                        exc = e
+                        # oops!
+                        pass
+                raise exc
 
         self.Model = Model
         self.pool: asyncpg.pool.Pool

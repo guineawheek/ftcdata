@@ -48,8 +48,6 @@ class ChampSplitHelper(object):
             'Alberta': HOU,
             'Saskatchewan': HOU,
         },
-        'Mexico': YELLOW,
-        'China': YELLOW,
         'Brazil': YELLOW,
         'Ecuador': YELLOW,
         'Israel': YELLOW,
@@ -85,6 +83,7 @@ class ChampSplitHelper(object):
         'Uganda': YELLOW,
         'Tunisia': YELLOW,
         'Saudi Arabia': YELLOW,
+        'Bahrain': YELLOW,
         'Jamaica': BLUE, # despite being yellow, they always seem to go detroit?
         'Romania': BLUE,
         'Ukraine': BLUE,
@@ -96,6 +95,7 @@ class ChampSplitHelper(object):
         'Thailand': BLUE,
         'Portugal': BLUE,
         'Bulgaria': BLUE,
+        'Belgium': BLUE,
         'Latvia': BLUE,
         'Austria': BLUE,
         'Albania': BLUE,
@@ -133,6 +133,9 @@ class ChampSplitHelper(object):
                     return {2016: champ, 2017: champ}
                 elif team.state_prov in {'Kansas', 'Missouri'}:
                     return {2016: cls.STL, 2017: cls.HOU}
+                elif team.state_prov.startswith("Armed Forces"):
+                    # team.region is usually their actual country sooo
+                    return cls.LOCATION_CHAMP_MAP[team.region]
                 else:
                     # All other unlabled states and provinces in US and CA are STL/DET
                     return {2016: cls.STL, 2017: cls.DET}

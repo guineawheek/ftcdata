@@ -6,7 +6,7 @@ from jinja2 import Environment, FileSystemLoader, ModuleLoader, select_autoescap
 from template_engine import jinja2_engine
 from db.orm import orm
 from models import Team, Event, Ranking, Award, AwardType, EventParticipant, EventType, TeamMeta
-from helpers import MatchHelper, BracketHelper, AwardHelper, EventHelper
+from helpers import MatchHelper, BracketHelper, AwardHelper, EventHelper, RegionHelper
 import uvloop
 import runtime
 import re
@@ -82,6 +82,7 @@ async def teams_year(request, number, season):
         "format_year": format_year,
         "year_to_season": year_to_season,
         "region_name": team.region,
+        "region_abbrev": RegionHelper.region_abbrev(team.region),
         "season_wlt": season_wlt,
         "participation": participation,
         "max_year": 2018,
@@ -193,6 +194,26 @@ async def events_list(request, season):
         "districts": None,
         "state_prov": None,
         "valid_state_provs": {},
+        "regions": await RegionHelper.get_regions_for_year(year)
+    }))
+
+@app.route("/events/<region>/<season:int>")
+async def events_list_region(request, region, season):
+    VALID_YEARS = list(range(2018, 2006, -1))
+    year = season_to_year(season)
+    region_name = await RegionHelper.region_unabbrev(region)
+    events = await Event.select(properties={"year": year, "region": region_name}, extra_sql=" ORDER BY start_date, key")
+    month_events = EventHelper.get_month_events(events)
+    return html(env.get_template("event_list.html").render({
+        "events": events,
+        "explicit_year": season,
+        "selected_year": year,
+        "valid_years": VALID_YEARS,
+        "month_events": month_events,
+        "districts": None,
+        "state_prov": region_name,
+        "valid_state_provs": {},
+        "regions": await RegionHelper.get_regions_for_year(year)
     }))
 
 @app.route("/events")
