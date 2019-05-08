@@ -347,18 +347,28 @@ class RegionHelper:
         return LocationHelper.abbrev_country(region_name)
     @classmethod
     async def region_unabbrev(cls, region_name):
-        await cls.update_region_cache()
+        if not cls.region_abbrev_cache:
+            await cls.update_region_cache()
         return cls.region_abbrev_cache.get(region_name, region_name)
 
     @classmethod
     async def update_region_cache(cls):
-        if not cls.region_abbrev_cache:
-            cls.region_abbrev_cache = {}
-            regions = await orm.pool.fetch("SELECT DISTINCT region FROM teams")
-            for r in regions:
-                if not r['region']:
-                    continue
-                cls.region_abbrev_cache[cls.region_abbrev(r['region'])] = r['region']
+        cls.region_abbrev_cache = {
+            "txsa": "Texas Southeast",
+            "txarl": "Texax NTX",
+            "nyexc": "New York Excelsior",
+            "ncal": "California NorCal",
+            "isr": "Israel",
+            "fim": "Michigan",
+            "cmp": None,
+            "canal": "Canada Alberta",
+            "canab": "Canada Alberta",
+        }
+        regions = await orm.pool.fetch("SELECT DISTINCT region FROM teams")
+        for r in regions:
+            if not r['region']:
+                continue
+            cls.region_abbrev_cache[cls.region_abbrev(r['region'])] = r['region']
 
     @classmethod
     def populate_apo(cls):
